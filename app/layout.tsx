@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Fraunces, Manrope } from "next/font/google";
+import { Playfair_Display, Source_Sans_3 } from "next/font/google";
 
 import "./globals.css";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteHeader } from "@/components/SiteHeader";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
 
-const manrope = Manrope({
+const sourceSans = Source_Sans_3({
   subsets: ["latin"],
   variable: "--font-manrope",
+  weight: ["400", "500", "600", "700"],
 });
 
-const fraunces = Fraunces({
+const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-fraunces",
   weight: ["400", "500", "600", "700"],
@@ -32,11 +33,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de">
-      <body className={`${manrope.variable} ${fraunces.variable} antialiased`}>
+      <body className={`${sourceSans.variable} ${playfair.variable} antialiased`}>
         <div className="flex min-h-screen flex-col">
-          <SiteHeader />
+          <Header />
           <main className="flex-1">{children}</main>
-          <SiteFooter />
+          <Footer />
         </div>
       </body>
     </html>

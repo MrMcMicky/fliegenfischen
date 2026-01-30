@@ -16,15 +16,15 @@ export function SectionHeader({
   return (
     <div className="flex flex-col gap-4">
       {eyebrow ? (
-        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-river)]">
+        <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
           {eyebrow}
         </span>
       ) : null}
-      <h2 className="font-display text-3xl font-semibold text-[var(--color-forest)] sm:text-4xl">
+      <h2 className="font-display text-3xl font-semibold text-[var(--color-text)] sm:text-4xl">
         {title}
       </h2>
       {description ? (
-        <p className="max-w-2xl text-base text-[var(--color-forest)]/70 sm:text-lg">
+        <p className="max-w-2xl text-base text-[var(--color-muted)] sm:text-lg">
           {description}
         </p>
       ) : null}

@@ -6,11 +6,11 @@ const baseStyles =
 
 const variants = {
   primary:
-    "bg-[var(--color-ember)] text-white shadow-[0_16px_40px_rgba(242,125,66,0.35)] hover:translate-y-[-1px] hover:shadow-[0_20px_50px_rgba(242,125,66,0.4)]",
+    "bg-[var(--color-ember)] text-white shadow-[0_12px_30px_rgba(232,134,72,0.35)] hover:translate-y-[-1px] hover:shadow-[0_16px_40px_rgba(232,134,72,0.4)]",
   secondary:
-    "bg-white/80 text-[var(--color-forest)] ring-1 ring-[var(--color-forest)]/20 hover:bg-white",
+    "border border-[var(--color-forest)]/20 text-[var(--color-forest)] hover:border-[var(--color-forest)]/40 hover:bg-[var(--color-forest)]/5",
   ghost:
-    "text-[var(--color-forest)] hover:bg-[var(--color-forest)]/10",
+    "text-[var(--color-forest)] hover:text-[var(--color-forest)]/80",
 };
 
 const sizes = {

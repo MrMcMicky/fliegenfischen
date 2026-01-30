@@ -9,15 +9,15 @@ export const metadata = {
 
 export default function KontaktPage() {
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-10 px-6 pb-24 pt-16">
+    <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow="Kontakt"
         title="Lass uns deinen Termin planen"
         description="Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausruestung und Terminen."
       />
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-3xl border border-white/70 bg-white/90 p-6 text-sm text-[var(--color-forest)]/70">
-          <p className="font-semibold text-[var(--color-forest)]">
+        <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
+          <p className="font-semibold text-[var(--color-text)]">
             {siteConfig.contact.instructor}
           </p>
           <p>{siteConfig.contact.address[0]}</p>
@@ -25,8 +25,8 @@ export default function KontaktPage() {
           <p className="mt-4">Tel. {siteConfig.contact.phone}</p>
           <p>Natel {siteConfig.contact.mobile}</p>
           <p>{siteConfig.contact.email}</p>
-          <div className="mt-6 rounded-2xl bg-[var(--color-mist)] p-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-river)]">
+          <div className="mt-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
               Treffpunkt
             </p>
             <p className="mt-2">
@@ -35,8 +35,8 @@ export default function KontaktPage() {
             </p>
           </div>
         </div>
-        <div className="rounded-3xl bg-[var(--color-forest)] p-8 text-white">
-          <p className="text-xs uppercase tracking-[0.3em] text-white/70">
+        <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
             Anfrage
           </p>
           <p className="mt-3 text-sm text-white/70">

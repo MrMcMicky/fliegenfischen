@@ -9,13 +9,13 @@ export const metadata = {
 
 export default function WetterPage() {
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-8 px-6 pb-24 pt-16">
+    <div className="mx-auto w-full max-w-4xl space-y-8 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow="Service"
         title="Wetter in der Schweiz"
         description="Fuer eine sichere Kursplanung empfehlen wir den Blick auf aktuelle Wetterdaten."
       />
-      <div className="rounded-3xl border border-white/70 bg-white/90 p-6 text-sm text-[var(--color-forest)]/70">
+      <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
         <p>
           Wir planen Kurse auch bei wechselhaftem Wetter. Bitte pruefe die
           lokalen Bedingungen vor dem Termin.

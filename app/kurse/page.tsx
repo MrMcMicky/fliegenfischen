@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function KursePage() {
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-12 px-6 pb-24 pt-16">
+    <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow="Kurse"
         title="Kursuebersicht"

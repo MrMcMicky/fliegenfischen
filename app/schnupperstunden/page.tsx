@@ -10,26 +10,26 @@ export const metadata = {
 
 export default function SchnupperstundenPage() {
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-10 px-6 pb-24 pt-16">
+    <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow="Schnupperstunden"
         title="Der perfekte Einstieg"
         description={tasterLessons.description}
       />
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="space-y-4 rounded-3xl border border-white/70 bg-white/90 p-6">
-          <p className="text-sm text-[var(--color-forest)]/70">
+        <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6">
+          <p className="text-sm text-[var(--color-muted)]">
             In zwei Stunden lernst du die Grundtechnik, das Material und die
             wichtigsten Sicherheitsregeln. Ideal fuer Einsteiger und Geschenke.
           </p>
-          <ul className="space-y-2 text-sm text-[var(--color-forest)]/70">
+          <ul className="space-y-2 text-sm text-[var(--color-muted)]">
             <li>• Termine unter der Woche nach Vereinbarung</li>
             <li>• Ausruestung kann gestellt werden</li>
             <li>• Kleingruppe oder privat</li>
           </ul>
         </div>
-        <div className="rounded-3xl bg-[var(--color-forest)] p-8 text-white">
-          <p className="text-xs uppercase tracking-[0.3em] text-white/70">
+        <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
             Preis
           </p>
           <p className="mt-3 text-3xl font-semibold">

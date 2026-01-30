@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function TerminePage() {
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-10 px-6 pb-24 pt-16">
+    <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow="Termine"
         title="Kursdaten & Preise"
@@ -25,16 +25,16 @@ export default function TerminePage() {
           return (
             <div
               key={session.id}
-              className="flex flex-col gap-4 rounded-3xl border border-white/70 bg-white/90 p-6 shadow-[0_20px_60px_rgba(12,43,42,0.08)] md:flex-row md:items-center md:justify-between"
+              className="flex flex-col gap-4 rounded-xl border border-[var(--color-border)] bg-white p-6 md:flex-row md:items-center md:justify-between"
             >
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-river)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
                   {course.title}
                 </p>
-                <h3 className="mt-2 font-display text-2xl font-semibold text-[var(--color-forest)]">
+                <h3 className="mt-2 font-display text-2xl font-semibold text-[var(--color-text)]">
                   {formatDate(session.date)}
                 </h3>
-                <p className="text-sm text-[var(--color-forest)]/70">
+                <p className="text-sm text-[var(--color-muted)]">
                   {session.startTime} - {session.endTime} · {session.location}
                 </p>
               </div>
@@ -44,9 +44,9 @@ export default function TerminePage() {
                 </p>
                 <Link
                   href={`/kurse/${course.slug}`}
-                  className="rounded-full bg-[var(--color-forest)] px-5 py-2 text-xs font-semibold text-white"
+                  className="inline-flex items-center justify-center rounded-full border border-[var(--color-forest)]/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)] transition hover:border-[var(--color-forest)]"
                 >
-                  Kursdetails
+                  Details
                 </Link>
               </div>
             </div>

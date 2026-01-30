@@ -34,7 +34,7 @@ export default function CourseDetailPage({
   const sessions = getSessionsForCourse(course.slug);
 
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-12 px-6 pb-24 pt-16">
+    <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-6">
           <SectionHeader
@@ -42,28 +42,28 @@ export default function CourseDetailPage({
             title={course.title}
             description={course.description}
           />
-          <div className="flex flex-wrap gap-3 text-sm text-[var(--color-forest)]/70">
+          <div className="flex flex-wrap gap-3 text-sm text-[var(--color-muted)]">
             <span>Dauer {course.duration}</span>
             <span>·</span>
             <span>{course.location}</span>
             <span>·</span>
             <span>Max. {course.maxParticipants} Personen</span>
           </div>
-          <div className="rounded-3xl border border-white/60 bg-white/90 p-6">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-river)]">
+          <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
               Inhalte
             </p>
-            <ul className="mt-4 grid gap-2 text-sm text-[var(--color-forest)]/70 sm:grid-cols-2">
+            <ul className="mt-4 grid gap-2 text-sm text-[var(--color-muted)] sm:grid-cols-2">
               {course.highlights.map((highlight) => (
                 <li key={highlight}>• {highlight}</li>
               ))}
             </ul>
           </div>
-          <div className="rounded-3xl border border-white/60 bg-white/90 p-6">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-river)]">
+          <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
               Ausruestung
             </p>
-            <ul className="mt-4 space-y-2 text-sm text-[var(--color-forest)]/70">
+            <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
               {course.equipment.map((item) => (
                 <li key={item}>• {item}</li>
               ))}
@@ -71,7 +71,7 @@ export default function CourseDetailPage({
           </div>
         </div>
         <div className="space-y-6">
-          <div className="rounded-3xl bg-[var(--color-forest)] p-8 text-white shadow-[0_30px_80px_rgba(12,43,42,0.4)]">
+          <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">
             <p className="text-xs uppercase tracking-[0.3em] text-white/70">
               Preis
             </p>
@@ -90,8 +90,8 @@ export default function CourseDetailPage({
               </Button>
             </div>
           </div>
-          <div className="rounded-3xl border border-white/60 bg-white/90 p-6">
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-river)]">
+          <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
               Termine
             </p>
             {sessions.length ? (
@@ -99,27 +99,24 @@ export default function CourseDetailPage({
                 {sessions.map((session) => (
                   <div
                     key={session.id}
-                    className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 text-sm"
+                    className="flex items-center justify-between rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] px-4 py-3 text-sm"
                   >
                     <div>
-                      <p className="font-semibold text-[var(--color-forest)]">
+                      <p className="font-semibold text-[var(--color-text)]">
                         {formatDate(session.date)}
                       </p>
-                      <p className="text-xs text-[var(--color-forest)]/60">
+                      <p className="text-xs text-[var(--color-muted)]">
                         {session.startTime} - {session.endTime}
                       </p>
                     </div>
-                    <Link
-                      href="/kontakt"
-                      className="rounded-full bg-[var(--color-forest)] px-4 py-2 text-xs font-semibold text-white"
-                    >
+                    <Button href="/kontakt" size="sm">
                       Platz sichern
-                    </Link>
+                    </Button>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="mt-4 text-sm text-[var(--color-forest)]/70">
+              <p className="mt-4 text-sm text-[var(--color-muted)]">
                 Termine auf Anfrage. Melde dich fuer den naechsten Kurs.
               </p>
             )}

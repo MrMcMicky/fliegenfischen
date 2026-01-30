@@ -28,13 +28,13 @@ export default function BerichtDetailPage({
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-10 px-6 pb-24 pt-16">
+    <div className="mx-auto w-full max-w-4xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow={`${report.location} · ${report.year}`}
         title={report.title}
         description={report.summary}
       />
-      <div className="space-y-6 rounded-3xl border border-white/70 bg-white/90 p-8 text-sm text-[var(--color-forest)]/70">
+      <div className="space-y-6 rounded-xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
         <p>
           Dieser Bericht wird im Relaunch aus dem bestehenden Material neu
           aufbereitet. Ziel ist eine klare Struktur, groessere Bilder und eine

@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function GutscheinePage() {
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-12 px-6 pb-24 pt-16">
+    <div className="mx-auto w-full max-w-5xl space-y-12 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow="Gutscheine"
         title="Geschenk mit Erlebnis"
@@ -20,19 +20,19 @@ export default function GutscheinePage() {
         {voucherOptions.map((option) => (
           <div
             key={option.title}
-            className="rounded-3xl border border-white/70 bg-white/90 p-6 shadow-[0_20px_60px_rgba(12,43,42,0.08)]"
+            className="rounded-xl border border-[var(--color-border)] bg-white p-6"
           >
-            <h3 className="font-display text-2xl font-semibold text-[var(--color-forest)]">
+            <h3 className="font-display text-2xl font-semibold text-[var(--color-text)]">
               {option.title}
             </h3>
-            <p className="mt-2 text-sm text-[var(--color-forest)]/70">
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
               {option.description}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               {option.values.map((value) => (
                 <span
                   key={value}
-                  className="rounded-full bg-[var(--color-mist)] px-4 py-2 text-xs font-semibold text-[var(--color-forest)]"
+                  className="rounded-full border border-[var(--color-border)] bg-[var(--color-stone)] px-4 py-2 text-xs font-semibold text-[var(--color-forest)]"
                 >
                   {formatPrice(value)}
                 </span>
@@ -46,7 +46,7 @@ export default function GutscheinePage() {
           </div>
         ))}
       </div>
-      <div className="rounded-[32px] bg-[var(--color-forest)] p-10 text-white">
+      <div className="rounded-2xl bg-[var(--color-forest)] p-10 text-white">
         <h3 className="font-display text-2xl font-semibold">
           Wunschtext & Versand
         </h3>

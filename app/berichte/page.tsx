@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function BerichtePage() {
   return (
-    <div className="mx-auto w-full max-w-6xl space-y-10 px-6 pb-24 pt-16">
+    <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow="Wissen"
         title="Berichte & Einblicke"
@@ -21,15 +21,15 @@ export default function BerichtePage() {
           <Link
             key={report.slug}
             href={`/berichte/${report.slug}`}
-            className="rounded-3xl border border-white/70 bg-white/90 p-6 shadow-[0_20px_60px_rgba(12,43,42,0.08)]"
+            className="rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
           >
-            <p className="text-xs uppercase tracking-[0.3em] text-[var(--color-river)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
               {report.location} · {report.year}
             </p>
-            <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-forest)]">
+            <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
               {report.title}
             </h3>
-            <p className="mt-2 text-sm text-[var(--color-forest)]/70">
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
               {report.summary}
             </p>
           </Link>

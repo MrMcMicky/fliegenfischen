@@ -12,7 +12,7 @@ export default function NotFound() {
         Diese Seite wurde nicht gefunden.
       </h1>
       <p className="text-sm text-[var(--color-muted)]">
-        Vielleicht hat sich die URL geaendert. Nutze die Navigation oder gehe
+        Vielleicht hat sich die URL geändert. Nutze die Navigation oder gehe
         zur Startseite.
       </p>
       <div className="flex gap-4">

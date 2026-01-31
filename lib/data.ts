@@ -5,20 +5,20 @@ import { coursePathSteps, faqs, siteConfig, uspItems } from "@/lib/site";
 export const navLinks = [
   { label: "Kurse", href: "/kurse" },
   { label: "Privat", href: "/privatunterricht" },
-  { label: "Ueber uns", href: "/ueber-uns" },
+  { label: "Über uns", href: "/ueber-uns" },
   { label: "Kontakt", href: "/kontakt" },
 ];
 
 export const footerLinks = {
   offer: [
-    { label: "Kursuebersicht", href: "/kurse" },
+    { label: "Kursübersicht", href: "/kurse" },
     { label: "Termine", href: "/kurse/termine" },
     { label: "Schnupperstunden", href: "/schnupperstunden" },
     { label: "Privatunterricht", href: "/privatunterricht" },
     { label: "Gutscheine", href: "/gutscheine" },
   ],
   resources: [
-    { label: "Ueber uns", href: "/ueber-uns" },
+    { label: "Über uns", href: "/ueber-uns" },
     { label: "Berichte", href: "/berichte" },
     { label: "FAQ", href: "/#faq" },
     { label: "Wetter", href: "/wetter" },
@@ -28,7 +28,7 @@ export const footerLinks = {
 
 export const homeHero = {
   eyebrow: "Fliegenfischerschule",
-  title: "Fliegenfischen in der Region Zuerich – ruhig, praezise, draussen.",
+  title: "Fliegenfischen in der Region Zürich – ruhig, präzise, draussen.",
   description:
     "Kleine Gruppen, klare Lernschritte und ein Instruktor mit SFV- und EFFA-Hintergrund.",
   primaryCta: { label: "Termin sichern", href: "/kurse/termine" },
@@ -36,25 +36,25 @@ export const homeHero = {
 };
 
 export const aboutSection = {
-  title: "Ueber Urs Mueller",
+  title: "Über Urs Müller",
   description:
     "SFV Instruktor (2003) und EFFA Basic Flycasting Instructor (2004). Fokus auf Technik, Sicherheit und Praxis.",
   highlights: siteConfig.socialProof,
   note:
-    "Treffpunkte entlang der Limmat, Kursmaterial auf Wunsch, klare Ablaeufe.",
+    "Treffpunkte entlang der Limmat, Kursmaterial auf Wunsch, klare Abläufe.",
 };
 
 export const aboutPage = {
-  title: "Ueber Urs Mueller",
+  title: "Über Urs Müller",
   intro:
-    "Fliegenfischen lebt von Geduld, Technik und einem wachen Blick fuers Wasser. Genau darauf basiert der Unterricht: ruhig, strukturiert und praxisnah.",
+    "Fliegenfischen lebt von Geduld, Technik und einem wachen Blick fürs Wasser. Genau darauf basiert der Unterricht: ruhig, strukturiert und praxisnah.",
   bio:
-    "Urs Mueller unterrichtet seit vielen Jahren in der Region Zuerich und kombiniert klare Technikvermittlung mit realen Situationen am Gewaesser.",
+    "Urs Müller unterrichtet seit vielen Jahren in der Region Zürich und kombiniert klare Technikvermittlung mit realen Situationen am Gewässer.",
   highlights: siteConfig.socialProof,
   values: [
-    "Kleine Gruppen fuer intensives Feedback",
+    "Kleine Gruppen für intensives Feedback",
     "Praxis am Wasser statt nur Theorie",
-    "Klare Ablaufe, nachvollziehbare Fortschritte",
+    "Klare Abläufe, nachvollziehbare Fortschritte",
   ],
   cta: {
     title: "Lust auf einen Kennenlern-Termin?",
@@ -68,15 +68,15 @@ export const aboutPage = {
 export const homeSections = {
   upcoming: {
     eyebrow: "Termine",
-    title: "Naechste Kurse",
+    title: "Nächste Kurse",
     description:
-      "Frueh buchen lohnt sich: Die Gruppen bleiben klein und die Plaetze sind limitiert.",
+      "Früh buchen lohnt sich: Die Gruppen bleiben klein und die Plätze sind limitiert.",
   },
   formats: {
     eyebrow: "Angebot",
-    title: "Kursformate fuer jedes Level",
+    title: "Kursformate für jedes Level",
     description:
-      "Einhand oder Zweihand, Privat oder Schnuppern: Technik Schritt fuer Schritt aufbauen.",
+      "Einhand oder Zweihand, Privat oder Schnuppern: Technik Schritt für Schritt aufbauen.",
   },
   timeline: {
     eyebrow: "Lernpfad",
@@ -88,15 +88,15 @@ export const homeSections = {
     eyebrow: "Wissen",
     title: "Berichte und Einblicke",
     description:
-      "Reiseberichte und Gewaesser-Notizen aus der Praxis. Ideal fuer Inspiration.",
+      "Reiseberichte und Gewässer-Notizen aus der Praxis. Ideal für Inspiration.",
   },
   faq: {
     eyebrow: "FAQ",
-    title: "Haefige Fragen",
-    description: "Kurz und klar beantwortet. Fuer Details gerne direkt melden.",
+    title: "Häufige Fragen",
+    description: "Kurz und klar beantwortet. Für Details gerne direkt melden.",
   },
   cta: {
-    title: "Bereit fuer den naechsten Schritt?",
+    title: "Bereit für den nächsten Schritt?",
     description:
       "Sichere dir einen Platz oder verschenke einen Gutschein. Wir melden uns mit allen Details.",
     note: "Schnupperstunden ab CHF 70 / Std., Privatunterricht flexibel.",
@@ -112,12 +112,12 @@ export const homeSections = {
 export const testimonials = [
   {
     quote:
-      "Nach zwei Stunden sass der Doppelzug endlich. Sehr praezise Korrekturen.",
+      "Nach zwei Stunden sass der Doppelzug endlich. Sehr präzise Korrekturen.",
     author: "Teilnehmer Einhandkurs",
   },
   {
     quote:
-      "Schnupperstunde gebucht und sofort Lust auf mehr. Ruhige Erklaerungen und viel Geduld.",
+      "Schnupperstunde gebucht und sofort Lust auf mehr. Ruhige Erklärungen und viel Geduld.",
     author: "Teilnehmerin Schnupperstunde",
   },
   {
@@ -129,9 +129,9 @@ export const testimonials = [
 
 export const testimonialSection = {
   eyebrow: "Erfolge",
-  title: "Klarer Aufbau, spuerbarer Fortschritt.",
+  title: "Klarer Aufbau, spürbarer Fortschritt.",
   description:
-    "Kleine Gruppen sorgen dafuer, dass jeder Wurf gesehen wird. Das Ziel: Technik, die auch am Wasser funktioniert.",
+    "Kleine Gruppen sorgen dafür, dass jeder Wurf gesehen wird. Das Ziel: Technik, die auch am Wasser funktioniert.",
 };
 
 export { categorySummaries, coursePathSteps, faqs, reports, siteConfig, uspItems };

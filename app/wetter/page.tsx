@@ -4,7 +4,7 @@ import { SectionHeader } from "@/components/SectionHeader";
 
 export const metadata = {
   title: "Wetter",
-  description: "Wetterinformationen fuer Kurse in der Schweiz.",
+  description: "Wetterinformationen für Kurse in der Schweiz.",
 };
 
 export default function WetterPage() {
@@ -13,11 +13,11 @@ export default function WetterPage() {
       <SectionHeader
         eyebrow="Service"
         title="Wetter in der Schweiz"
-        description="Fuer eine sichere Kursplanung empfehlen wir den Blick auf aktuelle Wetterdaten."
+        description="Für eine sichere Kursplanung empfehlen wir den Blick auf aktuelle Wetterdaten."
       />
       <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
         <p>
-          Wir planen Kurse auch bei wechselhaftem Wetter. Bitte pruefe die
+          Wir planen Kurse auch bei wechselhaftem Wetter. Bitte prüfe die
           lokalen Bedingungen vor dem Termin.
         </p>
         <p className="mt-4">

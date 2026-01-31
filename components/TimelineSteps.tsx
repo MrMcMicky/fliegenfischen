@@ -9,7 +9,8 @@ const icons = [Leaf, Fish, Sparkles, Compass, Waves];
 
 export function TimelineSteps() {
   return (
-    <div className="relative border-l border-[var(--color-border)] pl-8">
+    <div className="relative pl-12">
+      <span className="absolute left-4 top-0 h-full border-l-2 border-dashed border-[var(--color-border)]" />
       {coursePathSteps.map((step, index) => {
         const Icon = icons[index % icons.length];
         return (
@@ -21,7 +22,7 @@ export function TimelineSteps() {
             transition={{ duration: 0.5, delay: index * 0.08 }}
             className="relative pb-8 last:pb-0"
           >
-            <span className="absolute -left-[1.3rem] top-0 flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-forest)]">
+            <span className="absolute left-4 top-0 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-forest)]">
               <Icon size={16} />
             </span>
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">

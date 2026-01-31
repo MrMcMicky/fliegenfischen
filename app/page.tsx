@@ -15,9 +15,11 @@ import {
   siteConfig,
   uspItems,
 } from "@/lib/data";
+import { Award, Fish, MapPin, Users } from "lucide-react";
 
 const upcomingSessions = getUpcomingSessions().slice(0, 3);
 const nextSession = upcomingSessions[0] ?? null;
+const uspIcons = [Users, Award, Fish, MapPin];
 
 export default function Home() {
   return (
@@ -26,11 +28,14 @@ export default function Home() {
 
       <section className="mx-auto w-full max-w-5xl px-4 py-8">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {uspItems.map((item) => (
+          {uspItems.map((item, index) => {
+            const Icon = uspIcons[index % uspIcons.length];
+            return (
             <div
               key={item.title}
-              className="rounded-xl border border-[var(--color-border)] bg-white p-6"
+              className="flex flex-col items-center rounded-xl border border-[var(--color-border)] bg-white p-6 text-center"
             >
+              <Icon size={20} className="mb-3 text-[var(--color-ember)]" />
               <h3 className="font-display text-xl font-semibold text-[var(--color-text)]">
                 {item.title}
               </h3>
@@ -38,7 +43,7 @@ export default function Home() {
                 {item.description}
               </p>
             </div>
-          ))}
+          )})}
         </div>
       </section>
 
@@ -79,7 +84,7 @@ export default function Home() {
 
       <section id="ueber" className="mx-auto w-full max-w-5xl px-4 py-10">
         <SectionHeader
-          eyebrow="Ueber uns"
+          eyebrow="Über uns"
           title={aboutSection.title}
           description={aboutSection.description}
         />
@@ -98,7 +103,7 @@ export default function Home() {
         </div>
         <div className="mt-6">
           <Button href="/ueber-uns" variant="secondary" size="sm">
-            Mehr ueber uns
+            Mehr über uns
           </Button>
         </div>
       </section>
@@ -166,29 +171,31 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-5xl px-4 py-10">
-        <div className="grid gap-8 rounded-2xl border border-[var(--color-border)] bg-white p-10 lg:grid-cols-[1.2fr_0.8fr]">
-          <div>
-            <h2 className="font-display text-3xl font-semibold text-[var(--color-text)]">
-              {homeSections.cta.title}
-            </h2>
-            <p className="mt-3 text-sm text-[var(--color-muted)]">
-              {homeSections.cta.description}
-            </p>
-            <div className="mt-4 text-sm text-[var(--color-forest)]/70">
-              {homeSections.cta.note}
+      <section className="bg-[var(--color-forest)] py-16">
+        <div className="mx-auto w-full max-w-5xl px-4 text-white">
+          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+            <div>
+              <h2 className="font-display text-3xl font-semibold">
+                {homeSections.cta.title}
+              </h2>
+              <p className="mt-3 text-sm text-white/80">
+                {homeSections.cta.description}
+              </p>
+              <div className="mt-4 text-sm text-white/70">
+                {homeSections.cta.note}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-4">
-            <Button href={homeSections.cta.primary.href} size="lg">
-              {homeSections.cta.primary.label}
-            </Button>
-            <Button href={homeSections.cta.secondary.href} variant="secondary" size="lg">
-              {homeSections.cta.secondary.label}
-            </Button>
-            <Button href={homeSections.cta.tertiary.href} variant="ghost" size="lg">
-              {homeSections.cta.tertiary.label}
-            </Button>
+            <div className="flex flex-wrap items-center gap-4">
+              <Button href={homeSections.cta.primary.href} size="lg">
+                {homeSections.cta.primary.label}
+              </Button>
+              <Button href={homeSections.cta.secondary.href} variant="light" size="lg">
+                {homeSections.cta.secondary.label}
+              </Button>
+              <Button href={homeSections.cta.tertiary.href} variant="ghostLight" size="lg">
+                {homeSections.cta.tertiary.label}
+              </Button>
+            </div>
           </div>
         </div>
       </section>

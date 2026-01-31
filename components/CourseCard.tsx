@@ -48,7 +48,7 @@ export function CourseCard({
       {sessions.length > 0 ? (
         <div className="mt-4 space-y-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            Naechste Termine
+            Nächste Termine
           </p>
           {sessions.slice(0, 2).map((session) => (
             <div

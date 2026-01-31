@@ -15,7 +15,7 @@ export default function TerminePage() {
       <SectionHeader
         eyebrow="Termine"
         title="Kursdaten & Preise"
-        description="Alle verfuegbaren Termine. Fuer Privatstunden oder Schnuppern bitte direkt anfragen."
+        description="Alle verfügbaren Termine. Für Privatstunden oder Schnuppern bitte direkt anfragen."
       />
       <div className="space-y-4">
         {courseSessions.map((session) => {
@@ -43,7 +43,7 @@ export default function TerminePage() {
                   {formatPrice(session.priceCHF)}
                 </p>
                 <p className="text-xs text-[var(--color-muted)]">
-                  Noch {session.availableSpots} Plaetze
+                  Noch {session.availableSpots} Plätze
                 </p>
                 <Link
                   href={`/kurse/${course.slug}`}

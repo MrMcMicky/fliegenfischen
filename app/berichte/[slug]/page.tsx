@@ -37,8 +37,8 @@ export default function BerichtDetailPage({
       <div className="space-y-6 rounded-xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
         <p>
           Dieser Bericht wird im Relaunch aus dem bestehenden Material neu
-          aufbereitet. Ziel ist eine klare Struktur, groessere Bilder und eine
-          bessere Lesbarkeit auf Mobilgeraeten.
+          aufbereitet. Ziel ist eine klare Struktur, grössere Bilder und eine
+          bessere Lesbarkeit auf Mobilgeräten.
         </p>
         <ul className="space-y-2">
           {report.highlights.map((highlight) => (
@@ -46,13 +46,13 @@ export default function BerichtDetailPage({
           ))}
         </ul>
         <p>
-          Im naechsten Schritt integrieren wir die originalen Bilder, Karten und
+          Im nächsten Schritt integrieren wir die originalen Bilder, Karten und
           Routeninformationen aus dem bestehenden Archiv.
         </p>
       </div>
       <div className="flex flex-wrap gap-4">
         <Button href="/berichte" variant="secondary">
-          Zurueck zu allen Berichten
+          Zurück zu allen Berichten
         </Button>
         <Button href="/kurse">Zu den Kursen</Button>
       </div>

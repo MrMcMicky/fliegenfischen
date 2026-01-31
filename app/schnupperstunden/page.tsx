@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/utils";
 
 export const metadata = {
   title: "Schnupperstunden",
-  description: "Schnupperstunden fuer den ersten Einstieg ins Fliegenfischen.",
+  description: "Schnupperstunden für den ersten Einstieg ins Fliegenfischen.",
 };
 
 export default function SchnupperstundenPage() {
@@ -20,11 +20,11 @@ export default function SchnupperstundenPage() {
         <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6">
           <p className="text-sm text-[var(--color-muted)]">
             In zwei Stunden lernst du die Grundtechnik, das Material und die
-            wichtigsten Sicherheitsregeln. Ideal fuer Einsteiger und Geschenke.
+            wichtigsten Sicherheitsregeln. Ideal für Einsteiger und Geschenke.
           </p>
           <ul className="space-y-2 text-sm text-[var(--color-muted)]">
             <li>• Termine unter der Woche nach Vereinbarung</li>
-            <li>• Ausruestung kann gestellt werden</li>
+            <li>• Ausrüstung kann gestellt werden</li>
             <li>• Kleingruppe oder privat</li>
           </ul>
         </div>
@@ -40,7 +40,7 @@ export default function SchnupperstundenPage() {
             {formatPrice(tasterLessons.additionalPersonCHF)} / Std.
           </p>
           <div className="mt-6">
-            <Button href="/kontakt" variant="secondary">
+            <Button href="/kontakt" variant="light">
               Schnuppertermin sichern
             </Button>
           </div>

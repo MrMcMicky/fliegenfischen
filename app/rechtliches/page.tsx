@@ -11,7 +11,7 @@ export default function RechtlichesPage() {
       <SectionHeader
         eyebrow="Rechtliches"
         title="Datenschutz, AGB & Impressum"
-        description="Diese Inhalte werden mit dem Kunden final abgestimmt. Platzhalter fuer den Relaunch."
+        description="Diese Inhalte werden mit dem Kunden final abgestimmt. Platzhalter für den Relaunch."
       />
       <div className="space-y-6 rounded-xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
         <div>
@@ -23,7 +23,7 @@ export default function RechtlichesPage() {
         <div>
           <p className="font-semibold text-[var(--color-text)]">AGB & Storno</p>
           <p className="mt-2">
-            Regeln zu Buchung, Zahlung, Umbuchung und Rueckerstattung.
+            Regeln zu Buchung, Zahlung, Umbuchung und Rückerstattung.
           </p>
         </div>
         <div>

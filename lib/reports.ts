@@ -14,9 +14,9 @@ export const reports: Report[] = [
     location: "Island",
     year: "2010",
     summary:
-      "Reisebericht mit Fokus auf Gewaesser, Technik und besondere Fangerlebnisse.",
+      "Reisebericht mit Fokus auf Gewässer, Technik und besondere Fangerlebnisse.",
     highlights: [
-      "Gletscherfluesse und klare Seen",
+      "Gletscherflüsse und klare Seen",
       "Wurftechnik bei Wind",
       "Material- und Fliegenwahl",
     ],
@@ -27,10 +27,10 @@ export const reports: Report[] = [
     location: "Glarner Alpen",
     year: "2012",
     summary:
-      "Hochalpiner Tagestrip mit Blick auf Wetter, Sicherheit und Gewaesserlesen.",
+      "Hochalpiner Tagestrip mit Blick auf Wetter, Sicherheit und Gewässerlesen.",
     highlights: [
-      "Zustieg und Ausruestung",
-      "Lesen von Standplaetzen",
+      "Zustieg und Ausrüstung",
+      "Lesen von Standplätzen",
       "Schonende Landung",
     ],
   },
@@ -40,9 +40,9 @@ export const reports: Report[] = [
     location: "Limmat",
     year: "2014",
     summary:
-      "Beobachtungen rund um den Fischpass und die Bedeutung von Gewaesserstrukturen.",
+      "Beobachtungen rund um den Fischpass und die Bedeutung von Gewässerstrukturen.",
     highlights: [
-      "Hydraulik und Stroemung",
+      "Hydraulik und Strömung",
       "Spot-Analyse",
       "Schonendes Handling",
     ],

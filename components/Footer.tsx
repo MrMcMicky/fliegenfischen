@@ -17,7 +17,7 @@ export function Footer() {
             </p>
           </div>
           <p className="text-sm text-white/70">
-            Fliegenfischen lernen mit Ruhe, Technik und Blick fuer Details.
+            Fliegenfischen lernen mit Ruhe, Technik und Blick für Details.
           </p>
         </div>
         <div>

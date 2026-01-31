@@ -11,6 +11,10 @@ const variants = {
     "border border-[var(--color-forest)]/20 text-[var(--color-forest)] hover:border-[var(--color-forest)]/40 hover:bg-[var(--color-forest)]/5",
   ghost:
     "text-[var(--color-forest)] hover:text-[var(--color-forest)]/80",
+  light:
+    "border border-white/40 bg-white text-[var(--color-forest)] hover:bg-white/90",
+  ghostLight:
+    "text-white/80 hover:text-white",
 };
 
 const sizes = {

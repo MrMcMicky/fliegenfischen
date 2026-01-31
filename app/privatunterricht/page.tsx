@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/utils";
 
 export const metadata = {
   title: "Privatunterricht",
-  description: "Individuelle Privatstunden fuer Technik und Praxis.",
+  description: "Individuelle Privatstunden für Technik und Praxis.",
 };
 
 export default function PrivatunterrichtPage() {
@@ -20,12 +20,12 @@ export default function PrivatunterrichtPage() {
         <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6">
           <p className="text-sm text-[var(--color-muted)]">
             Wir richten uns nach deinem Niveau: Technikfehler, Wurfvarianten,
-            Praxis am Wasser. Ideal fuer alle, die gezielt Fortschritt wollen.
+            Praxis am Wasser. Ideal für alle, die gezielt Fortschritt wollen.
           </p>
           <ul className="space-y-2 text-sm text-[var(--color-muted)]">
             <li>• Termine unter der Woche nach Vereinbarung</li>
             <li>• Fokus auf individuelle Ziele</li>
-            <li>• Ausruestung kann gestellt werden</li>
+            <li>• Ausrüstung kann gestellt werden</li>
           </ul>
         </div>
         <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">
@@ -40,7 +40,7 @@ export default function PrivatunterrichtPage() {
             {formatPrice(privateLessons.additionalPersonCHF)} / Std.
           </p>
           <div className="mt-6">
-            <Button href="/kontakt" variant="secondary">
+            <Button href="/kontakt" variant="light">
               Termin anfragen
             </Button>
           </div>

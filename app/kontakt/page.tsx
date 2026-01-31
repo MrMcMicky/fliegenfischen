@@ -13,7 +13,7 @@ export default function KontaktPage() {
       <SectionHeader
         eyebrow="Kontakt"
         title="Lass uns deinen Termin planen"
-        description="Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausruestung und Terminen."
+        description="Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausrüstung und Terminen."
       />
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
@@ -31,7 +31,7 @@ export default function KontaktPage() {
             </p>
             <p className="mt-2">
               Kursdetails und genaue Treffpunkte senden wir mit der
-              Bestaetigungsmail.
+              Bestätigungsmail.
             </p>
           </div>
         </div>
@@ -40,7 +40,7 @@ export default function KontaktPage() {
             Anfrage
           </p>
           <p className="mt-3 text-sm text-white/70">
-            Teile uns kurz dein Ziel und moegliche Termine mit. Wir melden uns
+            Teile uns kurz dein Ziel und mögliche Termine mit. Wir melden uns
             innert 48 Stunden.
           </p>
           <div className="mt-6">

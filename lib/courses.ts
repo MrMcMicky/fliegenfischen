@@ -1,7 +1,7 @@
 export type CourseLevel = "Einsteiger" | "Leicht Fortgeschritten" | "Fortgeschritten";
 export type CourseCategory = "Einhand" | "Zweihand" | "Privat" | "Schnuppern";
 
-export type SessionStatus = "verfuegbar" | "ausgebucht" | "abgesagt";
+export type SessionStatus = "verfügbar" | "ausgebucht" | "abgesagt";
 
 export type CourseSession = {
   id: string;
@@ -43,9 +43,9 @@ export const courses: Course[] = [
     title: "Einhand Wurfkurs Fortgeschrittene",
     level: "Fortgeschritten",
     category: "Einhand",
-    summary: "Distanz, Varianten und Kontrolle fuer erfahrene Werfer.",
+    summary: "Distanz, Varianten und Kontrolle für erfahrene Werfer.",
     description:
-      "Tageskurs fuer Fortgeschrittene: Distanz, Varianten, Fehleranalyse und effiziente Schnurkontrolle.",
+      "Tageskurs für Fortgeschrittene: Distanz, Varianten, Fehleranalyse und effiziente Schnurkontrolle.",
     image: {
       src: "/illustrations/course-einhand.svg",
       alt: "Illustration Einhand Fliegenfischen",
@@ -54,7 +54,7 @@ export const courses: Course[] = [
       "Doppelzug und Distanz",
       "Backhand & Side Cast",
       "Rollwurf, Switch Cast",
-      "Trick- und Praezisionswuerfe",
+      "Trick- und Präzisionswürfe",
     ],
     duration: "09:00-16:00",
     priceCHF: 190,
@@ -67,7 +67,7 @@ export const courses: Course[] = [
     includes: [
       "Technik-Coaching in Kleingruppe",
       "Individuelles Feedback",
-      "Optionale Leihrueten",
+      "Optionale Leihruten",
     ],
     prerequisites: [
       "Sicherer Grundwurf",
@@ -79,9 +79,9 @@ export const courses: Course[] = [
     title: "Zweihand Wurfkurs Einsteiger",
     level: "Leicht Fortgeschritten",
     category: "Zweihand",
-    summary: "Schusskopf, Rollwuerfe und erste Spey-Varianten.",
+    summary: "Schusskopf, Rollwürfe und erste Spey-Varianten.",
     description:
-      "Einsteigerkurs fuer Zweihand-Technik mit Fokus auf Schusskopf, Rollwurf und Spey-Varianten.",
+      "Einsteigerkurs für Zweihand-Technik mit Fokus auf Schusskopf, Rollwurf und Spey-Varianten.",
     image: {
       src: "/illustrations/course-zweihand.svg",
       alt: "Illustration Zweihand Fliegenfischen",
@@ -102,7 +102,7 @@ export const courses: Course[] = [
     ],
     includes: [
       "Technik-Coaching in Kleingruppe",
-      "Leihrueten auf Anfrage",
+      "Leihruten auf Anfrage",
       "Praxisnahes Training am Wasser",
     ],
     prerequisites: ["Grundlegende Wurferfahrung hilfreich"],
@@ -119,7 +119,7 @@ export const courseSessions: CourseSession[] = [
     location: "Dietikon/Wettingen an der Limmat",
     priceCHF: 190,
     availableSpots: 6,
-    status: "verfuegbar",
+    status: "verfügbar",
     notes: [
       "Kurs findet bei jeder Witterung statt",
       "Verpflegung und Spesen nicht enthalten",
@@ -134,7 +134,7 @@ export const courseSessions: CourseSession[] = [
     location: "Dietikon/Wettingen an der Limmat",
     priceCHF: 200,
     availableSpots: 6,
-    status: "verfuegbar",
+    status: "verfügbar",
     notes: [
       "Kurs findet bei jeder Witterung statt",
       "Verpflegung und Spesen nicht enthalten",
@@ -150,7 +150,7 @@ export const categorySummaries = [
   },
   {
     title: "Zweihand",
-    description: "Spey, Switch Cast und effiziente Schusskopf-Fuehrung.",
+    description: "Spey, Switch Cast und effiziente Schusskopf-Führung.",
     href: "/kurse",
   },
   {
@@ -185,18 +185,18 @@ export const tasterLessons = {
   minHours: 2,
   additionalPersonCHF: 40,
   description:
-    "Kurzer Einstieg: Grundtechnik, Materialkunde und erste Wuerfe.",
+    "Kurzer Einstieg: Grundtechnik, Materialkunde und erste Würfe.",
 };
 
 export const voucherOptions = [
   {
     title: "Wertgutschein",
-    description: "Frei waehlbarer Betrag, einloesbar fuer alle Kurse.",
+    description: "Frei wählbarer Betrag, einlösbar für alle Kurse.",
     values: [100, 150, 200, 250],
   },
   {
     title: "Kursgutschein",
-    description: "Direkt fuer einen Kurs oder 2h Privatstunde.",
+    description: "Direkt für einen Kurs oder 2h Privatstunde.",
     values: [140, 190, 200],
   },
 ];

@@ -27,12 +27,12 @@ export async function submitContact(
   if (!name || !email || !message) {
     return {
       status: "error",
-      message: "Bitte Name, E-Mail und Nachricht ausfuellen.",
+      message: "Bitte Name, E-Mail und Nachricht ausfüllen.",
     };
   }
 
   if (!emailRegex.test(email)) {
-    return { status: "error", message: "Bitte eine gueltige E-Mail eingeben." };
+    return { status: "error", message: "Bitte eine gültige E-Mail eingeben." };
   }
 
   try {
@@ -43,7 +43,7 @@ export async function submitContact(
     };
   } catch (error) {
     const fallback =
-      "Versand derzeit nicht verfuegbar. Bitte telefonisch oder per Mail melden.";
+      "Versand derzeit nicht verfügbar. Bitte telefonisch oder per Mail melden.";
     if (error instanceof Error && error.message.includes("Missing SMTP")) {
       return { status: "error", message: fallback };
     }

@@ -1,16 +1,16 @@
 export const siteConfig = {
-  name: "Fliegenfischerschule Urs Mueller",
-  tagline: "Fliegenfischen lernen vom Profi in der Region Zuerich",
-  location: "Geroldswil / Limmat, Zuerich",
+  name: "Fliegenfischerschule Urs Müller",
+  tagline: "Fliegenfischen lernen vom Profi in der Region Zürich",
+  location: "Geroldswil / Limmat, Zürich",
   contact: {
-    instructor: "Urs Mueller",
+    instructor: "Urs Müller",
     address: ["Ruggstrasse 36", "CH 8954 Geroldswil"],
     phone: "044 748 17 36",
     mobile: "076 397 84 85",
     email: "info@fliegenfischer-schule.ch",
   },
   socialProof: [
-    "SFV Instruktorenpruefung 2003",
+    "SFV Instruktorenprüfung 2003",
     "EFFA Basic Flycasting Instructor 2004",
   ],
 };
@@ -18,15 +18,15 @@ export const siteConfig = {
 export const uspItems = [
   {
     title: "Kleine Gruppen",
-    description: "Max. 6 Teilnehmende fuer intensive Betreuung.",
+    description: "Max. 6 Teilnehmende für intensive Betreuung.",
   },
   {
     title: "Zertifizierte Ausbildung",
     description: "SFV Instruktor und EFFA Basic Abschluss (2004).",
   },
   {
-    title: "Ausrustung vorhanden",
-    description: "Ruten und Schnuere koennen gestellt werden.",
+    title: "Ausrüstung vorhanden",
+    description: "Ruten und Schnüre können gestellt werden.",
   },
   {
     title: "Region Limmat",
@@ -47,25 +47,25 @@ export const coursePathSteps = [
   },
   {
     step: "Stufe 3",
-    title: "Praezision",
-    detail: "Rollwuerfe, Seitenwuerfe, Distanz.",
+    title: "Präzision",
+    detail: "Rollwürfe, Seitenwürfe, Distanz.",
   },
   {
     step: "Stufe 4",
     title: "Technik vertiefen",
-    detail: "Doppelzug, Spezialwuerfe, Fehleranalyse.",
+    detail: "Doppelzug, Spezialwürfe, Fehleranalyse.",
   },
   {
     step: "Stufe 5",
     title: "Praxis am Wasser",
-    detail: "Lesen des Gewaessers, Insektenkunde, Taktik.",
+    detail: "Lesen des Gewässers, Insektenkunde, Taktik.",
   },
 ];
 
 export const faqs = [
   {
-    question: "Brauche ich eigene Ausruestung?",
-    answer: "Nein. Ruten und Schnuere koennen auf Anfrage gestellt werden.",
+    question: "Brauche ich eigene Ausrüstung?",
+    answer: "Nein. Ruten und Schnüre können auf Anfrage gestellt werden.",
   },
   {
     question: "Findet der Kurs bei schlechtem Wetter statt?",

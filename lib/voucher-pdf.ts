@@ -16,6 +16,8 @@ const COLORS = {
   ember: rgb(232 / 255, 134 / 255, 72 / 255),
   stone: rgb(248 / 255, 247 / 255, 244 / 255),
   muted: rgb(74 / 255, 85 / 255, 104 / 255),
+  paper: rgb(1, 1, 1),
+  line: rgb(226 / 255, 232 / 255, 240 / 255),
 };
 
 const formatCHF = (amount: number) =>
@@ -61,27 +63,53 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-  const margin = 56;
-  const headerHeight = 88;
+  const cardMargin = 24;
+  const headerHeight = 90;
+  const card = {
+    x: cardMargin,
+    y: cardMargin,
+    width: width - cardMargin * 2,
+    height: height - cardMargin * 2,
+  };
+  const margin = card.x + 36;
+  const contentWidth = card.width - 72;
 
   page.drawRectangle({
     x: 0,
-    y: height - headerHeight,
+    y: 0,
     width,
+    height,
+    color: COLORS.stone,
+  });
+
+  page.drawRectangle({
+    x: card.x,
+    y: card.y,
+    width: card.width,
+    height: card.height,
+    color: COLORS.paper,
+    borderColor: COLORS.line,
+    borderWidth: 1,
+  });
+
+  page.drawRectangle({
+    x: card.x,
+    y: card.y + card.height - headerHeight,
+    width: card.width,
     height: headerHeight,
     color: COLORS.forest,
   });
 
   page.drawText("Fliegenfischerschule Urs Müller", {
     x: margin,
-    y: height - 46,
+    y: card.y + card.height - 48,
     font: fontBold,
     size: 18,
     color: rgb(1, 1, 1),
   });
   page.drawText("Geroldswil / Limmat, Zürich", {
     x: margin,
-    y: height - 66,
+    y: card.y + card.height - 68,
     font: fontRegular,
     size: 10,
     color: rgb(1, 1, 1),
@@ -97,8 +125,8 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
     const iconBytes = await fs.readFile(iconPath);
     const iconImage = await pdfDoc.embedPng(iconBytes);
     page.drawImage(iconImage, {
-      x: width - margin - 48,
-      y: height - 72,
+      x: card.x + card.width - 36 - 40,
+      y: card.y + card.height - 74,
       width: 40,
       height: 40,
       opacity: 0.9,
@@ -107,39 +135,58 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
     // Optional icon; ignore if missing.
   }
 
-  let cursorY = height - headerHeight - 42;
+  let cursorY = card.y + card.height - headerHeight - 38;
+  page.drawText("GESCHENKGUTSCHEIN", {
+    x: margin,
+    y: cursorY,
+    font: fontBold,
+    size: 10,
+    color: COLORS.muted,
+  });
+  cursorY -= 24;
   page.drawText("Gutschein", {
     x: margin,
     y: cursorY,
     font: fontBold,
-    size: 34,
+    size: 32,
     color: COLORS.forest,
   });
 
-  cursorY -= 44;
-  page.drawText(`CHF ${formatCHF(input.amountCHF)}`, {
+  cursorY -= 48;
+  const amountBoxHeight = 34;
+  const amountBoxWidth = 170;
+  page.drawRectangle({
     x: margin,
-    y: cursorY,
+    y: cursorY - amountBoxHeight + 6,
+    width: amountBoxWidth,
+    height: amountBoxHeight,
+    color: COLORS.stone,
+    borderColor: COLORS.ember,
+    borderWidth: 1,
+  });
+  page.drawText(`CHF ${formatCHF(input.amountCHF)}`, {
+    x: margin + 12,
+    y: cursorY - amountBoxHeight + 16,
     font: fontBold,
-    size: 28,
+    size: 20,
     color: COLORS.ember,
   });
 
-  cursorY -= 24;
+  cursorY -= 40;
   page.drawLine({
     start: { x: margin, y: cursorY },
-    end: { x: width - margin, y: cursorY },
+    end: { x: margin + contentWidth, y: cursorY },
     thickness: 1,
-    color: COLORS.stone,
+    color: COLORS.line,
   });
 
-  cursorY -= 36;
+  cursorY -= 28;
   page.drawRectangle({
     x: margin,
-    y: cursorY - 48,
-    width: width - margin * 2,
-    height: 56,
-    borderColor: COLORS.forest,
+    y: cursorY - 50,
+    width: contentWidth,
+    height: 60,
+    borderColor: COLORS.line,
     borderWidth: 1,
     color: COLORS.stone,
   });
@@ -153,13 +200,13 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   });
   page.drawText(input.code, {
     x: margin + 16,
-    y: cursorY - 32,
+    y: cursorY - 34,
     font: fontBold,
-    size: 20,
+    size: 22,
     color: COLORS.forest,
   });
 
-  cursorY -= 96;
+  cursorY -= 92;
   const issuedDate = input.issuedAt ? formatDate(input.issuedAt) : formatDate(new Date());
   const recipient = input.recipientName?.trim();
   const purchaser = input.purchaserName?.trim();
@@ -186,7 +233,7 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
     cursorY -= 18;
     const lines = wrapText(
       input.message,
-      width - margin * 2,
+      contentWidth,
       fontRegular,
       11
     );
@@ -202,6 +249,15 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
     }
     cursorY -= 6;
   }
+
+  page.drawText("Hinweise:", {
+    x: margin,
+    y: cursorY,
+    font: fontBold,
+    size: 11,
+    color: COLORS.muted,
+  });
+  cursorY -= 18;
 
   const metaLines = [
     purchaser ? `Ausgestellt für: ${purchaser}` : null,
@@ -221,16 +277,23 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
     cursorY -= 14;
   }
 
+  page.drawLine({
+    start: { x: margin, y: card.y + 58 },
+    end: { x: margin + contentWidth, y: card.y + 58 },
+    thickness: 1,
+    color: COLORS.line,
+  });
+
   page.drawText("fliegenfischer-schule.shop", {
     x: margin,
-    y: 36,
+    y: card.y + 36,
     font: fontBold,
     size: 10,
     color: COLORS.forest,
   });
-  page.drawText("info@fliegenfischer-schule.ch", {
+  page.drawText("info@fliegenfischer-schule.shop", {
     x: margin,
-    y: 20,
+    y: card.y + 20,
     font: fontRegular,
     size: 9,
     color: COLORS.muted,

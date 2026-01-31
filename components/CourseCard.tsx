@@ -39,21 +39,17 @@ export function CourseCard({
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
       {hasImage ? (
-        <div
-          className={`mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] ${
-            isSvg ? "p-3" : "overflow-hidden"
-          }`}
-        >
+        <div className="-mx-6 -mt-6 mb-4 overflow-hidden rounded-t-xl border-b border-[var(--color-border)] bg-[var(--color-stone)]">
           <Image
             src={course.imageSrc as string}
             alt={course.imageAlt || course.title}
-            width={520}
-            height={240}
-            className={`w-full ${isSvg ? "h-24 object-contain" : "h-28 object-cover"}`}
+            width={640}
+            height={360}
+            className={`h-48 w-full ${isSvg ? "object-contain" : "object-cover"}`}
           />
         </div>
       ) : (
-        <div className="mb-4 flex h-28 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[#E8F0F0] text-[var(--color-forest)]/70">
+        <div className="-mx-6 -mt-6 mb-4 flex h-48 items-center justify-center rounded-t-xl border-b border-[var(--color-border)] bg-[#E8F0F0] text-[var(--color-forest)]/70">
           <Fish size={28} aria-hidden="true" />
         </div>
       )}

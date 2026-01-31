@@ -32,8 +32,8 @@ export function HeroSection({
         >
           <source src="/videos/hero-fliegenfischer.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/45" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-[var(--color-stone)]" />
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-[var(--color-stone)]" />
       </div>
       <div className="mx-auto w-full max-w-5xl px-4 text-center text-white">
         {nextSession ? (
@@ -44,10 +44,10 @@ export function HeroSection({
         ) : (
           <p className={pillClass}>Termine auf Anfrage</p>
         )}
-        <h1 className="mt-6 font-display text-4xl font-semibold sm:text-5xl lg:text-6xl">
+        <h1 className="mt-6 font-display text-4xl font-semibold drop-shadow-md sm:text-5xl lg:text-6xl">
           {hero.title}
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-base text-white/80 sm:text-lg">
+        <p className="mx-auto mt-4 max-w-2xl text-base text-white/85 drop-shadow-md sm:text-lg">
           {hero.description}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">

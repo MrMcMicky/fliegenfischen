@@ -32,25 +32,21 @@ export function CourseGrid({
         >
           {session.course ? (
             session.course.imageSrc ? (
-              <div
-                className={`mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] ${
-                  session.course.imageSrc.endsWith(".svg") ? "p-3" : "overflow-hidden"
-                }`}
-              >
+              <div className="-mx-6 -mt-6 mb-4 overflow-hidden rounded-t-xl border-b border-[var(--color-border)] bg-[var(--color-stone)]">
                 <Image
                   src={session.course.imageSrc}
                   alt={session.course.imageAlt || session.course.title}
-                  width={520}
-                  height={240}
-                  className={`w-full ${
+                  width={640}
+                  height={360}
+                  className={`h-48 w-full ${
                     session.course.imageSrc.endsWith(".svg")
-                      ? "h-20 object-contain"
-                      : "h-24 object-cover"
+                      ? "object-contain"
+                      : "object-cover"
                   }`}
                 />
               </div>
             ) : (
-              <div className="mb-4 flex h-24 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[#E8F0F0] text-[var(--color-forest)]/70">
+              <div className="-mx-6 -mt-6 mb-4 flex h-48 items-center justify-center rounded-t-xl border-b border-[var(--color-border)] bg-[#E8F0F0] text-[var(--color-forest)]/70">
                 <Fish size={24} aria-hidden="true" />
               </div>
             )

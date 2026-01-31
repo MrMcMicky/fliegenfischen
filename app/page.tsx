@@ -149,7 +149,7 @@ export default async function Home() {
 
       <section id="ueber" className="mx-auto w-full max-w-5xl px-4 py-10">
         <SectionHeader
-          eyebrow="Ueber uns"
+          eyebrow="Über uns"
           title={aboutSection.title}
           description={aboutSection.description}
         />
@@ -168,7 +168,7 @@ export default async function Home() {
         </div>
         <div className="mt-6">
           <Button href="/ueber-uns" variant="secondary" size="sm">
-            Mehr ueber uns
+            Mehr über uns
           </Button>
         </div>
       </section>

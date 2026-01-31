@@ -3,8 +3,8 @@ import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
 
 export const metadata = {
-  title: "Ueber uns",
-  description: "Ueber die Fliegenfischerschule, Philosophie und Instruktor.",
+  title: "Über uns",
+  description: "Über die Fliegenfischerschule, Philosophie und Instruktor.",
 };
 
 export const dynamic = "force-dynamic";
@@ -38,7 +38,7 @@ export default async function UeberUnsPage() {
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
-        eyebrow="Ueber uns"
+        eyebrow="Über uns"
         title={aboutPage.title}
         description={aboutPage.intro}
       />

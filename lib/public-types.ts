@@ -1,6 +1,6 @@
 export type CourseLevelLabel = "Einsteiger" | "Leicht Fortgeschritten" | "Fortgeschritten";
 export type CourseCategoryLabel = "Einhand" | "Zweihand" | "Privat" | "Schnuppern";
-export type SessionStatusLabel = "verfuegbar" | "ausgebucht" | "abgesagt";
+export type SessionStatusLabel = "verfügbar" | "ausgebucht" | "abgesagt";
 
 export const courseLevelLabels: Record<string, CourseLevelLabel> = {
   EINSTEIGER: "Einsteiger",
@@ -16,7 +16,7 @@ export const courseCategoryLabels: Record<string, CourseCategoryLabel> = {
 };
 
 export const sessionStatusLabels: Record<string, SessionStatusLabel> = {
-  VERFUEGBAR: "verfuegbar",
+  VERFUEGBAR: "verfügbar",
   AUSGEBUCHT: "ausgebucht",
   ABGESAGT: "abgesagt",
 };

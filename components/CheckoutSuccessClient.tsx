@@ -45,7 +45,7 @@ export function CheckoutSuccessClient({ bookingId }: { bookingId: string }) {
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
       <p className="font-semibold text-[var(--color-text)]">Status</p>
-      <p>{status === "paid" ? "Bezahlt" : "Zahlung wird bestaetigt"}</p>
+      <p>{status === "paid" ? "Bezahlt" : "Zahlung wird bestätigt"}</p>
       {voucherCode ? (
         <div className="mt-4">
           <p className="font-semibold text-[var(--color-text)]">Gutschein-Code</p>

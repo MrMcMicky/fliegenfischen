@@ -20,11 +20,11 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "Fliegenfischerschule Urs Mueller",
-    template: "%s | Fliegenfischerschule Urs Mueller",
+    default: "Fliegenfischerschule Urs Müller",
+    template: "%s | Fliegenfischerschule Urs Müller",
   },
   description:
-    "Fliegenfischen lernen in der Region Zuerich: Einhand- und Zweihandkurse, Privatunterricht, Schnupperstunden und Gutscheine.",
+    "Fliegenfischen lernen in der Region Zürich: Einhand- und Zweihandkurse, Privatunterricht, Schnupperstunden und Gutscheine.",
 };
 
 export default async function RootLayout({

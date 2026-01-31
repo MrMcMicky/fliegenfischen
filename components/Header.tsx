@@ -47,7 +47,7 @@ export function Header({
           </div>
           <button
             type="button"
-            aria-label={open ? "Menue schliessen" : "Menue oeffnen"}
+            aria-label={open ? "Menü schließen" : "Menü öffnen"}
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
             className="inline-flex items-center justify-center rounded-full border border-[var(--color-border)] bg-white/80 p-2 text-[var(--color-text)] transition hover:bg-white lg:hidden"

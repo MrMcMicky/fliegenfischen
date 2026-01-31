@@ -106,7 +106,7 @@ export default async function AdminReportEditPage({
             Speichern
           </button>
           <button formAction={deleteReport} className="rounded-full border border-red-300 px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-red-600">
-            Loeschen
+            Löschen
           </button>
         </div>
       </form>

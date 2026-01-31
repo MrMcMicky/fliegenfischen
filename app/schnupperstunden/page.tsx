@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/format";
 
 export const metadata = {
   title: "Schnupperstunden",
-  description: "Schnupperstunden fuer den ersten Einstieg ins Fliegenfischen.",
+  description: "Schnupperstunden für den ersten Einstieg ins Fliegenfischen.",
 };
 
 export const dynamic = "force-dynamic";
@@ -36,7 +36,7 @@ export default async function SchnupperstundenPage() {
         <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6">
           <p className="text-sm text-[var(--color-muted)]">
             In zwei Stunden lernst du die Grundtechnik, das Material und die
-            wichtigsten Sicherheitsregeln. Ideal fuer Einsteiger und Geschenke.
+            wichtigsten Sicherheitsregeln. Ideal für Einsteiger und Geschenke.
           </p>
           <ul className="space-y-2 text-sm text-[var(--color-muted)]">
             {lesson.bullets.map((bullet) => (

@@ -5,7 +5,7 @@ import { prisma } from "@/lib/db";
 
 export const metadata = {
   title: "Zahlung erfolgreich",
-  description: "Vielen Dank fuer deine Buchung.",
+  description: "Vielen Dank für deine Buchung.",
 };
 
 export const dynamic = "force-dynamic";
@@ -29,7 +29,7 @@ export default async function CheckoutSuccessPage({
         Danke! Zahlung erfolgreich.
       </h1>
       <p className="text-sm text-[var(--color-muted)]">
-        Du erhaeltst in Kuerze eine Bestaetigung per E-Mail.
+        Du erhältst in Kürze eine Bestätigung per E-Mail.
       </p>
       {bookingId ? <CheckoutSuccessClient bookingId={bookingId} /> : null}
       {booking?.voucher ? (

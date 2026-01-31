@@ -19,7 +19,7 @@ export default function CheckoutCancelPage() {
         href="/kurse"
         className="inline-flex items-center justify-center rounded-full border border-[var(--color-forest)]/30 px-5 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)]"
       >
-        Zurueck zu den Kursen
+        Zurück zu den Kursen
       </Link>
     </div>
   );

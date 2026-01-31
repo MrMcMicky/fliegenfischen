@@ -93,7 +93,7 @@ export default async function CourseDetailPage({
           </div>
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-              Ausruestung
+              Ausrüstung
             </p>
             <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
               {course.equipment.map((item) => (
@@ -178,7 +178,7 @@ export default async function CourseDetailPage({
               </div>
             ) : (
               <p className="mt-4 text-sm text-[var(--color-muted)]">
-                Termine auf Anfrage. Melde dich fuer den naechsten Kurs.
+                Termine auf Anfrage. Melde dich für den nächsten Kurs.
               </p>
             )}
           </div>

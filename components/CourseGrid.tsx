@@ -58,7 +58,7 @@ export function CourseGrid({
             </p>
           ) : null}
           <p className="mt-2 text-xs text-[var(--color-forest)]/60">
-            Noch {session.availableSpots} Plaetze
+            Noch {session.availableSpots} Plätze
           </p>
           <div className="mt-6">
             <Link

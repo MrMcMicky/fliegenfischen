@@ -22,10 +22,10 @@ export default async function BookingSuccessPage({
   return (
     <div className="mx-auto w-full max-w-3xl space-y-6 px-4 pb-20 pt-16">
       <h1 className="font-display text-3xl font-semibold">
-        Danke fuer deine Anfrage!
+        Danke für deine Anfrage!
       </h1>
       <p className="text-sm text-[var(--color-muted)]">
-        Wir senden dir in Kuerze die Rechnung und alle Details per E-Mail.
+        Wir senden dir in Kürze die Rechnung und alle Details per E-Mail.
       </p>
       {booking ? (
         <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">

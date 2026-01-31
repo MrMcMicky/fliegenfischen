@@ -199,7 +199,7 @@ export function BookingForm({ type, session, lesson, voucherOption }: BookingFor
               />
             </div>
             <div className="text-sm text-[var(--color-muted)]">
-              Noch {session.availableSpots} Plaetze
+              Noch {session.availableSpots} Plätze
             </div>
           </div>
         </div>
@@ -264,7 +264,7 @@ export function BookingForm({ type, session, lesson, voucherOption }: BookingFor
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-                Empfaenger (optional)
+                Empfänger (optional)
               </label>
               <input
                 value={voucherRecipient}

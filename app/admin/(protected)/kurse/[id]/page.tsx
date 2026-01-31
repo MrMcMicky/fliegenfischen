@@ -109,7 +109,7 @@ export default async function AdminCourseEditPage({
           <input name="imageAlt" defaultValue={course.imageAlt || ""} placeholder="Bild Alt Text" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
         </div>
         <textarea name="highlights" defaultValue={course.highlights.join("\n")} placeholder="Highlights" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="equipment" defaultValue={course.equipment.join("\n")} placeholder="Ausruestung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
+        <textarea name="equipment" defaultValue={course.equipment.join("\n")} placeholder="Ausrüstung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="includes" defaultValue={course.includes.join("\n")} placeholder="Inklusive" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="prerequisites" defaultValue={course.prerequisites.join("\n")} placeholder="Voraussetzungen" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <div className="flex flex-wrap gap-3">
@@ -123,7 +123,7 @@ export default async function AdminCourseEditPage({
             formAction={deleteCourse}
             className="rounded-full border border-red-300 px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-red-600"
           >
-            Loeschen
+            Löschen
           </button>
         </div>
       </form>

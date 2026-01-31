@@ -95,7 +95,7 @@ export default function AdminCourseNewPage() {
           <input name="imageAlt" placeholder="Bild Alt Text" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
         </div>
         <textarea name="highlights" placeholder="Highlights (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="equipment" placeholder="Ausruestung (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
+        <textarea name="equipment" placeholder="Ausrüstung (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="includes" placeholder="Inklusive (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="prerequisites" placeholder="Voraussetzungen (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <button

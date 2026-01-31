@@ -66,9 +66,9 @@ export default async function AdminTermineNewPage() {
           <input name="startTime" placeholder="Startzeit" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
           <input name="endTime" placeholder="Endzeit" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
           <input name="priceCHF" type="number" placeholder="Preis CHF" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="availableSpots" type="number" placeholder="Plaetze" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
+          <input name="availableSpots" type="number" placeholder="Plätze" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
           <select name="status" className="rounded-lg border border-[var(--color-border)] px-3 py-2">
-            <option value="VERFUEGBAR">Verfuegbar</option>
+            <option value="VERFUEGBAR">Verfügbar</option>
             <option value="AUSGEBUCHT">Ausgebucht</option>
             <option value="ABGESAGT">Abgesagt</option>
           </select>

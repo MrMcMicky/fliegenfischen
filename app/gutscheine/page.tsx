@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/format";
 
 export const metadata = {
   title: "Gutscheine",
-  description: "Wert- und Kursgutscheine fuer Fliegenfischerkurse.",
+  description: "Wert- und Kursgutscheine für Fliegenfischerkurse.",
 };
 
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ export default async function GutscheinePage() {
       <SectionHeader
         eyebrow="Gutscheine"
         title="Geschenk mit Erlebnis"
-        description="Ob Wertgutschein oder konkreter Kurs: Gutscheine sind unbefristet gueltig und perfekt fuer Einsteiger wie Fortgeschrittene."
+        description="Ob Wertgutschein oder konkreter Kurs: Gutscheine sind unbefristet gültig und perfekt für Einsteiger wie Fortgeschrittene."
       />
       <div className="grid gap-6 lg:grid-cols-2">
         {voucherOptions.map((option) => (
@@ -57,7 +57,7 @@ export default async function GutscheinePage() {
           Wunschtext & Versand
         </h3>
         <p className="mt-3 text-sm text-white/70">
-          Wir erstellen den Gutschein als PDF mit persoenlicher Widmung. Versand
+          Wir erstellen den Gutschein als PDF mit persönlicher Widmung. Versand
           per Mail oder auf Wunsch gedruckt.
         </p>
         <div className="mt-6">

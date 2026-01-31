@@ -1,9 +1,9 @@
 export const defaultSiteSettings = {
-  name: "Fliegenfischerschule Urs Mueller",
-  tagline: "Fliegenfischen lernen vom Profi in der Region Zuerich",
-  location: "Geroldswil / Limmat, Zuerich",
+  name: "Fliegenfischerschule Urs Müller",
+  tagline: "Fliegenfischen lernen vom Profi in der Region Zürich",
+  location: "Geroldswil / Limmat, Zürich",
   contact: {
-    instructor: "Urs Mueller",
+    instructor: "Urs Müller",
     address: ["Ruggstrasse 36", "CH 8954 Geroldswil"],
     phone: "044 748 17 36",
     mobile: "076 397 84 85",
@@ -12,7 +12,7 @@ export const defaultSiteSettings = {
   navLinks: [
     { label: "Kurse", href: "/kurse" },
     { label: "Privat", href: "/privatunterricht" },
-    { label: "Ueber uns", href: "/ueber-uns" },
+    { label: "Über uns", href: "/ueber-uns" },
     { label: "Kontakt", href: "/kontakt" },
   ],
   categorySummaries: [
@@ -23,7 +23,7 @@ export const defaultSiteSettings = {
     },
     {
       title: "Zweihand",
-      description: "Spey, Switch Cast und effiziente Schusskopf-Fuehrung.",
+      description: "Spey, Switch Cast und effiziente Schusskopf-Führung.",
       href: "/kurse",
     },
     {
@@ -44,14 +44,14 @@ export const defaultSiteSettings = {
   ],
   footerLinks: {
     offer: [
-      { label: "Kursuebersicht", href: "/kurse" },
+      { label: "Kursübersicht", href: "/kurse" },
       { label: "Termine", href: "/kurse/termine" },
       { label: "Schnupperstunden", href: "/schnupperstunden" },
       { label: "Privatunterricht", href: "/privatunterricht" },
       { label: "Gutscheine", href: "/gutscheine" },
     ],
     resources: [
-      { label: "Ueber uns", href: "/ueber-uns" },
+      { label: "Über uns", href: "/ueber-uns" },
       { label: "Berichte", href: "/berichte" },
       { label: "FAQ", href: "/#faq" },
       { label: "Wetter", href: "/wetter" },
@@ -60,36 +60,36 @@ export const defaultSiteSettings = {
   },
   homeHero: {
     eyebrow: "Fliegenfischerschule",
-    title: "Fliegenfischen in der Region Zuerich - ruhig, praezise, draussen.",
+    title: "Fliegenfischen in der Region Zürich - ruhig, präzise, draussen.",
     description:
       "Kleine Gruppen, klare Lernschritte und ein Instruktor mit SFV- und EFFA-Hintergrund.",
     primaryCta: { label: "Termin sichern", href: "/kurse/termine" },
     secondaryCta: { label: "Kurse ansehen", href: "/kurse" },
   },
   aboutSection: {
-    title: "Ueber Urs Mueller",
+    title: "Über Urs Müller",
     description:
       "SFV Instruktor (2003) und EFFA Basic Flycasting Instructor (2004). Fokus auf Technik, Sicherheit und Praxis.",
     highlights: [
-      "SFV Instruktorenpruefung 2003",
+      "SFV Instruktorenprüfung 2003",
       "EFFA Basic Flycasting Instructor 2004",
     ],
-    note: "Treffpunkte entlang der Limmat, Kursmaterial auf Wunsch, klare Ablaeufe.",
+    note: "Treffpunkte entlang der Limmat, Kursmaterial auf Wunsch, klare Abläufe.",
   },
   aboutPage: {
-    title: "Ueber Urs Mueller",
+    title: "Über Urs Müller",
     intro:
-      "Fliegenfischen lebt von Geduld, Technik und einem wachen Blick fuers Wasser. Genau darauf basiert der Unterricht: ruhig, strukturiert und praxisnah.",
+      "Fliegenfischen lebt von Geduld, Technik und einem wachen Blick fürs Wasser. Genau darauf basiert der Unterricht: ruhig, strukturiert und praxisnah.",
     bio:
-      "Urs Mueller unterrichtet seit vielen Jahren in der Region Zuerich und kombiniert klare Technikvermittlung mit realen Situationen am Gewaesser.",
+      "Urs Müller unterrichtet seit vielen Jahren in der Region Zürich und kombiniert klare Technikvermittlung mit realen Situationen am Gewässer.",
     highlights: [
-      "SFV Instruktorenpruefung 2003",
+      "SFV Instruktorenprüfung 2003",
       "EFFA Basic Flycasting Instructor 2004",
     ],
     values: [
-      "Kleine Gruppen fuer intensives Feedback",
+      "Kleine Gruppen für intensives Feedback",
       "Praxis am Wasser statt nur Theorie",
-      "Klare Ablaufe, nachvollziehbare Fortschritte",
+      "Klare Abläufe, nachvollziehbare Fortschritte",
     ],
     cta: {
       title: "Lust auf einen Kennenlern-Termin?",
@@ -102,15 +102,15 @@ export const defaultSiteSettings = {
   homeSections: {
     upcoming: {
       eyebrow: "Termine",
-      title: "Naechste Kurse",
+      title: "Nächste Kurse",
       description:
-        "Frueh buchen lohnt sich: Die Gruppen bleiben klein und die Plaetze sind limitiert.",
+        "Früh buchen lohnt sich: Die Gruppen bleiben klein und die Plätze sind limitiert.",
     },
     formats: {
       eyebrow: "Angebot",
-      title: "Kursformate fuer jedes Level",
+      title: "Kursformate für jedes Level",
       description:
-        "Einhand oder Zweihand, Privat oder Schnuppern: Technik Schritt fuer Schritt aufbauen.",
+        "Einhand oder Zweihand, Privat oder Schnuppern: Technik Schritt für Schritt aufbauen.",
     },
     timeline: {
       eyebrow: "Lernpfad",
@@ -122,15 +122,15 @@ export const defaultSiteSettings = {
       eyebrow: "Wissen",
       title: "Berichte und Einblicke",
       description:
-        "Reiseberichte und Gewaesser-Notizen aus der Praxis. Ideal fuer Inspiration.",
+        "Reiseberichte und Gewässer-Notizen aus der Praxis. Ideal für Inspiration.",
     },
     faq: {
       eyebrow: "FAQ",
-      title: "Haefige Fragen",
-      description: "Kurz und klar beantwortet. Fuer Details gerne direkt melden.",
+      title: "Häufige Fragen",
+      description: "Kurz und klar beantwortet. Für Details gerne direkt melden.",
     },
     cta: {
-      title: "Bereit fuer den naechsten Schritt?",
+      title: "Bereit für den nächsten Schritt?",
       description:
         "Sichere dir einen Platz oder verschenke einen Gutschein. Wir melden uns mit allen Details.",
       note: "Schnupperstunden ab CHF 70 / Std., Privatunterricht flexibel.",
@@ -145,15 +145,15 @@ export const defaultSiteSettings = {
   uspItems: [
     {
       title: "Kleine Gruppen",
-      description: "Max. 6 Teilnehmende fuer intensive Betreuung.",
+      description: "Max. 6 Teilnehmende für intensive Betreuung.",
     },
     {
       title: "Zertifizierte Ausbildung",
       description: "SFV Instruktor und EFFA Basic Abschluss (2004).",
     },
     {
-      title: "Ausrustung vorhanden",
-      description: "Ruten und Schnuere koennen gestellt werden.",
+      title: "Ausrüstung vorhanden",
+      description: "Ruten und Schnüre können gestellt werden.",
     },
     {
       title: "Region Limmat",
@@ -162,8 +162,8 @@ export const defaultSiteSettings = {
   ],
   faqs: [
     {
-      question: "Brauche ich eigene Ausruestung?",
-      answer: "Nein. Ruten und Schnuere koennen auf Anfrage gestellt werden.",
+      question: "Brauche ich eigene Ausrüstung?",
+      answer: "Nein. Ruten und Schnüre können auf Anfrage gestellt werden.",
     },
     {
       question: "Findet der Kurs bei schlechtem Wetter statt?",
@@ -177,12 +177,12 @@ export const defaultSiteSettings = {
   testimonials: [
     {
       quote:
-        "Nach zwei Stunden sass der Doppelzug endlich. Sehr praezise Korrekturen.",
+        "Nach zwei Stunden sass der Doppelzug endlich. Sehr präzise Korrekturen.",
       author: "Teilnehmer Einhandkurs",
     },
     {
       quote:
-        "Schnupperstunde gebucht und sofort Lust auf mehr. Ruhige Erklaerungen und viel Geduld.",
+        "Schnupperstunde gebucht und sofort Lust auf mehr. Ruhige Erklärungen und viel Geduld.",
       author: "Teilnehmerin Schnupperstunde",
     },
     {
@@ -193,9 +193,9 @@ export const defaultSiteSettings = {
   ],
   testimonialSection: {
     eyebrow: "Erfolge",
-    title: "Klarer Aufbau, spuerbarer Fortschritt.",
+    title: "Klarer Aufbau, spürbarer Fortschritt.",
     description:
-      "Kleine Gruppen sorgen dafuer, dass jeder Wurf gesehen wird. Das Ziel: Technik, die auch am Wasser funktioniert.",
+      "Kleine Gruppen sorgen dafür, dass jeder Wurf gesehen wird. Das Ziel: Technik, die auch am Wasser funktioniert.",
   },
   coursePathSteps: [
     {
@@ -210,18 +210,18 @@ export const defaultSiteSettings = {
     },
     {
       step: "Stufe 3",
-      title: "Praezision",
-      detail: "Rollwuerfe, Seitenwuerfe, Distanz.",
+      title: "Präzision",
+      detail: "Rollwürfe, Seitenwürfe, Distanz.",
     },
     {
       step: "Stufe 4",
       title: "Technik vertiefen",
-      detail: "Doppelzug, Spezialwuerfe, Fehleranalyse.",
+      detail: "Doppelzug, Spezialwürfe, Fehleranalyse.",
     },
     {
       step: "Stufe 5",
       title: "Praxis am Wasser",
-      detail: "Lesen des Gewaessers, Insektenkunde, Taktik.",
+      detail: "Lesen des Gewässers, Insektenkunde, Taktik.",
     },
   ],
 };
@@ -232,16 +232,16 @@ export const defaultCourses = [
     title: "Einhand Wurfkurs Fortgeschrittene",
     level: "FORTGESCHRITTEN" as const,
     category: "EINHAND" as const,
-    summary: "Distanz, Varianten und Kontrolle fuer erfahrene Werfer.",
+    summary: "Distanz, Varianten und Kontrolle für erfahrene Werfer.",
     description:
-      "Tageskurs fuer Fortgeschrittene: Distanz, Varianten, Fehleranalyse und effiziente Schnurkontrolle.",
+      "Tageskurs für Fortgeschrittene: Distanz, Varianten, Fehleranalyse und effiziente Schnurkontrolle.",
     imageSrc: "/illustrations/course-einhand.svg",
     imageAlt: "Illustration Einhand Fliegenfischen",
     highlights: [
       "Doppelzug und Distanz",
       "Backhand & Side Cast",
       "Rollwurf, Switch Cast",
-      "Trick- und Praezisionswuerfe",
+      "Trick- und Präzisionswürfe",
     ],
     duration: "09:00-16:00",
     priceCHF: 190,
@@ -254,7 +254,7 @@ export const defaultCourses = [
     includes: [
       "Technik-Coaching in Kleingruppe",
       "Individuelles Feedback",
-      "Optionale Leihrueten",
+      "Optionale Leihruten",
     ],
     prerequisites: ["Sicherer Grundwurf", "Grundlegende Schnurkontrolle"],
   },
@@ -263,9 +263,9 @@ export const defaultCourses = [
     title: "Zweihand Wurfkurs Einsteiger",
     level: "LEICHT_FORTGESCHRITTEN" as const,
     category: "ZWEIHAND" as const,
-    summary: "Schusskopf, Rollwuerfe und erste Spey-Varianten.",
+    summary: "Schusskopf, Rollwürfe und erste Spey-Varianten.",
     description:
-      "Einsteigerkurs fuer Zweihand-Technik mit Fokus auf Schusskopf, Rollwurf und Spey-Varianten.",
+      "Einsteigerkurs für Zweihand-Technik mit Fokus auf Schusskopf, Rollwurf und Spey-Varianten.",
     imageSrc: "/illustrations/course-zweihand.svg",
     imageAlt: "Illustration Zweihand Fliegenfischen",
     highlights: [
@@ -284,7 +284,7 @@ export const defaultCourses = [
     ],
     includes: [
       "Technik-Coaching in Kleingruppe",
-      "Leihrueten auf Anfrage",
+      "Leihruten auf Anfrage",
       "Praxisnahes Training am Wasser",
     ],
     prerequisites: ["Grundlegende Wurferfahrung hilfreich"],
@@ -334,7 +334,7 @@ export const defaultLessonOfferings = [
     bullets: [
       "Termine unter der Woche nach Vereinbarung",
       "Fokus auf individuelle Ziele",
-      "Ausrustung kann gestellt werden",
+      "Ausrüstung kann gestellt werden",
     ],
   },
   {
@@ -344,10 +344,10 @@ export const defaultLessonOfferings = [
     minHours: 2,
     additionalPersonCHF: 40,
     description:
-      "Kurzer Einstieg: Grundtechnik, Materialkunde und erste Wuerfe.",
+      "Kurzer Einstieg: Grundtechnik, Materialkunde und erste Würfe.",
     bullets: [
       "Termine unter der Woche nach Vereinbarung",
-      "Ausrustung kann gestellt werden",
+      "Ausrüstung kann gestellt werden",
       "Kleingruppe oder privat",
     ],
   },
@@ -356,13 +356,13 @@ export const defaultLessonOfferings = [
 export const defaultVoucherOptions = [
   {
     title: "Wertgutschein",
-    description: "Frei waehlbarer Betrag, einloesbar fuer alle Kurse.",
+    description: "Frei wählbarer Betrag, einlösbar für alle Kurse.",
     kind: "VALUE" as const,
     values: [100, 150, 200, 250],
   },
   {
     title: "Kursgutschein",
-    description: "Direkt fuer einen Kurs oder 2h Privatstunde.",
+    description: "Direkt für einen Kurs oder 2h Privatstunde.",
     kind: "COURSE" as const,
     values: [140, 190, 200],
   },
@@ -375,14 +375,14 @@ export const defaultReports = [
     location: "Island",
     year: "2010",
     summary:
-      "Reisebericht mit Fokus auf Gewaesser, Technik und besondere Fangerlebnisse.",
+      "Reisebericht mit Fokus auf Gewässer, Technik und besondere Fangerlebnisse.",
     highlights: [
-      "Gletscherfluesse und klare Seen",
+      "Gletscherflüsse und klare Seen",
       "Wurftechnik bei Wind",
       "Material- und Fliegenwahl",
     ],
     body:
-      "Dieser Bericht wird im Relaunch aus dem bestehenden Material neu aufbereitet. Ziel ist eine klare Struktur, groessere Bilder und eine bessere Lesbarkeit auf Mobilgeraeten.",
+      "Dieser Bericht wird im Relaunch aus dem bestehenden Material neu aufbereitet. Ziel ist eine klare Struktur, grössere Bilder und eine bessere Lesbarkeit auf Mobilgeräten.",
   },
   {
     slug: "murgsee",
@@ -390,14 +390,14 @@ export const defaultReports = [
     location: "Glarner Alpen",
     year: "2012",
     summary:
-      "Hochalpiner Tagestrip mit Blick auf Wetter, Sicherheit und Gewaesserlesen.",
+      "Hochalpiner Tagestrip mit Blick auf Wetter, Sicherheit und Gewässerlesen.",
     highlights: [
-      "Zustieg und Ausruestung",
-      "Lesen von Standplaetzen",
+      "Zustieg und Ausrüstung",
+      "Lesen von Standplätzen",
       "Schonende Landung",
     ],
     body:
-      "Dieser Bericht wird im Relaunch aus dem bestehenden Material neu aufbereitet. Ziel ist eine klare Struktur, groessere Bilder und eine bessere Lesbarkeit auf Mobilgeraeten.",
+      "Dieser Bericht wird im Relaunch aus dem bestehenden Material neu aufbereitet. Ziel ist eine klare Struktur, grössere Bilder und eine bessere Lesbarkeit auf Mobilgeräten.",
   },
   {
     slug: "fischpass-wettingen",
@@ -405,13 +405,13 @@ export const defaultReports = [
     location: "Limmat",
     year: "2014",
     summary:
-      "Beobachtungen rund um den Fischpass und die Bedeutung von Gewaesserstrukturen.",
+      "Beobachtungen rund um den Fischpass und die Bedeutung von Gewässerstrukturen.",
     highlights: [
-      "Hydraulik und Stroemung",
+      "Hydraulik und Strömung",
       "Spot-Analyse",
       "Schonendes Handling",
     ],
     body:
-      "Dieser Bericht wird im Relaunch aus dem bestehenden Material neu aufbereitet. Ziel ist eine klare Struktur, groessere Bilder und eine bessere Lesbarkeit auf Mobilgeraeten.",
+      "Dieser Bericht wird im Relaunch aus dem bestehenden Material neu aufbereitet. Ziel ist eine klare Struktur, grössere Bilder und eine bessere Lesbarkeit auf Mobilgeräten.",
   },
 ];

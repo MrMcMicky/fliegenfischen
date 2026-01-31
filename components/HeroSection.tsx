@@ -38,7 +38,7 @@ export function HeroSection({
             href="/kurse/termine"
             className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--color-ember)]"
           >
-            Naechster Kurs · {formatDate(nextSession.date)}
+            Nächster Kurs · {formatDate(nextSession.date)}
           </Link>
         ) : (
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--color-ember)]">

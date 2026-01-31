@@ -51,7 +51,7 @@ export default async function AdminSettingsPage() {
       <div>
         <h2 className="font-display text-2xl font-semibold">Einstellungen</h2>
         <p className="text-sm text-[var(--color-muted)]">
-          JSON-Inhalte fuer Navigation und Inhalte.
+          JSON-Inhalte für Navigation und Inhalte.
         </p>
       </div>
       <form action={updateSettings} className="space-y-6">

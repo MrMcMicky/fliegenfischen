@@ -117,7 +117,7 @@ export default async function AdminTerminEditPage({
             name="availableSpots"
             type="number"
             defaultValue={session.availableSpots}
-            placeholder="Plaetze"
+            placeholder="Plätze"
             className="rounded-lg border border-[var(--color-border)] px-3 py-2"
           />
           <select
@@ -125,7 +125,7 @@ export default async function AdminTerminEditPage({
             defaultValue={session.status}
             className="rounded-lg border border-[var(--color-border)] px-3 py-2"
           >
-            <option value="VERFUEGBAR">Verfuegbar</option>
+            <option value="VERFUEGBAR">Verfügbar</option>
             <option value="AUSGEBUCHT">Ausgebucht</option>
             <option value="ABGESAGT">Abgesagt</option>
           </select>
@@ -147,7 +147,7 @@ export default async function AdminTerminEditPage({
             formAction={deleteSession}
             className="rounded-full border border-red-300 px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-red-600"
           >
-            Loeschen
+            Löschen
           </button>
         </div>
       </form>

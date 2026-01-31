@@ -5,7 +5,7 @@ import { prisma } from "@/lib/db";
 
 export const metadata = {
   title: "Wissen & Berichte",
-  description: "Reiseberichte, Gewaesser und Praxistipps aus der Region.",
+  description: "Reiseberichte, Gewässer und Praxistipps aus der Region.",
 };
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,7 @@ export default async function BerichtePage() {
       <SectionHeader
         eyebrow="Wissen"
         title="Berichte & Einblicke"
-        description="Bestehende Inhalte werden hier modern aufbereitet: Reiseberichte, Technik und Gewaesser-Wissen."
+        description="Bestehende Inhalte werden hier modern aufbereitet: Reiseberichte, Technik und Gewässer-Wissen."
       />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {reports.map((report) => (

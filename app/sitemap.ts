@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/privatunterricht",
     "/schnupperstunden",
     "/gutscheine",
+    "/ueber-uns",
     "/berichte",
     "/kontakt",
     "/rechtliches",

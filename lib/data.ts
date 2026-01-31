@@ -5,7 +5,7 @@ import { coursePathSteps, faqs, siteConfig, uspItems } from "@/lib/site";
 export const navLinks = [
   { label: "Kurse", href: "/kurse" },
   { label: "Privat", href: "/privatunterricht" },
-  { label: "Ueber uns", href: "/#ueber" },
+  { label: "Ueber uns", href: "/ueber-uns" },
   { label: "Kontakt", href: "/kontakt" },
 ];
 
@@ -18,6 +18,7 @@ export const footerLinks = {
     { label: "Gutscheine", href: "/gutscheine" },
   ],
   resources: [
+    { label: "Ueber uns", href: "/ueber-uns" },
     { label: "Berichte", href: "/berichte" },
     { label: "FAQ", href: "/#faq" },
     { label: "Wetter", href: "/wetter" },
@@ -41,6 +42,27 @@ export const aboutSection = {
   highlights: siteConfig.socialProof,
   note:
     "Treffpunkte entlang der Limmat, Kursmaterial auf Wunsch, klare Ablaeufe.",
+};
+
+export const aboutPage = {
+  title: "Ueber Urs Mueller",
+  intro:
+    "Fliegenfischen lebt von Geduld, Technik und einem wachen Blick fuers Wasser. Genau darauf basiert der Unterricht: ruhig, strukturiert und praxisnah.",
+  bio:
+    "Urs Mueller unterrichtet seit vielen Jahren in der Region Zuerich und kombiniert klare Technikvermittlung mit realen Situationen am Gewaesser.",
+  highlights: siteConfig.socialProof,
+  values: [
+    "Kleine Gruppen fuer intensives Feedback",
+    "Praxis am Wasser statt nur Theorie",
+    "Klare Ablaufe, nachvollziehbare Fortschritte",
+  ],
+  cta: {
+    title: "Lust auf einen Kennenlern-Termin?",
+    description:
+      "Schnupperstunden oder Privatunterricht sind ideal, um Stil und Niveau abzustimmen.",
+    primary: { label: "Schnuppern", href: "/schnupperstunden" },
+    secondary: { label: "Kontakt aufnehmen", href: "/kontakt" },
+  },
 };
 
 export const homeSections = {

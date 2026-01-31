@@ -96,6 +96,11 @@ export default function Home() {
             {aboutSection.note}
           </div>
         </div>
+        <div className="mt-6">
+          <Button href="/ueber-uns" variant="secondary" size="sm">
+            Mehr ueber uns
+          </Button>
+        </div>
       </section>
 
       <section className="mx-auto w-full max-w-5xl px-4 py-10">

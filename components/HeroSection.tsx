@@ -22,10 +22,7 @@ export function HeroSection({ nextSession }: HeroSectionProps) {
           preload="metadata"
           poster="/illustrations/hero-river.svg"
         >
-          <source
-            src="https://cdn.coverr.co/videos/coverr-fly-fishing-5703/1080p.mp4"
-            type="video/mp4"
-          />
+          <source src="/videos/hero-fliegenfischer.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/45" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-[var(--color-stone)]" />

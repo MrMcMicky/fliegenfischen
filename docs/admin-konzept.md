@@ -90,11 +90,11 @@ Stand: 2026-01-31
   - Event-Dedupe via `StripeEvent`
   - bei `checkout.session.completed` -> Booking `PAID`, Payment `PAID`, Voucher erzeugen
 - **Success/Cancel**
-  - `/checkout/success` zeigt Zusammenfassung + ggf. Voucher-Code
+  - `/checkout/erfolg` zeigt Zusammenfassung + ggf. Voucher-Code
   - `/checkout/cancel` zeigt Abbruch
 
 ## Invoice/Vorauszahlung
-- Checkout-Form erlaubt **"Rechnung anfragen"**.
+- Checkout-Form erlaubt **"Rechnung anfragen"** via `/api/checkout`.
 - Booking wird mit Status `INVOICE_REQUESTED` gespeichert.
 - Admin kann Status manuell auf `PAID` setzen.
 

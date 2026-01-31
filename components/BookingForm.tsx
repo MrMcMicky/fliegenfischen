@@ -86,7 +86,9 @@ export function BookingForm({ type, session, lesson, voucherOption }: BookingFor
     setLoading(true);
 
     try {
-      const response = await fetch("/api/checkout", {
+      const endpoint =
+        paymentMode === "STRIPE" ? "/api/stripe/checkout" : "/api/checkout";
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

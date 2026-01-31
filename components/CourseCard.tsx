@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Fish } from "lucide-react";
 
 import { Button } from "@/components/Button";
 import { formatDate, formatPrice } from "@/lib/format";
@@ -32,19 +33,28 @@ export function CourseCard({
     endTime: string;
   }[];
 }) {
+  const hasPhoto =
+    Boolean(course.imageSrc) &&
+    !course.imageSrc?.includes("/illustrations/") &&
+    !course.imageSrc?.endsWith(".svg");
+
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
-      {course.imageSrc ? (
-        <div className="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
+      {hasPhoto ? (
+        <div className="mb-4 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)]">
           <Image
-            src={course.imageSrc}
+            src={course.imageSrc as string}
             alt={course.imageAlt || course.title}
             width={520}
             height={240}
-            className="h-24 w-full object-contain"
+            className="h-28 w-full object-cover"
           />
         </div>
-      ) : null}
+      ) : (
+        <div className="mb-4 flex h-28 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[#E8F0F0] text-[var(--color-forest)]/70">
+          <Fish size={28} aria-hidden="true" />
+        </div>
+      )}
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
           {courseLevelLabels[course.level] ?? course.level} · {" "}

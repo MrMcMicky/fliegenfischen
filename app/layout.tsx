@@ -64,7 +64,7 @@ export default async function RootLayout({
             location={settings?.location || ""}
             navLinks={navLinks}
           />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pt-20">{children}</main>
           <Footer
             siteName={settings?.name || "Fliegenfischerschule"}
             location={settings?.location || ""}

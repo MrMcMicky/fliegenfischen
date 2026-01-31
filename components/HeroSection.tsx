@@ -15,8 +15,11 @@ export function HeroSection({
     secondaryCta: { label: string; href: string };
   };
 }) {
+  const pillClass =
+    "inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/20 px-4 py-1 text-xs font-semibold tracking-[0.25em] text-white backdrop-blur-sm";
+
   return (
-    <section className="relative overflow-hidden pb-16 pt-12">
+    <section className="relative -mt-20 overflow-hidden pb-16 pt-28">
       <div className="absolute inset-0 -z-10">
         <video
           className="absolute inset-0 h-full w-full object-cover"
@@ -34,16 +37,12 @@ export function HeroSection({
       </div>
       <div className="mx-auto w-full max-w-5xl px-4 text-center text-white">
         {nextSession ? (
-          <Link
-            href="/kurse/termine"
-            className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--color-ember)]"
-          >
-            Nächster Kurs · {formatDate(nextSession.date)}
+          <Link href="/kurse/termine" className={pillClass}>
+            <span className="uppercase">Nächster Kurs</span>
+            <span className="text-white/80">· {formatDate(nextSession.date)}</span>
           </Link>
         ) : (
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--color-ember)]">
-            Termine auf Anfrage
-          </p>
+          <p className={pillClass}>Termine auf Anfrage</p>
         )}
         <h1 className="mt-6 font-display text-4xl font-semibold sm:text-5xl lg:text-6xl">
           {hero.title}

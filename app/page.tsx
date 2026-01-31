@@ -52,7 +52,6 @@ export default async function Home() {
       secondary: { label: string; href: string };
       tertiary: { label: string; href: string };
     };
-    contactCard: { title: string };
   };
   const uspItems = settings.uspItems as { title: string; description: string }[];
   const aboutSection = settings.aboutSection as {
@@ -81,13 +80,6 @@ export default async function Home() {
     description: string;
     href: string;
   }[]) || [];
-  const contact = settings.contact as {
-    address: string[];
-    phone: string;
-    mobile: string;
-    email: string;
-  };
-
   const nextSession = upcomingSessions[0] ?? null;
 
   return (
@@ -274,19 +266,6 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-5xl px-4 pb-6">
-        <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
-          <p className="font-semibold text-[var(--color-text)]">
-            {homeSections.contactCard?.title}
-          </p>
-          <p className="mt-2">{contact.address?.[0]}</p>
-          <p>{contact.address?.[1]}</p>
-          <p className="mt-3">
-            {contact.phone} · {contact.mobile}
-          </p>
-          <p>{contact.email}</p>
-        </div>
-      </section>
     </div>
   );
 }

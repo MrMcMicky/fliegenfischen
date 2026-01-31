@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Fish } from "lucide-react";
 
 import { formatDate, formatPrice } from "@/lib/format";
 
@@ -29,16 +30,24 @@ export function CourseGrid({
           key={session.id}
           className="rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
         >
-          {session.course?.imageSrc ? (
-            <div className="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
-              <Image
-                src={session.course.imageSrc}
-                alt={session.course.imageAlt || session.course.title}
-                width={520}
-                height={240}
-                className="h-20 w-full object-contain"
-              />
-            </div>
+          {session.course ? (
+            session.course.imageSrc &&
+            !session.course.imageSrc.includes("/illustrations/") &&
+            !session.course.imageSrc.endsWith(".svg") ? (
+              <div className="mb-4 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)]">
+                <Image
+                  src={session.course.imageSrc}
+                  alt={session.course.imageAlt || session.course.title}
+                  width={520}
+                  height={240}
+                  className="h-24 w-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="mb-4 flex h-24 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[#E8F0F0] text-[var(--color-forest)]/70">
+                <Fish size={24} aria-hidden="true" />
+              </div>
+            )
           ) : null}
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
             {session.location}

@@ -60,7 +60,7 @@ export const defaultSiteSettings = {
   },
   homeHero: {
     eyebrow: "Fliegenfischerschule",
-    title: "Fliegenfischen in der Region Zürich - ruhig, präzise, draussen.",
+    title: "Fliegenfischen in der Region Zürich — ruhig, präzise, draussen.",
     description:
       "Kleine Gruppen, klare Lernschritte und ein Instruktor mit SFV- und EFFA-Hintergrund.",
     primaryCta: { label: "Termin sichern", href: "/kurse/termine" },

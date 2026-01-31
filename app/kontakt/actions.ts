@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/db";
-import { sendContactMail } from "@/lib/email";
+import { sendContactConfirmationMail, sendContactMail } from "@/lib/email";
 
 export type ContactFormState = {
   status: "idle" | "success" | "error";
@@ -47,9 +47,15 @@ export async function submitContact(
       },
     });
     await sendContactMail({ name, email, phone, subject, message });
+    try {
+      await sendContactConfirmationMail({ name, email, phone, subject, message });
+    } catch (error) {
+      console.warn("Contact confirmation mail failed", error);
+    }
     return {
       status: "success",
-      message: "Danke! Wir melden uns innert 48 Stunden.",
+      message:
+        "Danke! Wir melden uns innert 48 Stunden. Bestätigung per E-Mail folgt.",
     };
   } catch (error) {
     const fallback =

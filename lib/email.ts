@@ -87,6 +87,39 @@ export async function sendContactMail(payload: ContactPayload) {
   });
 }
 
+export async function sendContactConfirmationMail(payload: ContactPayload) {
+  const to = payload.email;
+  const from = getEnv("CONTACT_CONFIRMATION_FROM") || getDefaultFrom();
+  const transporter = createTransporter();
+
+  const lines = [
+    `Hallo ${payload.name},`,
+    "",
+    "Danke für deine Anfrage! Wir melden uns in der Regel innert 48 Stunden.",
+    payload.subject ? `Betreff: ${payload.subject}` : null,
+    "",
+    "Deine Nachricht:",
+    payload.message,
+    "",
+    "Petri Heil",
+    "Urs Müller",
+    "Fliegenfischerschule Urs Müller",
+    "Geroldswil / Limmat / Zürich",
+    "fliegenfischer-schule.shop",
+    "info@fliegenfischer-schule.shop",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  await transporter.sendMail({
+    to,
+    from,
+    replyTo: getReplyTo(),
+    subject: "Bestätigung deiner Anfrage",
+    text: lines,
+  });
+}
+
 export async function sendVoucherMail(payload: VoucherEmailPayload) {
   const from = getEnv("BOOKING_EMAIL_FROM") || getDefaultFrom();
   const bcc = getEnv("BOOKING_EMAIL_BCC") || "";

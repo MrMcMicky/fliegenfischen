@@ -9,9 +9,13 @@ export const dynamic = "force-dynamic";
 export default async function AdminReportEditPage({
   params,
 }: {
-  params: { id: string };
+  params: { id: string } | Promise<{ id: string }>;
 }) {
-  const report = await prisma.report.findUnique({ where: { id: params.id } });
+  const { id } = await Promise.resolve(params);
+  if (!id) {
+    redirect("/admin/berichte");
+  }
+  const report = await prisma.report.findUnique({ where: { id } });
   if (!report) {
     redirect("/admin/berichte");
   }
@@ -28,7 +32,7 @@ export default async function AdminReportEditPage({
     const highlights = parseLines(String(formData.get("highlights") || ""));
 
     await prisma.report.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         slug,
@@ -45,7 +49,7 @@ export default async function AdminReportEditPage({
 
   async function deleteReport() {
     "use server";
-    await prisma.report.delete({ where: { id: params.id } });
+    await prisma.report.delete({ where: { id } });
     redirect("/admin/berichte");
   }
 

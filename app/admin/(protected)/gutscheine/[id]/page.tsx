@@ -8,10 +8,14 @@ export const dynamic = "force-dynamic";
 export default async function AdminGutscheinEditPage({
   params,
 }: {
-  params: { id: string };
+  params: { id: string } | Promise<{ id: string }>;
 }) {
+  const { id } = await Promise.resolve(params);
+  if (!id) {
+    redirect("/admin/gutscheine");
+  }
   const option = await prisma.voucherOption.findUnique({
-    where: { id: params.id },
+    where: { id },
   });
 
   if (!option) {
@@ -30,7 +34,7 @@ export default async function AdminGutscheinEditPage({
       .filter((value) => Number.isFinite(value));
 
     await prisma.voucherOption.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         description,
@@ -44,7 +48,7 @@ export default async function AdminGutscheinEditPage({
 
   async function deleteOption() {
     "use server";
-    await prisma.voucherOption.delete({ where: { id: params.id } });
+    await prisma.voucherOption.delete({ where: { id } });
     redirect("/admin/gutscheine");
   }
 

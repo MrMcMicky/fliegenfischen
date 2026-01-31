@@ -9,57 +9,83 @@ export const dynamic = "force-dynamic";
 export const generateMetadata = async ({
   params,
 }: {
-  params: { slug: string };
+  params: { slug: string } | Promise<{ slug: string }>;
 }) => {
-  const report = await prisma.report.findUnique({
-    where: { slug: params.slug },
-  });
-  if (!report) return { title: "Bericht" };
-  return {
-    title: report.title,
-    description: report.summary,
-  };
+  let resolvedSlug: string | undefined;
+  try {
+    const { slug } = await Promise.resolve(params);
+    resolvedSlug = slug;
+    if (!resolvedSlug) return { title: "Bericht" };
+    const report = await prisma.report.findUnique({
+      where: { slug: resolvedSlug },
+    });
+    if (!report) return { title: "Bericht" };
+    return {
+      title: report.title,
+      description: report.summary,
+    };
+  } catch (error) {
+    console.error("Report metadata error", {
+      slug: resolvedSlug,
+      error,
+    });
+    return { title: "Bericht" };
+  }
 };
 
 export default async function BerichtDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: { slug: string } | Promise<{ slug: string }>;
 }) {
-  const report = await prisma.report.findUnique({
-    where: { slug: params.slug },
-  });
+  let resolvedSlug: string | undefined;
+  try {
+    const { slug } = await Promise.resolve(params);
+    resolvedSlug = slug;
+    if (!resolvedSlug) {
+      notFound();
+    }
+    const report = await prisma.report.findUnique({
+      where: { slug: resolvedSlug },
+    });
 
-  if (!report) {
-    notFound();
-  }
+    if (!report) {
+      notFound();
+    }
 
-  return (
-    <div className="mx-auto w-full max-w-4xl space-y-10 px-4 pb-20 pt-16">
-      <SectionHeader
-        eyebrow={`${report.location} · ${report.year}`}
-        title={report.title}
-        description={report.summary}
-      />
-      <div className="space-y-8 rounded-xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
-        <div
-          className="report-content"
-          dangerouslySetInnerHTML={{ __html: report.body }}
+    return (
+      <div className="mx-auto w-full max-w-4xl space-y-10 px-4 pb-20 pt-16">
+        <SectionHeader
+          eyebrow={`${report.location} · ${report.year}`}
+          title={report.title}
+          description={report.summary}
         />
-        {report.highlights.length > 0 ? (
-          <ul className="space-y-2">
-            {report.highlights.map((highlight) => (
-              <li key={highlight}>• {highlight}</li>
-            ))}
-          </ul>
-        ) : null}
+        <div className="space-y-8 rounded-xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
+          <div
+            className="report-content"
+            dangerouslySetInnerHTML={{ __html: report.body }}
+          />
+          {report.highlights.length > 0 ? (
+            <ul className="space-y-2">
+              {report.highlights.map((highlight) => (
+                <li key={highlight}>• {highlight}</li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+        <div className="flex flex-wrap gap-4">
+          <Button href="/berichte" variant="secondary">
+            Zurück zu allen Berichten
+          </Button>
+          <Button href="/kurse">Zu den Kursen</Button>
+        </div>
       </div>
-      <div className="flex flex-wrap gap-4">
-        <Button href="/berichte" variant="secondary">
-          Zurück zu allen Berichten
-        </Button>
-        <Button href="/kurse">Zu den Kursen</Button>
-      </div>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error("Report detail page error", {
+      slug: resolvedSlug,
+      error,
+    });
+    throw error;
+  }
 }

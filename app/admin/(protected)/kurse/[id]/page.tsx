@@ -8,9 +8,13 @@ export const dynamic = "force-dynamic";
 export default async function AdminCourseEditPage({
   params,
 }: {
-  params: { id: string };
+  params: { id: string } | Promise<{ id: string }>;
 }) {
-  const course = await prisma.course.findUnique({ where: { id: params.id } });
+  const { id } = await Promise.resolve(params);
+  if (!id) {
+    redirect("/admin/kurse");
+  }
+  const course = await prisma.course.findUnique({ where: { id } });
   if (!course) {
     redirect("/admin/kurse");
   }
@@ -46,7 +50,7 @@ export default async function AdminCourseEditPage({
     const location = String(formData.get("location") || "").trim();
 
     await prisma.course.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         slug,
@@ -72,7 +76,7 @@ export default async function AdminCourseEditPage({
 
   async function deleteCourse() {
     "use server";
-    await prisma.course.delete({ where: { id: params.id } });
+    await prisma.course.delete({ where: { id } });
     redirect("/admin/kurse");
   }
 

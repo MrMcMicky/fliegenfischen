@@ -7,10 +7,14 @@ export const dynamic = "force-dynamic";
 export default async function AdminTerminEditPage({
   params,
 }: {
-  params: { id: string };
+  params: { id: string } | Promise<{ id: string }>;
 }) {
+  const { id } = await Promise.resolve(params);
+  if (!id) {
+    redirect("/admin/termine");
+  }
   const session = await prisma.courseSession.findUnique({
-    where: { id: params.id },
+    where: { id },
   });
   const courses = await prisma.course.findMany({ orderBy: { title: "asc" } });
 
@@ -38,7 +42,7 @@ export default async function AdminTerminEditPage({
     const notes = String(formData.get("notes") || "");
 
     await prisma.courseSession.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         courseId,
         date: new Date(date),
@@ -60,7 +64,7 @@ export default async function AdminTerminEditPage({
 
   async function deleteSession() {
     "use server";
-    await prisma.courseSession.delete({ where: { id: params.id } });
+    await prisma.courseSession.delete({ where: { id } });
     redirect("/admin/termine");
   }
 

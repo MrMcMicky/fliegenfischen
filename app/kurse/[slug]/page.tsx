@@ -15,10 +15,12 @@ export const dynamic = "force-dynamic";
 export const generateMetadata = async ({
   params,
 }: {
-  params: { slug: string };
+  params: { slug: string } | Promise<{ slug: string }>;
 }) => {
+  const { slug } = await Promise.resolve(params);
+  if (!slug) return { title: "Kurs" };
   const course = await prisma.course.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
   });
   if (!course) {
     return { title: "Kurs" };
@@ -32,10 +34,14 @@ export const generateMetadata = async ({
 export default async function CourseDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: { slug: string } | Promise<{ slug: string }>;
 }) {
+  const { slug } = await Promise.resolve(params);
+  if (!slug) {
+    notFound();
+  }
   const course = await prisma.course.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
   });
 
   if (!course) {

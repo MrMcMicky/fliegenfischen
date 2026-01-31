@@ -2,7 +2,7 @@ import crypto from "crypto";
 import type { Booking } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
-import { sendVoucherMail } from "@/lib/email";
+import { sendBookingMail, sendVoucherMail } from "@/lib/email";
 import { renderVoucherPdf } from "@/lib/voucher-pdf";
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -120,6 +120,67 @@ export const markBookingPaid = async ({
       });
     } catch (error) {
       console.error("voucher email failed", error);
+    }
+  }
+
+  if (!alreadyPaid && booking.type !== "VOUCHER") {
+    try {
+      let subject = "Bestätigung deiner Buchung";
+      const lines: string[] = [
+        `Hallo ${booking.customerName},`,
+        "",
+        "Danke für deine Bestellung. Hier sind deine Details:",
+        "",
+      ];
+
+      if (booking.type === "COURSE" && booking.courseSessionId) {
+        const session = await prisma.courseSession.findUnique({
+          where: { id: booking.courseSessionId },
+          include: { course: true },
+        });
+        if (session?.course) {
+          subject = `Bestätigung: ${session.course.title}`;
+          lines.push(`Kurs: ${session.course.title}`);
+          lines.push(`Datum: ${session.date.toLocaleDateString("de-CH")}`);
+          lines.push(`Zeit: ${session.startTime}-${session.endTime}`);
+          lines.push(`Ort: ${session.location}`);
+          if (booking.quantity) {
+            lines.push(`Plätze: ${booking.quantity}`);
+          }
+        }
+      }
+
+      if (booking.type === "PRIVATE" || booking.type === "TASTER") {
+        const lesson = booking.lessonType
+          ? await prisma.lessonOffering.findUnique({
+              where: { type: booking.lessonType },
+            })
+          : null;
+        subject = `Bestätigung: ${lesson?.title ?? "Privatlektion"}`;
+        lines.push(`Leistung: ${lesson?.title ?? booking.type}`);
+        if (booking.hours) {
+          lines.push(`Dauer: ${booking.hours} Stunden`);
+        }
+        if (booking.quantity && booking.quantity > 1) {
+          lines.push(`Teilnehmer: ${booking.quantity}`);
+        }
+      }
+
+      lines.push("");
+      lines.push(`Betrag: CHF ${booking.amountCHF}`);
+      lines.push("");
+      lines.push("Bei Fragen antworte auf diese E-Mail.");
+      lines.push("");
+      lines.push("Petri Heil");
+      lines.push("Fliegenfischerschule Urs Müller");
+
+      await sendBookingMail({
+        to: booking.customerEmail,
+        subject,
+        lines,
+      });
+    } catch (error) {
+      console.error("booking email failed", error);
     }
   }
 

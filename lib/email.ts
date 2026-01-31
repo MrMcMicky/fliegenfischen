@@ -18,6 +18,12 @@ export type VoucherEmailPayload = {
   pdfBytes: Uint8Array;
 };
 
+export type BookingEmailPayload = {
+  to: string;
+  subject: string;
+  lines: string[];
+};
+
 const getEnv = (key: string) => process.env[key];
 
 const createTransporter = () => {
@@ -112,5 +118,19 @@ export async function sendVoucherMail(payload: VoucherEmailPayload) {
         content: Buffer.from(payload.pdfBytes),
       },
     ],
+  });
+}
+
+export async function sendBookingMail(payload: BookingEmailPayload) {
+  const from = getEnv("BOOKING_EMAIL_FROM") || getDefaultFrom();
+  const bcc = getEnv("BOOKING_EMAIL_BCC") || "";
+  const transporter = createTransporter();
+
+  await transporter.sendMail({
+    to: payload.to,
+    bcc: bcc || undefined,
+    from,
+    subject: payload.subject,
+    text: payload.lines.join("\n"),
   });
 }

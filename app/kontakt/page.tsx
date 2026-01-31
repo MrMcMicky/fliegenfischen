@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { ContactForm } from "@/components/ContactForm";
 import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
@@ -31,10 +33,19 @@ export default async function KontaktPage() {
       <SectionHeader
         eyebrow="Kontakt"
         title="Lass uns deinen Termin planen"
-        description="Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausruestung und Terminen."
+        description="Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausrüstung und Terminen."
       />
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
+          <div className="mb-6 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
+            <Image
+              src="/illustrations/contact-map.png"
+              alt="Illustration Treffpunkt und Limmat"
+              width={720}
+              height={480}
+              className="h-40 w-full object-contain sm:h-48"
+            />
+          </div>
           <p className="font-semibold text-[var(--color-text)]">
             {contact.instructor}
           </p>
@@ -49,7 +60,7 @@ export default async function KontaktPage() {
             </p>
             <p className="mt-2">
               Kursdetails und genaue Treffpunkte senden wir mit der
-              Bestaetigungsmail.
+              Bestätigungsmail.
             </p>
           </div>
         </div>
@@ -58,7 +69,7 @@ export default async function KontaktPage() {
             Anfrage
           </p>
           <p className="mt-3 text-sm text-white/70">
-            Teile uns kurz dein Ziel und moegliche Termine mit. Wir melden uns
+            Teile uns kurz dein Ziel und mögliche Termine mit. Wir melden uns
             innert 48 Stunden.
           </p>
           <div className="mt-6">

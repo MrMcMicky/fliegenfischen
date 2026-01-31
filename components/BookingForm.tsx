@@ -16,6 +16,7 @@ type BookingType = "COURSE" | "PRIVATE" | "TASTER" | "VOUCHER";
 
 type BookingFormProps = {
   type: BookingType;
+  initialVoucherAmount?: number;
   session?: {
     id: string;
     date: string;
@@ -42,7 +43,13 @@ type BookingFormProps = {
   };
 };
 
-export function BookingForm({ type, session, lesson, voucherOption }: BookingFormProps) {
+export function BookingForm({
+  type,
+  session,
+  lesson,
+  voucherOption,
+  initialVoucherAmount,
+}: BookingFormProps) {
   const router = useRouter();
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -50,8 +57,14 @@ export function BookingForm({ type, session, lesson, voucherOption }: BookingFor
   const [quantity, setQuantity] = useState(1);
   const [hours, setHours] = useState(lesson?.minHours ?? 2);
   const [additionalPeople, setAdditionalPeople] = useState(0);
+  const initialVoucherAmountValue =
+    voucherOption && voucherOption.values.length > 0
+      ? voucherOption.values.includes(initialVoucherAmount ?? -1)
+        ? (initialVoucherAmount as number)
+        : voucherOption.values[0]
+      : 0;
   const [voucherAmount, setVoucherAmount] = useState(
-    voucherOption?.values?.[0] ?? 0
+    initialVoucherAmountValue
   );
   const [voucherRecipient, setVoucherRecipient] = useState("");
   const [voucherMessage, setVoucherMessage] = useState("");

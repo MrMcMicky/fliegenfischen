@@ -15,9 +15,14 @@ export const dynamic = "force-dynamic";
 export default async function BookingPage({
   searchParams,
 }: {
-  searchParams: { sessionId?: string; lesson?: string; voucherOptionId?: string };
+  searchParams: {
+    sessionId?: string;
+    lesson?: string;
+    voucherOptionId?: string;
+    voucherAmount?: string;
+  };
 }) {
-  const { sessionId, lesson, voucherOptionId } = searchParams;
+  const { sessionId, lesson, voucherOptionId, voucherAmount } = searchParams;
 
   if (sessionId) {
     const session = await prisma.courseSession.findUnique({
@@ -90,6 +95,10 @@ export default async function BookingPage({
       where: { id: voucherOptionId },
     });
     if (!option) notFound();
+    const parsedAmount = Number(voucherAmount);
+    const initialVoucherAmount = Number.isFinite(parsedAmount)
+      ? parsedAmount
+      : undefined;
 
     return (
       <div className="mx-auto w-full max-w-4xl space-y-8 px-4 pb-20 pt-16">
@@ -100,6 +109,7 @@ export default async function BookingPage({
         />
         <BookingForm
           type="VOUCHER"
+          initialVoucherAmount={initialVoucherAmount}
           voucherOption={{
             id: option.id,
             title: option.title,

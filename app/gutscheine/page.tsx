@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button";
 import { SectionHeader } from "@/components/SectionHeader";
+import { VoucherOptionCard } from "@/components/VoucherOptionCard";
 import { prisma } from "@/lib/db";
-import { formatPrice } from "@/lib/format";
 
 export const metadata = {
   title: "Gutscheine",
@@ -24,32 +24,7 @@ export default async function GutscheinePage() {
       />
       <div className="grid gap-6 lg:grid-cols-2">
         {voucherOptions.map((option) => (
-          <div
-            key={option.id}
-            className="rounded-xl border border-[var(--color-border)] bg-white p-6"
-          >
-            <h3 className="font-display text-2xl font-semibold text-[var(--color-text)]">
-              {option.title}
-            </h3>
-            <p className="mt-2 text-sm text-[var(--color-muted)]">
-              {option.description}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {option.values.map((value) => (
-                <span
-                  key={value}
-                  className="rounded-full border border-[var(--color-border)] bg-[var(--color-stone)] px-4 py-2 text-xs font-semibold text-[var(--color-forest)]"
-                >
-                  {formatPrice(value)}
-                </span>
-              ))}
-            </div>
-            <div className="mt-6">
-              <Button href={`/buchen?voucherOptionId=${option.id}`} variant="secondary">
-                Gutschein bestellen
-              </Button>
-            </div>
-          </div>
+          <VoucherOptionCard key={option.id} option={option} />
         ))}
       </div>
       <div className="rounded-2xl bg-[var(--color-forest)] p-10 text-white">

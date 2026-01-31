@@ -35,7 +35,7 @@ export default async function PrivatunterrichtPage() {
         description={lesson.description}
       />
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6">
+        <div className="space-y-6 rounded-xl border border-[var(--color-border)] bg-white p-6">
           <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
             <Image
               src="/illustrations/private-lessons.png"
@@ -49,11 +49,31 @@ export default async function PrivatunterrichtPage() {
             Wir richten uns nach deinem Niveau: Technikfehler, Wurfvarianten,
             Praxis am Wasser. Ideal für alle, die gezielt Fortschritt wollen.
           </p>
-          <ul className="space-y-2 text-sm text-[var(--color-muted)]">
-            {lesson.bullets.map((bullet) => (
-              <li key={bullet}>• {bullet}</li>
-            ))}
-          </ul>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {lesson.bullets.map((bullet, index) => {
+              const iconSrc = [
+                "/illustrations/icon-calendar.png",
+                "/illustrations/icon-target.png",
+                "/illustrations/icon-rod.png",
+              ][index] ?? "/illustrations/icon-rod.png";
+
+              return (
+                <div
+                  key={bullet}
+                  className="flex flex-col items-center rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3 text-center text-sm text-[var(--color-muted)]"
+                >
+                  <Image
+                    src={iconSrc}
+                    alt=""
+                    width={96}
+                    height={96}
+                    className="h-12 w-12 object-contain"
+                  />
+                  <p className="mt-3">{bullet}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">

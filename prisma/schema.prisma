@@ -73,6 +73,12 @@ enum VoucherStatus {
   EXPIRED
 }
 
+enum ContactRequestStatus {
+  OPEN
+  DONE
+  ARCHIVED
+}
+
 model AdminUser {
   id           String         @id @default(cuid())
   email        String         @unique
@@ -171,13 +177,15 @@ model Report {
 }
 
 model ContactRequest {
-  id        String   @id @default(cuid())
+  id        String               @id @default(cuid())
   name      String
   email     String
   phone     String?
   subject   String?
   message   String
-  createdAt DateTime @default(now())
+  status    ContactRequestStatus @default(OPEN)
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
 }
 
 model SiteSettings {

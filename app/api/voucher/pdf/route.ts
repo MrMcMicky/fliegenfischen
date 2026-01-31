@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     issuedAt: booking.voucher.createdAt,
   });
 
-  return new NextResponse(pdfBytes, {
+  return new NextResponse(Buffer.from(pdfBytes), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename=\"Gutschein-${booking.voucher.code}.pdf\"`,

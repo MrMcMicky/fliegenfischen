@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { Button } from "@/components/Button";
 import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
@@ -43,13 +45,24 @@ export default async function UeberUnsPage() {
         description={aboutPage.intro}
       />
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
-          <p>{aboutPage.bio}</p>
-          <ul className="space-y-2">
-            {aboutPage.values.map((value) => (
-              <li key={value}>• {value}</li>
-            ))}
-          </ul>
+        <div className="space-y-4">
+          <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
+            <Image
+              src="/illustrations/about-flyfishing.png"
+              alt="Fliegenfischen an der Limmat"
+              width={1200}
+              height={800}
+              className="h-56 w-full rounded-lg object-cover sm:h-64"
+            />
+          </div>
+          <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
+            <p>{aboutPage.bio}</p>
+            <ul className="space-y-2">
+              {aboutPage.values.map((value) => (
+                <li key={value}>• {value}</li>
+              ))}
+            </ul>
+          </div>
         </div>
         <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">

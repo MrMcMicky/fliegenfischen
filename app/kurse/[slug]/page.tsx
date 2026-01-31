@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -42,6 +43,17 @@ export default function CourseDetailPage({
             title={course.title}
             description={course.description}
           />
+          {course.image ? (
+            <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
+              <Image
+                src={course.image.src}
+                alt={course.image.alt}
+                width={640}
+                height={280}
+                className="h-28 w-full object-contain"
+              />
+            </div>
+          ) : null}
           <div className="flex flex-wrap gap-3 text-sm text-[var(--color-muted)]">
             <span>Dauer {course.duration}</span>
             <span>·</span>

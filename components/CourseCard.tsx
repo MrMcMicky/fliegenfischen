@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { Button } from "@/components/Button";
 import type { Course, CourseSession } from "@/lib/courses";
 import { formatDate, formatPrice } from "@/lib/utils";
@@ -11,6 +13,17 @@ export function CourseCard({
 }) {
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
+      {course.image ? (
+        <div className="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
+          <Image
+            src={course.image.src}
+            alt={course.image.alt}
+            width={520}
+            height={240}
+            className="h-24 w-full object-contain"
+          />
+        </div>
+      ) : null}
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
           {course.level} · {course.category}

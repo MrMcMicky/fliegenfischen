@@ -23,6 +23,10 @@ export type Course = {
   category: CourseCategory;
   summary: string;
   description: string;
+  image?: {
+    src: string;
+    alt: string;
+  };
   highlights: string[];
   duration: string;
   priceCHF: number;
@@ -41,7 +45,11 @@ export const courses: Course[] = [
     category: "Einhand",
     summary: "Distanz, Varianten und Kontrolle fuer erfahrene Werfer.",
     description:
-      "Intensiver Kurstag fuer Fortgeschrittene mit Fokus auf Technikfeinschliff, Wurfvarianten und effiziente Schnurkontrolle.",
+      "Tageskurs fuer Fortgeschrittene: Distanz, Varianten, Fehleranalyse und effiziente Schnurkontrolle.",
+    image: {
+      src: "/illustrations/course-einhand.svg",
+      alt: "Illustration Einhand Fliegenfischen",
+    },
     highlights: [
       "Doppelzug und Distanz",
       "Backhand & Side Cast",
@@ -73,7 +81,11 @@ export const courses: Course[] = [
     category: "Zweihand",
     summary: "Schusskopf, Rollwuerfe und erste Spey-Varianten.",
     description:
-      "Einsteigerkurs fuer Zweihand-Technik mit Fokus auf Schusskopf-Fuehrung, Rollwurf und effiziente Spey-Bewegungen.",
+      "Einsteigerkurs fuer Zweihand-Technik mit Fokus auf Schusskopf, Rollwurf und Spey-Varianten.",
+    image: {
+      src: "/illustrations/course-zweihand.svg",
+      alt: "Illustration Zweihand Fliegenfischen",
+    },
     highlights: [
       "Schusskopf-Technik",
       "Rollwurf und Single Spey",
@@ -164,7 +176,7 @@ export const privateLessons = {
   minHours: 2,
   additionalPersonCHF: 40,
   description:
-    "Individuelles Coaching zu Technik, Wurfvarianten und Praxis am Wasser. Termine nach Vereinbarung.",
+    "Individuelles Coaching am Wasser: Technik, Fehleranalyse und klare Ziele. Termine nach Vereinbarung.",
 };
 
 export const tasterLessons = {
@@ -173,7 +185,7 @@ export const tasterLessons = {
   minHours: 2,
   additionalPersonCHF: 40,
   description:
-    "Kurzer Einstieg fuer Neugierige: Grundtechnik, Materialkunde und erste Wuerfe.",
+    "Kurzer Einstieg: Grundtechnik, Materialkunde und erste Wuerfe.",
 };
 
 export const voucherOptions = [

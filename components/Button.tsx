@@ -25,6 +25,9 @@ type ButtonProps = {
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
   className?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  onClick?: () => void;
 };
 
 export function Button({
@@ -33,8 +36,11 @@ export function Button({
   variant = "primary",
   size = "md",
   className = "",
+  type = "button",
+  disabled = false,
+  onClick,
 }: ButtonProps) {
-  const classes = `${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`;
+  const classes = `${baseStyles} ${variants[variant]} ${sizes[size]} ${disabled ? "cursor-not-allowed opacity-60" : ""} ${className}`;
 
   if (href) {
     return (
@@ -45,7 +51,7 @@ export function Button({
   }
 
   return (
-    <button type="button" className={classes}>
+    <button type={type} className={classes} disabled={disabled} onClick={onClick}>
       {children}
     </button>
   );

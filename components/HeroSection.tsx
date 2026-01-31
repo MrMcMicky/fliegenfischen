@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/Button";
@@ -54,6 +55,16 @@ export function HeroSection({ nextSession }: HeroSectionProps) {
           <Button href={homeHero.secondaryCta.href} variant="secondary" size="lg">
             {homeHero.secondaryCta.label}
           </Button>
+        </div>
+        <div className="mx-auto mt-10 max-w-4xl">
+          <Image
+            src="/illustrations/hero-river.svg"
+            alt="Illustration Fluss und Wellen"
+            width={1200}
+            height={260}
+            priority
+            className="h-32 w-full rounded-2xl object-contain sm:h-40"
+          />
         </div>
         <div className="mt-6 text-sm text-[var(--color-forest)]/70">
           {nextSession ? (

@@ -27,18 +27,18 @@ export const footerLinks = {
 };
 
 export const homeHero = {
-  eyebrow: "Fliegenfischen Schule",
-  title: "Fliegenfischen & Flycasting lernen in Zuerich am Wasser.",
+  eyebrow: "Fliegenfischerschule",
+  title: "Fliegenfischen in der Region Zuerich – ruhig, praezise, draussen.",
   description:
-    "Kleine Gruppen, klare Lernschritte und ein Instruktor, der Technik ruhig und praezise erklaert.",
-  primaryCta: { label: "Termin buchen", href: "/kurse/termine" },
+    "Kleine Gruppen, klare Lernschritte und ein Instruktor mit SFV- und EFFA-Hintergrund.",
+  primaryCta: { label: "Termin sichern", href: "/kurse/termine" },
   secondaryCta: { label: "Kurse ansehen", href: "/kurse" },
 };
 
 export const aboutSection = {
   title: "Ueber Urs Mueller",
   description:
-    "SFV Instruktor und EFFA Basic Flycasting Instructor. Fokus auf klare Technik, Praezision und Praxis am Wasser.",
+    "SFV Instruktor (2003) und EFFA Basic Flycasting Instructor (2004). Fokus auf Technik, Sicherheit und Praxis.",
   highlights: siteConfig.socialProof,
   note:
     "Treffpunkte entlang der Limmat, Kursmaterial auf Wunsch, klare Ablaeufe.",
@@ -70,13 +70,13 @@ export const homeSections = {
     eyebrow: "Termine",
     title: "Naechste Kurse",
     description:
-      "Frueh buchen lohnt sich: Die Gruppen bleiben klein, die Plaetze sind limitiert.",
+      "Frueh buchen lohnt sich: Die Gruppen bleiben klein und die Plaetze sind limitiert.",
   },
   formats: {
     eyebrow: "Angebot",
     title: "Kursformate fuer jedes Level",
     description:
-      "Einhand oder Zweihand, Privat oder Schnuppern: Wir bauen gemeinsam Technik auf, Schritt fuer Schritt.",
+      "Einhand oder Zweihand, Privat oder Schnuppern: Technik Schritt fuer Schritt aufbauen.",
   },
   timeline: {
     eyebrow: "Lernpfad",
@@ -88,7 +88,7 @@ export const homeSections = {
     eyebrow: "Wissen",
     title: "Berichte und Einblicke",
     description:
-      "Reiseberichte und Gewaesser-Notizen aus der Praxis. Ideal fuer SEO und Inspiration.",
+      "Reiseberichte und Gewaesser-Notizen aus der Praxis. Ideal fuer Inspiration.",
   },
   faq: {
     eyebrow: "FAQ",
@@ -99,8 +99,8 @@ export const homeSections = {
     title: "Bereit fuer den naechsten Schritt?",
     description:
       "Sichere dir einen Platz oder verschenke einen Gutschein. Wir melden uns mit allen Details.",
-    note: "Schnupperstunden ab CHF 70 pro Stunde, Privatunterricht flexibel.",
-    primary: { label: "Termin buchen", href: "/kurse/termine" },
+    note: "Schnupperstunden ab CHF 70 / Std., Privatunterricht flexibel.",
+    primary: { label: "Termin sichern", href: "/kurse/termine" },
     secondary: { label: "Gutschein bestellen", href: "/gutscheine" },
     tertiary: { label: "Kontakt", href: "/kontakt" },
   },

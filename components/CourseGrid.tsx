@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import type { CourseSession } from "@/lib/courses";
@@ -18,6 +19,17 @@ export function CourseGrid({ sessions }: CourseGridProps) {
             key={session.id}
             className="rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
           >
+            {course?.image ? (
+              <div className="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
+                <Image
+                  src={course.image.src}
+                  alt={course.image.alt}
+                  width={520}
+                  height={240}
+                  className="h-20 w-full object-contain"
+                />
+              </div>
+            ) : null}
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
               {session.location}
             </p>

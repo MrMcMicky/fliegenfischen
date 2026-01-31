@@ -52,13 +52,18 @@ const createTransporter = () => {
 };
 
 const getDefaultFrom = () =>
-  getEnv("SMTP_FROM") || "Fliegenfischerschule <no-reply@fliegenfischer-schule.shop>";
+  getEnv("SMTP_FROM") || "Urs Müller <info@fliegenfischer-schule.shop>";
+
+const getReplyTo = () =>
+  getEnv("SMTP_REPLY_TO") ||
+  getEnv("CONTACT_EMAIL_TO") ||
+  "info@fliegenfischer-schule.shop";
 
 export async function sendContactMail(payload: ContactPayload) {
   const to =
     getEnv("CONTACT_EMAIL_TO") ||
     getEnv("SMTP_TO") ||
-    "info@fliegenfischer-schule.ch";
+    "info@fliegenfischer-schule.shop";
   const from = getEnv("CONTACT_EMAIL_FROM") || getDefaultFrom();
   const transporter = createTransporter();
 
@@ -77,7 +82,7 @@ export async function sendContactMail(payload: ContactPayload) {
     to,
     from,
     replyTo: payload.email,
-    subject: `Fliegenfischerschule: ${subject}`,
+    subject: `Neue Kontaktanfrage: ${subject}`,
     text,
   });
 }
@@ -87,11 +92,12 @@ export async function sendVoucherMail(payload: VoucherEmailPayload) {
   const bcc = getEnv("BOOKING_EMAIL_BCC") || "";
   const transporter = createTransporter();
 
-  const subject = "Dein Gutschein der Fliegenfischerschule";
+  const subject = "Dein Gutschein – Fliegenfischerschule Urs Müller";
   const lines = [
     `Hallo ${payload.customerName},`,
     "",
     "Vielen Dank für deine Bestellung.",
+    "",
     `Gutschein-Code: ${payload.voucherCode}`,
     `Wert: CHF ${payload.amountCHF}`,
     payload.recipientName ? `Empfänger: ${payload.recipientName}` : null,
@@ -99,9 +105,11 @@ export async function sendVoucherMail(payload: VoucherEmailPayload) {
     payload.message ? `Nachricht: ${payload.message}` : null,
     "",
     "Der Gutschein ist als PDF im Anhang.",
+    "Einlösbar für Kurse und Privatunterricht. Keine Barauszahlung.",
+    "Termin nach Vereinbarung.",
     "",
     "Petri Heil",
-    "Fliegenfischerschule Urs Müller",
+    "Urs Müller",
   ]
     .filter(Boolean)
     .join("\n");
@@ -110,6 +118,7 @@ export async function sendVoucherMail(payload: VoucherEmailPayload) {
     to: payload.to,
     bcc: bcc || undefined,
     from,
+    replyTo: getReplyTo(),
     subject,
     text: lines,
     attachments: [
@@ -130,6 +139,7 @@ export async function sendBookingMail(payload: BookingEmailPayload) {
     to: payload.to,
     bcc: bcc || undefined,
     from,
+    replyTo: getReplyTo(),
     subject: payload.subject,
     text: payload.lines.join("\n"),
   });

@@ -129,7 +129,7 @@ export const markBookingPaid = async ({
       const lines: string[] = [
         `Hallo ${booking.customerName},`,
         "",
-        "Danke für deine Bestellung. Hier sind deine Details:",
+        "Vielen Dank für deine Buchung bei der Fliegenfischerschule Urs Müller.",
         "",
       ];
 
@@ -142,7 +142,7 @@ export const markBookingPaid = async ({
           subject = `Bestätigung: ${session.course.title}`;
           lines.push(`Kurs: ${session.course.title}`);
           lines.push(`Datum: ${session.date.toLocaleDateString("de-CH")}`);
-          lines.push(`Zeit: ${session.startTime}-${session.endTime}`);
+          lines.push(`Zeit: ${session.startTime}–${session.endTime}`);
           lines.push(`Ort: ${session.location}`);
           if (booking.quantity) {
             lines.push(`Plätze: ${booking.quantity}`);
@@ -164,15 +164,17 @@ export const markBookingPaid = async ({
         if (booking.quantity && booking.quantity > 1) {
           lines.push(`Teilnehmer: ${booking.quantity}`);
         }
+        lines.push("");
+        lines.push("Wir melden uns in Kürze, um den Termin abzustimmen.");
       }
 
       lines.push("");
       lines.push(`Betrag: CHF ${booking.amountCHF}`);
       lines.push("");
-      lines.push("Bei Fragen antworte auf diese E-Mail.");
+      lines.push("Bei Fragen antworte bitte auf diese E-Mail.");
       lines.push("");
       lines.push("Petri Heil");
-      lines.push("Fliegenfischerschule Urs Müller");
+      lines.push("Urs Müller");
 
       await sendBookingMail({
         to: booking.customerEmail,

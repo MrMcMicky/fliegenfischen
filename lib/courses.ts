@@ -47,7 +47,7 @@ export const courses: Course[] = [
     description:
       "Tageskurs für Fortgeschrittene: Distanz, Varianten, Fehleranalyse und effiziente Schnurkontrolle.",
     image: {
-      src: "/illustrations/course-einhand.svg",
+      src: "/illustrations/course-einhand.png",
       alt: "Illustration Einhand Fliegenfischen",
     },
     highlights: [
@@ -83,7 +83,7 @@ export const courses: Course[] = [
     description:
       "Einsteigerkurs für Zweihand-Technik mit Fokus auf Schusskopf, Rollwurf und Spey-Varianten.",
     image: {
-      src: "/illustrations/course-zweihand.svg",
+      src: "/illustrations/course-zweihand.png",
       alt: "Illustration Zweihand Fliegenfischen",
     },
     highlights: [

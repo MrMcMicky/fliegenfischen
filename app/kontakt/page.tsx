@@ -8,6 +8,9 @@ export const metadata = {
 };
 
 export default function KontaktPage() {
+  const phoneHref = `tel:${siteConfig.contact.mobile.replace(/\s/g, "")}`;
+  const mailHref = `mailto:${siteConfig.contact.email}`;
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
@@ -42,8 +45,9 @@ export default function KontaktPage() {
           <p className="mt-3 text-sm text-white/70">
             Formular folgt in Phase 2. Bis dahin gerne per Mail oder Telefon.
           </p>
-          <div className="mt-6">
-            <Button href={`mailto:${siteConfig.contact.email}`} variant="secondary">
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button href={phoneHref}>Anrufen</Button>
+            <Button href={mailHref} variant="secondary">
               Mail senden
             </Button>
           </div>

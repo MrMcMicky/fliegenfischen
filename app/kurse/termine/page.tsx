@@ -42,6 +42,9 @@ export default function TerminePage() {
                 <p className="text-lg font-semibold text-[var(--color-forest)]">
                   {formatPrice(session.priceCHF)}
                 </p>
+                <p className="text-xs text-[var(--color-muted)]">
+                  Noch {session.availableSpots} Plaetze
+                </p>
                 <Link
                   href={`/kurse/${course.slug}`}
                   className="inline-flex items-center justify-center rounded-full border border-[var(--color-forest)]/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)] transition hover:border-[var(--color-forest)]"

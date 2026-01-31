@@ -16,6 +16,26 @@ export function HeroSection({ nextSession }: HeroSectionProps) {
         <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-[var(--color-ember)]/15 blur-3xl" />
         <div className="absolute -right-16 top-0 h-80 w-80 rounded-full bg-[var(--color-forest)]/15 blur-3xl" />
         <div className="absolute bottom-0 left-1/2 h-40 w-[120%] -translate-x-1/2 bg-gradient-to-t from-white/70 to-transparent" />
+        <svg
+          className="absolute bottom-0 left-0 w-full text-[var(--color-forest)]/10"
+          viewBox="0 0 1440 220"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M0,120 C240,200 480,40 720,120 C960,200 1200,40 1440,120"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+          <path
+            d="M0,170 C240,90 480,210 720,170 C960,130 1200,230 1440,170"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1"
+            opacity="0.6"
+          />
+        </svg>
       </div>
       <div className="mx-auto w-full max-w-5xl px-4 text-center">
         <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/70">

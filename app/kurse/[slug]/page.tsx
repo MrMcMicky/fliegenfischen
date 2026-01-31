@@ -69,6 +69,28 @@ export default function CourseDetailPage({
               ))}
             </ul>
           </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                Inklusive
+              </p>
+              <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
+                {course.includes.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                Voraussetzungen
+              </p>
+              <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
+                {course.prerequisites.map((item) => (
+                  <li key={item}>• {item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
         <div className="space-y-6">
           <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">

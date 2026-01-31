@@ -193,7 +193,9 @@ export default function Home() {
           <p className="font-semibold text-[var(--color-text)]">
             {homeSections.contactCard.title}
           </p>
-          <p className="mt-2">{siteConfig.contact.phone} · {siteConfig.contact.mobile}</p>
+          <p className="mt-2">{siteConfig.contact.address[0]}</p>
+          <p>{siteConfig.contact.address[1]}</p>
+          <p className="mt-3">{siteConfig.contact.phone} · {siteConfig.contact.mobile}</p>
           <p>{siteConfig.contact.email}</p>
         </div>
       </section>

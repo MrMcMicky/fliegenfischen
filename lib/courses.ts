@@ -88,7 +88,7 @@ export const courses: Course[] = [
     description:
       "Wurftechnik mit Schusskopf, Rollwurf, Single Spey, Unterhandtechnik und Switch-Cast.",
     image: {
-      src: "/illustrations/course-zweihand-v2.png",
+      src: "/illustrations/course-zweihand-v3.png",
       alt: "Illustration Zweihand Fliegenfischen",
     },
     highlights: [

@@ -271,7 +271,7 @@ export const defaultCourses = [
       "Wurftechnik mit Schusskopf, Rollwurf, Single Spey, Unterhandtechnik und Switch-Cast.",
     description:
       "Wurftechnik mit Schusskopf, Rollwurf, Single Spey, Unterhandtechnik und Switch-Cast.",
-    imageSrc: "/illustrations/course-zweihand-v2.png",
+    imageSrc: "/illustrations/course-zweihand-v3.png",
     imageAlt: "Illustration Zweihand Fliegenfischen",
     highlights: [
       "Schusskopf",

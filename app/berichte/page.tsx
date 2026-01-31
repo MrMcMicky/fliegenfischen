@@ -35,14 +35,11 @@ export default async function BerichtePage() {
               className="group relative overflow-hidden rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
             >
               {heroImage ? (
-                <img
-                  src={heroImage}
-                  alt=""
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover opacity-40 transition duration-300 group-hover:opacity-55"
+                <div
+                  className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40"
+                  style={{ backgroundImage: `url(${heroImage})` }}
                 />
               ) : null}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/85 to-white/70" />
               <div className="relative z-10">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
                   {report.location} · {report.year}

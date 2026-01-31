@@ -40,21 +40,25 @@ export type Course = {
 export const courses: Course[] = [
   {
     slug: "einhand-fortgeschritten",
-    title: "Einhand Wurfkurs Fortgeschrittene",
+    title: "Einhandwurfkurs Trainingstag für Fortgeschrittene",
     level: "Fortgeschritten",
     category: "Einhand",
-    summary: "Distanz, Varianten und Kontrolle für erfahrene Werfer.",
+    summary:
+      "Trainingstag für Fortgeschrittene: Wurfstil perfektionieren und Fehler korrigieren.",
     description:
-      "Tageskurs für Fortgeschrittene: Distanz, Varianten, Fehleranalyse und effiziente Schnurkontrolle.",
+      "Den eigenen Wurfstil perfektionieren und Wurffehler korrigieren. Einführung und Optimierung des Doppelzuges, Backhand-Wurf, Side Cast, Rollwurf, Switch-Cast, Unterhandwurf sowie diverse Trickwürfe.",
     image: {
       src: "/illustrations/course-einhand-v2.png",
       alt: "Illustration Einhand Fliegenfischen",
     },
     highlights: [
-      "Doppelzug und Distanz",
-      "Backhand & Side Cast",
-      "Rollwurf, Switch Cast",
-      "Trick- und Präzisionswürfe",
+      "Doppelzug",
+      "Backhand-Wurf",
+      "Side Cast",
+      "Rollwurf",
+      "Switch-Cast",
+      "Unterhandwurf",
+      "Trickwürfe",
     ],
     duration: "09:00-16:00",
     priceCHF: 190,
@@ -76,21 +80,23 @@ export const courses: Course[] = [
   },
   {
     slug: "zweihand-einsteiger",
-    title: "Zweihand Wurfkurs Einsteiger",
+    title: "Zweihand Fliegenfischerkurs für Einsteiger und leicht Fortgeschrittene",
     level: "Leicht Fortgeschritten",
     category: "Zweihand",
-    summary: "Schusskopf, Rollwürfe und erste Spey-Varianten.",
+    summary:
+      "Wurftechnik mit Schusskopf, Rollwurf, Single Spey, Unterhandtechnik und Switch-Cast.",
     description:
-      "Einsteigerkurs für Zweihand-Technik mit Fokus auf Schusskopf, Rollwurf und Spey-Varianten.",
+      "Wurftechnik mit Schusskopf, Rollwurf, Single Spey, Unterhandtechnik und Switch-Cast.",
     image: {
       src: "/illustrations/course-zweihand-v2.png",
       alt: "Illustration Zweihand Fliegenfischen",
     },
     highlights: [
-      "Schusskopf-Technik",
-      "Rollwurf und Single Spey",
-      "Unterhandwurf",
-      "Switch Cast",
+      "Schusskopf",
+      "Rollwurf",
+      "Single Spey",
+      "Unterhandtechnik",
+      "Switch-Cast",
     ],
     duration: "09:00-16:00",
     priceCHF: 200,

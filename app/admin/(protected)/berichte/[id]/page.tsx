@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { prisma } from "@/lib/db";
 import { parseLines } from "@/lib/admin-utils";
+import { ReportEditor } from "@/components/admin/ReportEditor";
 
 export const dynamic = "force-dynamic";
 
@@ -49,67 +50,19 @@ export default async function AdminReportEditPage({
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="font-display text-2xl font-semibold">Bericht bearbeiten</h2>
-      </div>
-      <form action={updateReport} className="space-y-4">
-        <input
-          name="title"
-          required
-          defaultValue={report.title}
-          placeholder="Titel"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
-        />
-        <input
-          name="slug"
-          required
-          defaultValue={report.slug}
-          placeholder="slug"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
-        />
-        <div className="grid gap-4 md:grid-cols-2">
-          <input
-            name="location"
-            defaultValue={report.location}
-            placeholder="Ort"
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
-          />
-          <input
-            name="year"
-            defaultValue={report.year}
-            placeholder="Jahr"
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
-          />
-        </div>
-        <textarea
-          name="summary"
-          defaultValue={report.summary}
-          placeholder="Summary"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
-        />
-        <textarea
-          name="body"
-          defaultValue={report.body}
-          placeholder="Inhalt"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
-          rows={6}
-        />
-        <textarea
-          name="highlights"
-          defaultValue={report.highlights.join("\n")}
-          placeholder="Highlights"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
-        />
-        <div className="flex flex-wrap gap-3">
-          <button type="submit" className="rounded-full bg-[var(--color-forest)] px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
-            Speichern
-          </button>
-          <button formAction={deleteReport} className="rounded-full border border-red-300 px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-red-600">
-            Löschen
-          </button>
-        </div>
-      </form>
-    </div>
+    <ReportEditor
+      action={updateReport}
+      deleteAction={deleteReport}
+      initial={{
+        title: report.title,
+        slug: report.slug,
+        location: report.location,
+        year: report.year,
+        summary: report.summary,
+        body: report.body,
+        highlights: report.highlights,
+      }}
+      submitLabel="Speichern"
+    />
   );
 }

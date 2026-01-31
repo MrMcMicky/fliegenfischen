@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 
+import { CourseImagePicker } from "@/components/admin/CourseImagePicker";
 import { prisma } from "@/lib/db";
+import { getCourseImageOptions } from "@/lib/course-images";
 import { parseLines } from "@/lib/admin-utils";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +20,7 @@ export default async function AdminCourseEditPage({
   if (!course) {
     redirect("/admin/kurse");
   }
+  const courseImages = await getCourseImageOptions();
 
   async function updateCourse(formData: FormData) {
     "use server";
@@ -108,10 +111,16 @@ export default async function AdminCourseEditPage({
         </div>
         <textarea name="summary" defaultValue={course.summary} placeholder="Kurzbeschreibung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="description" defaultValue={course.description} placeholder="Beschreibung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <div className="grid gap-4 md:grid-cols-2">
-          <input name="imageSrc" defaultValue={course.imageSrc || ""} placeholder="Bild URL" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="imageAlt" defaultValue={course.imageAlt || ""} placeholder="Bild Alt Text" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        </div>
+        <CourseImagePicker
+          availableImages={courseImages}
+          initialSrc={course.imageSrc}
+        />
+        <input
+          name="imageAlt"
+          defaultValue={course.imageAlt || ""}
+          placeholder="Bild Alt Text"
+          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+        />
         <textarea name="highlights" defaultValue={course.highlights.join("\n")} placeholder="Highlights" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="equipment" defaultValue={course.equipment.join("\n")} placeholder="Ausrüstung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="includes" defaultValue={course.includes.join("\n")} placeholder="Inklusive" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />

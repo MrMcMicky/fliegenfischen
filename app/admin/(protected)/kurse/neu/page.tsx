@@ -1,11 +1,15 @@
 import { redirect } from "next/navigation";
 
+import { CourseImagePicker } from "@/components/admin/CourseImagePicker";
 import { prisma } from "@/lib/db";
+import { getCourseImageOptions } from "@/lib/course-images";
 import { parseLines } from "@/lib/admin-utils";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminCourseNewPage() {
+export default async function AdminCourseNewPage() {
+  const courseImages = await getCourseImageOptions();
+
   async function createCourse(formData: FormData) {
     "use server";
 
@@ -90,10 +94,12 @@ export default function AdminCourseNewPage() {
         </div>
         <textarea name="summary" placeholder="Kurzbeschreibung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="description" placeholder="Beschreibung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <div className="grid gap-4 md:grid-cols-2">
-          <input name="imageSrc" placeholder="Bild URL" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="imageAlt" placeholder="Bild Alt Text" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        </div>
+        <CourseImagePicker availableImages={courseImages} />
+        <input
+          name="imageAlt"
+          placeholder="Bild Alt Text"
+          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+        />
         <textarea name="highlights" placeholder="Highlights (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="equipment" placeholder="Ausrüstung (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
         <textarea name="includes" placeholder="Inklusive (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />

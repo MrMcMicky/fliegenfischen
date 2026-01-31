@@ -10,6 +10,11 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
+const extractFirstImage = (body: string) => {
+  const match = body.match(/<img[^>]+src="([^"]+)"/i);
+  return match?.[1] || null;
+};
+
 export default async function BerichtePage() {
   const reports = await prisma.report.findMany({ orderBy: { year: "desc" } });
 
@@ -21,23 +26,37 @@ export default async function BerichtePage() {
         description="Bestehende Inhalte werden hier modern aufbereitet: Reiseberichte, Technik und Gewässer-Wissen."
       />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {reports.map((report) => (
-          <Link
-            key={report.slug}
-            href={`/berichte/${report.slug}`}
-            className="rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
-          >
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-              {report.location} · {report.year}
-            </p>
-            <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
-              {report.title}
-            </h3>
-            <p className="mt-2 text-sm text-[var(--color-muted)]">
-              {report.summary}
-            </p>
-          </Link>
-        ))}
+        {reports.map((report) => {
+          const heroImage = extractFirstImage(report.body || "");
+          return (
+            <Link
+              key={report.slug}
+              href={`/berichte/${report.slug}`}
+              className="group relative overflow-hidden rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
+            >
+              {heroImage ? (
+                <img
+                  src={heroImage}
+                  alt=""
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover opacity-40 transition duration-300 group-hover:opacity-55"
+                />
+              ) : null}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/85 to-white/70" />
+              <div className="relative z-10">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                  {report.location} · {report.year}
+                </p>
+                <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
+                  {report.title}
+                </h3>
+                <p className="mt-2 text-sm text-[var(--color-muted)]">
+                  {report.summary}
+                </p>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

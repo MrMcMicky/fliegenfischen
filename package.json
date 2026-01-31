@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' scripts/seed.ts"
+    "prisma:generate": "./scripts/prisma-safe.sh generate",
+    "prisma:migrate": "./scripts/prisma-safe.sh migrate dev",
+    "prisma:seed": "./scripts/prisma-safe.sh db seed"
   },
   "dependencies": {
     "@prisma/client": "^6.16.1",

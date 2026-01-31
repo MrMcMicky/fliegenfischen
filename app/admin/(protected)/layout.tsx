@@ -21,6 +21,7 @@ export default async function AdminLayout({
     { href: "/admin/angebote", label: "Angebote" },
     { href: "/admin/gutscheine", label: "Gutscheine" },
     { href: "/admin/berichte", label: "Berichte" },
+    { href: "/admin/anfragen", label: "Anfragen" },
     { href: "/admin/buchungen", label: "Buchungen" },
     { href: "/admin/zahlungen", label: "Zahlungen" },
     { href: "/admin/settings", label: "Einstellungen" },

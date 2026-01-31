@@ -1,5 +1,6 @@
 "use server";
 
+import { prisma } from "@/lib/db";
 import { sendContactMail } from "@/lib/email";
 
 export type ContactFormState = {
@@ -36,6 +37,15 @@ export async function submitContact(
   }
 
   try {
+    await prisma.contactRequest.create({
+      data: {
+        name,
+        email,
+        phone: phone || null,
+        subject: subject || null,
+        message,
+      },
+    });
     await sendContactMail({ name, email, phone, subject, message });
     return {
       status: "success",

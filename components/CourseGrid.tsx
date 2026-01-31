@@ -31,16 +31,22 @@ export function CourseGrid({
           className="rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
         >
           {session.course ? (
-            session.course.imageSrc &&
-            !session.course.imageSrc.includes("/illustrations/") &&
-            !session.course.imageSrc.endsWith(".svg") ? (
-              <div className="mb-4 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)]">
+            session.course.imageSrc ? (
+              <div
+                className={`mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] ${
+                  session.course.imageSrc.endsWith(".svg") ? "p-3" : "overflow-hidden"
+                }`}
+              >
                 <Image
                   src={session.course.imageSrc}
                   alt={session.course.imageAlt || session.course.title}
                   width={520}
                   height={240}
-                  className="h-24 w-full object-cover"
+                  className={`w-full ${
+                    session.course.imageSrc.endsWith(".svg")
+                      ? "h-20 object-contain"
+                      : "h-24 object-cover"
+                  }`}
                 />
               </div>
             ) : (

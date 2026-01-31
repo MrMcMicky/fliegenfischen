@@ -33,21 +33,23 @@ export function CourseCard({
     endTime: string;
   }[];
 }) {
-  const hasPhoto =
-    Boolean(course.imageSrc) &&
-    !course.imageSrc?.includes("/illustrations/") &&
-    !course.imageSrc?.endsWith(".svg");
+  const hasImage = Boolean(course.imageSrc);
+  const isSvg = course.imageSrc?.endsWith(".svg") ?? false;
 
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
-      {hasPhoto ? (
-        <div className="mb-4 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)]">
+      {hasImage ? (
+        <div
+          className={`mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] ${
+            isSvg ? "p-3" : "overflow-hidden"
+          }`}
+        >
           <Image
             src={course.imageSrc as string}
             alt={course.imageAlt || course.title}
             width={520}
             height={240}
-            className="h-28 w-full object-cover"
+            className={`w-full ${isSvg ? "h-24 object-contain" : "h-28 object-cover"}`}
           />
         </div>
       ) : (

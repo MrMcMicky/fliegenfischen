@@ -8,22 +8,24 @@ export type ContactPayload = {
   message: string;
 };
 
+export type VoucherEmailPayload = {
+  to: string;
+  customerName: string;
+  voucherCode: string;
+  amountCHF: number;
+  recipientName?: string | null;
+  message?: string | null;
+  pdfBytes: Uint8Array;
+};
+
 const getEnv = (key: string) => process.env[key];
 
-export async function sendContactMail(payload: ContactPayload) {
+const createTransporter = () => {
   const host = getEnv("SMTP_HOST");
   const portValue = getEnv("SMTP_PORT");
   const user = getEnv("SMTP_USER");
   const pass = getEnv("SMTP_PASS");
   const secure = getEnv("SMTP_SECURE") === "true";
-  const to =
-    getEnv("CONTACT_EMAIL_TO") ||
-    getEnv("SMTP_TO") ||
-    "info@fliegenfischer-schule.ch";
-  const from =
-    getEnv("CONTACT_EMAIL_FROM") ||
-    getEnv("SMTP_FROM") ||
-    "Fliegenfischerschule <no-reply@fliegenfischer-schule.shop>";
 
   if (!host || !portValue || !user || !pass) {
     throw new Error(
@@ -32,8 +34,7 @@ export async function sendContactMail(payload: ContactPayload) {
   }
 
   const port = Number(portValue);
-
-  const transporter = nodemailer.createTransport({
+  return nodemailer.createTransport({
     host,
     port,
     secure,
@@ -42,6 +43,18 @@ export async function sendContactMail(payload: ContactPayload) {
       pass,
     },
   });
+};
+
+const getDefaultFrom = () =>
+  getEnv("SMTP_FROM") || "Fliegenfischerschule <no-reply@fliegenfischer-schule.shop>";
+
+export async function sendContactMail(payload: ContactPayload) {
+  const to =
+    getEnv("CONTACT_EMAIL_TO") ||
+    getEnv("SMTP_TO") ||
+    "info@fliegenfischer-schule.ch";
+  const from = getEnv("CONTACT_EMAIL_FROM") || getDefaultFrom();
+  const transporter = createTransporter();
 
   const subject = payload.subject?.trim() || "Kontaktanfrage";
   const text = [
@@ -60,5 +73,44 @@ export async function sendContactMail(payload: ContactPayload) {
     replyTo: payload.email,
     subject: `Fliegenfischerschule: ${subject}`,
     text,
+  });
+}
+
+export async function sendVoucherMail(payload: VoucherEmailPayload) {
+  const from = getEnv("BOOKING_EMAIL_FROM") || getDefaultFrom();
+  const bcc = getEnv("BOOKING_EMAIL_BCC") || "";
+  const transporter = createTransporter();
+
+  const subject = "Dein Gutschein der Fliegenfischerschule";
+  const lines = [
+    `Hallo ${payload.customerName},`,
+    "",
+    "Vielen Dank für deine Bestellung.",
+    `Gutschein-Code: ${payload.voucherCode}`,
+    `Wert: CHF ${payload.amountCHF}`,
+    payload.recipientName ? `Empfänger: ${payload.recipientName}` : null,
+    "",
+    payload.message ? `Nachricht: ${payload.message}` : null,
+    "",
+    "Der Gutschein ist als PDF im Anhang.",
+    "",
+    "Petri Heil",
+    "Fliegenfischerschule Urs Müller",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  await transporter.sendMail({
+    to: payload.to,
+    bcc: bcc || undefined,
+    from,
+    subject,
+    text: lines,
+    attachments: [
+      {
+        filename: `Gutschein-${payload.voucherCode}.pdf`,
+        content: Buffer.from(payload.pdfBytes),
+      },
+    ],
   });
 }

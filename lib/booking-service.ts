@@ -2,6 +2,8 @@ import crypto from "crypto";
 import type { Booking } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
+import { sendVoucherMail } from "@/lib/email";
+import { renderVoucherPdf } from "@/lib/voucher-pdf";
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
@@ -96,5 +98,30 @@ export const markBookingPaid = async ({
   }
 
   const voucher = await createVoucherIfNeeded(booking);
+
+  if (!alreadyPaid && booking.type === "VOUCHER" && voucher) {
+    try {
+      const pdfBytes = await renderVoucherPdf({
+        code: voucher.code,
+        amountCHF: voucher.originalAmount,
+        recipientName: voucher.recipientName,
+        message: voucher.message,
+        purchaserName: booking.customerName,
+        issuedAt: new Date(),
+      });
+      await sendVoucherMail({
+        to: booking.customerEmail,
+        customerName: booking.customerName,
+        voucherCode: voucher.code,
+        amountCHF: voucher.originalAmount,
+        recipientName: voucher.recipientName,
+        message: voucher.message,
+        pdfBytes,
+      });
+    } catch (error) {
+      console.error("voucher email failed", error);
+    }
+  }
+
   return { booking, voucher };
 };

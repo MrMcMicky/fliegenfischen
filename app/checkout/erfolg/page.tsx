@@ -38,6 +38,12 @@ export default async function CheckoutSuccessPage({
           <p className="mt-1 text-lg font-semibold text-[var(--color-forest)]">
             {booking.voucher.code}
           </p>
+          <Link
+            href={`/api/voucher/pdf?bookingId=${booking.id}`}
+            className="mt-4 inline-flex items-center justify-center rounded-full border border-[var(--color-forest)]/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)]"
+          >
+            Gutschein PDF herunterladen
+          </Link>
         </div>
       ) : null}
       <Link

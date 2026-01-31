@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { Button } from "@/components/Button";
 import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
@@ -5,7 +7,7 @@ import { formatPrice } from "@/lib/format";
 
 export const metadata = {
   title: "Privatunterricht",
-  description: "Individuelle Privatstunden fuer Technik und Praxis.",
+  description: "Individuelle Privatstunden für Technik und Praxis.",
 };
 
 export const dynamic = "force-dynamic";
@@ -34,9 +36,18 @@ export default async function PrivatunterrichtPage() {
       />
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6">
+          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
+            <Image
+              src="/illustrations/private-lessons.png"
+              alt="Illustration Privatunterricht"
+              width={720}
+              height={480}
+              className="h-40 w-full object-contain sm:h-48"
+            />
+          </div>
           <p className="text-sm text-[var(--color-muted)]">
             Wir richten uns nach deinem Niveau: Technikfehler, Wurfvarianten,
-            Praxis am Wasser. Ideal fuer alle, die gezielt Fortschritt wollen.
+            Praxis am Wasser. Ideal für alle, die gezielt Fortschritt wollen.
           </p>
           <ul className="space-y-2 text-sm text-[var(--color-muted)]">
             {lesson.bullets.map((bullet) => (

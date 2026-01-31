@@ -20,7 +20,7 @@ export function HeroSection({ nextSession }: HeroSectionProps) {
           loop
           playsInline
           preload="metadata"
-          poster="/illustrations/hero-river.svg"
+          poster="/videos/hero-fliegenfischer.jpg"
         >
           <source src="/videos/hero-fliegenfischer.mp4" type="video/mp4" />
         </video>

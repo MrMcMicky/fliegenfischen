@@ -1,0 +1,417 @@
+export const defaultSiteSettings = {
+  name: "Fliegenfischerschule Urs Mueller",
+  tagline: "Fliegenfischen lernen vom Profi in der Region Zuerich",
+  location: "Geroldswil / Limmat, Zuerich",
+  contact: {
+    instructor: "Urs Mueller",
+    address: ["Ruggstrasse 36", "CH 8954 Geroldswil"],
+    phone: "044 748 17 36",
+    mobile: "076 397 84 85",
+    email: "info@fliegenfischer-schule.ch",
+  },
+  navLinks: [
+    { label: "Kurse", href: "/kurse" },
+    { label: "Privat", href: "/privatunterricht" },
+    { label: "Ueber uns", href: "/ueber-uns" },
+    { label: "Kontakt", href: "/kontakt" },
+  ],
+  categorySummaries: [
+    {
+      title: "Einhand",
+      description: "Vom Einsteiger bis Fortgeschrittene mit sauberer Technik.",
+      href: "/kurse",
+    },
+    {
+      title: "Zweihand",
+      description: "Spey, Switch Cast und effiziente Schusskopf-Fuehrung.",
+      href: "/kurse",
+    },
+    {
+      title: "Schnuppern",
+      description: "2 Stunden Einstieg, ideal zum Reinschnuppern.",
+      href: "/schnupperstunden",
+    },
+    {
+      title: "Privatunterricht",
+      description: "Individuelle Ziele, Fehleranalyse, flexible Termine.",
+      href: "/privatunterricht",
+    },
+    {
+      title: "Gutscheine",
+      description: "Wert- oder Kursgutschein, perfekt als Geschenk.",
+      href: "/gutscheine",
+    },
+  ],
+  footerLinks: {
+    offer: [
+      { label: "Kursuebersicht", href: "/kurse" },
+      { label: "Termine", href: "/kurse/termine" },
+      { label: "Schnupperstunden", href: "/schnupperstunden" },
+      { label: "Privatunterricht", href: "/privatunterricht" },
+      { label: "Gutscheine", href: "/gutscheine" },
+    ],
+    resources: [
+      { label: "Ueber uns", href: "/ueber-uns" },
+      { label: "Berichte", href: "/berichte" },
+      { label: "FAQ", href: "/#faq" },
+      { label: "Wetter", href: "/wetter" },
+      { label: "Rechtliches", href: "/rechtliches" },
+    ],
+  },
+  homeHero: {
+    eyebrow: "Fliegenfischerschule",
+    title: "Fliegenfischen in der Region Zuerich - ruhig, praezise, draussen.",
+    description:
+      "Kleine Gruppen, klare Lernschritte und ein Instruktor mit SFV- und EFFA-Hintergrund.",
+    primaryCta: { label: "Termin sichern", href: "/kurse/termine" },
+    secondaryCta: { label: "Kurse ansehen", href: "/kurse" },
+  },
+  aboutSection: {
+    title: "Ueber Urs Mueller",
+    description:
+      "SFV Instruktor (2003) und EFFA Basic Flycasting Instructor (2004). Fokus auf Technik, Sicherheit und Praxis.",
+    highlights: [
+      "SFV Instruktorenpruefung 2003",
+      "EFFA Basic Flycasting Instructor 2004",
+    ],
+    note: "Treffpunkte entlang der Limmat, Kursmaterial auf Wunsch, klare Ablaeufe.",
+  },
+  aboutPage: {
+    title: "Ueber Urs Mueller",
+    intro:
+      "Fliegenfischen lebt von Geduld, Technik und einem wachen Blick fuers Wasser. Genau darauf basiert der Unterricht: ruhig, strukturiert und praxisnah.",
+    bio:
+      "Urs Mueller unterrichtet seit vielen Jahren in der Region Zuerich und kombiniert klare Technikvermittlung mit realen Situationen am Gewaesser.",
+    highlights: [
+      "SFV Instruktorenpruefung 2003",
+      "EFFA Basic Flycasting Instructor 2004",
+    ],
+    values: [
+      "Kleine Gruppen fuer intensives Feedback",
+      "Praxis am Wasser statt nur Theorie",
+      "Klare Ablaufe, nachvollziehbare Fortschritte",
+    ],
+    cta: {
+      title: "Lust auf einen Kennenlern-Termin?",
+      description:
+        "Schnupperstunden oder Privatunterricht sind ideal, um Stil und Niveau abzustimmen.",
+      primary: { label: "Schnuppern", href: "/schnupperstunden" },
+      secondary: { label: "Kontakt aufnehmen", href: "/kontakt" },
+    },
+  },
+  homeSections: {
+    upcoming: {
+      eyebrow: "Termine",
+      title: "Naechste Kurse",
+      description:
+        "Frueh buchen lohnt sich: Die Gruppen bleiben klein und die Plaetze sind limitiert.",
+    },
+    formats: {
+      eyebrow: "Angebot",
+      title: "Kursformate fuer jedes Level",
+      description:
+        "Einhand oder Zweihand, Privat oder Schnuppern: Technik Schritt fuer Schritt aufbauen.",
+    },
+    timeline: {
+      eyebrow: "Lernpfad",
+      title: "So bauen wir Technik und Praxis auf",
+      description:
+        "Von der Materialkunde bis zur Praxis am Wasser. Jeder Kurs bringt dich einen Schritt weiter.",
+    },
+    reports: {
+      eyebrow: "Wissen",
+      title: "Berichte und Einblicke",
+      description:
+        "Reiseberichte und Gewaesser-Notizen aus der Praxis. Ideal fuer Inspiration.",
+    },
+    faq: {
+      eyebrow: "FAQ",
+      title: "Haefige Fragen",
+      description: "Kurz und klar beantwortet. Fuer Details gerne direkt melden.",
+    },
+    cta: {
+      title: "Bereit fuer den naechsten Schritt?",
+      description:
+        "Sichere dir einen Platz oder verschenke einen Gutschein. Wir melden uns mit allen Details.",
+      note: "Schnupperstunden ab CHF 70 / Std., Privatunterricht flexibel.",
+      primary: { label: "Termin sichern", href: "/kurse/termine" },
+      secondary: { label: "Gutschein bestellen", href: "/gutscheine" },
+      tertiary: { label: "Kontakt", href: "/kontakt" },
+    },
+    contactCard: {
+      title: "Kontakt auf einen Blick",
+    },
+  },
+  uspItems: [
+    {
+      title: "Kleine Gruppen",
+      description: "Max. 6 Teilnehmende fuer intensive Betreuung.",
+    },
+    {
+      title: "Zertifizierte Ausbildung",
+      description: "SFV Instruktor und EFFA Basic Abschluss (2004).",
+    },
+    {
+      title: "Ausrustung vorhanden",
+      description: "Ruten und Schnuere koennen gestellt werden.",
+    },
+    {
+      title: "Region Limmat",
+      description: "Kurse in Dietikon/Wettingen und Umgebung.",
+    },
+  ],
+  faqs: [
+    {
+      question: "Brauche ich eigene Ausruestung?",
+      answer: "Nein. Ruten und Schnuere koennen auf Anfrage gestellt werden.",
+    },
+    {
+      question: "Findet der Kurs bei schlechtem Wetter statt?",
+      answer: "Ja, Kurse finden bei jeder Witterung statt.",
+    },
+    {
+      question: "Wie viele Personen sind dabei?",
+      answer: "Maximal 6 Teilnehmende pro Termin.",
+    },
+  ],
+  testimonials: [
+    {
+      quote:
+        "Nach zwei Stunden sass der Doppelzug endlich. Sehr praezise Korrekturen.",
+      author: "Teilnehmer Einhandkurs",
+    },
+    {
+      quote:
+        "Schnupperstunde gebucht und sofort Lust auf mehr. Ruhige Erklaerungen und viel Geduld.",
+      author: "Teilnehmerin Schnupperstunde",
+    },
+    {
+      quote:
+        "Strukturierter Aufbau, kleine Gruppe, viel Feedback. Genau das habe ich gesucht.",
+      author: "Teilnehmer Zweihandkurs",
+    },
+  ],
+  testimonialSection: {
+    eyebrow: "Erfolge",
+    title: "Klarer Aufbau, spuerbarer Fortschritt.",
+    description:
+      "Kleine Gruppen sorgen dafuer, dass jeder Wurf gesehen wird. Das Ziel: Technik, die auch am Wasser funktioniert.",
+  },
+  coursePathSteps: [
+    {
+      step: "Stufe 1",
+      title: "Grundlagen & Sicherheit",
+      detail: "Material, Knoten, Sicherheit am Wasser.",
+    },
+    {
+      step: "Stufe 2",
+      title: "Wurfmechanik",
+      detail: "Timing, Schnurkontrolle, saubere Schlaufen.",
+    },
+    {
+      step: "Stufe 3",
+      title: "Praezision",
+      detail: "Rollwuerfe, Seitenwuerfe, Distanz.",
+    },
+    {
+      step: "Stufe 4",
+      title: "Technik vertiefen",
+      detail: "Doppelzug, Spezialwuerfe, Fehleranalyse.",
+    },
+    {
+      step: "Stufe 5",
+      title: "Praxis am Wasser",
+      detail: "Lesen des Gewaessers, Insektenkunde, Taktik.",
+    },
+  ],
+};
+
+export const defaultCourses = [
+  {
+    slug: "einhand-fortgeschritten",
+    title: "Einhand Wurfkurs Fortgeschrittene",
+    level: "FORTGESCHRITTEN" as const,
+    category: "EINHAND" as const,
+    summary: "Distanz, Varianten und Kontrolle fuer erfahrene Werfer.",
+    description:
+      "Tageskurs fuer Fortgeschrittene: Distanz, Varianten, Fehleranalyse und effiziente Schnurkontrolle.",
+    imageSrc: "/illustrations/course-einhand.svg",
+    imageAlt: "Illustration Einhand Fliegenfischen",
+    highlights: [
+      "Doppelzug und Distanz",
+      "Backhand & Side Cast",
+      "Rollwurf, Switch Cast",
+      "Trick- und Praezisionswuerfe",
+    ],
+    duration: "09:00-16:00",
+    priceCHF: 190,
+    maxParticipants: 6,
+    location: "Limmat (Dietikon/Wettingen)",
+    equipment: [
+      "Eigene Einhandrute (falls vorhanden)",
+      "Wathose oder wetterfeste Kleidung",
+    ],
+    includes: [
+      "Technik-Coaching in Kleingruppe",
+      "Individuelles Feedback",
+      "Optionale Leihrueten",
+    ],
+    prerequisites: ["Sicherer Grundwurf", "Grundlegende Schnurkontrolle"],
+  },
+  {
+    slug: "zweihand-einsteiger",
+    title: "Zweihand Wurfkurs Einsteiger",
+    level: "LEICHT_FORTGESCHRITTEN" as const,
+    category: "ZWEIHAND" as const,
+    summary: "Schusskopf, Rollwuerfe und erste Spey-Varianten.",
+    description:
+      "Einsteigerkurs fuer Zweihand-Technik mit Fokus auf Schusskopf, Rollwurf und Spey-Varianten.",
+    imageSrc: "/illustrations/course-zweihand.svg",
+    imageAlt: "Illustration Zweihand Fliegenfischen",
+    highlights: [
+      "Schusskopf-Technik",
+      "Rollwurf und Single Spey",
+      "Unterhandwurf",
+      "Switch Cast",
+    ],
+    duration: "09:00-16:00",
+    priceCHF: 200,
+    maxParticipants: 6,
+    location: "Limmat (Dietikon/Wettingen)",
+    equipment: [
+      "Eigene Zweihandrute (falls vorhanden)",
+      "Wathose oder wetterfeste Kleidung",
+    ],
+    includes: [
+      "Technik-Coaching in Kleingruppe",
+      "Leihrueten auf Anfrage",
+      "Praxisnahes Training am Wasser",
+    ],
+    prerequisites: ["Grundlegende Wurferfahrung hilfreich"],
+  },
+];
+
+export const defaultCourseSessions = [
+  {
+    courseSlug: "einhand-fortgeschritten",
+    date: "2026-03-15",
+    startTime: "09:00",
+    endTime: "16:00",
+    location: "Dietikon/Wettingen an der Limmat",
+    priceCHF: 190,
+    availableSpots: 6,
+    status: "VERFUEGBAR" as const,
+    notes: [
+      "Kurs findet bei jeder Witterung statt",
+      "Verpflegung und Spesen nicht enthalten",
+    ],
+  },
+  {
+    courseSlug: "zweihand-einsteiger",
+    date: "2026-03-08",
+    startTime: "09:00",
+    endTime: "16:00",
+    location: "Dietikon/Wettingen an der Limmat",
+    priceCHF: 200,
+    availableSpots: 6,
+    status: "VERFUEGBAR" as const,
+    notes: [
+      "Kurs findet bei jeder Witterung statt",
+      "Verpflegung und Spesen nicht enthalten",
+    ],
+  },
+];
+
+export const defaultLessonOfferings = [
+  {
+    type: "PRIVATE" as const,
+    title: "Privatunterricht",
+    priceCHF: 70,
+    minHours: 2,
+    additionalPersonCHF: 40,
+    description:
+      "Individuelles Coaching am Wasser: Technik, Fehleranalyse und klare Ziele. Termine nach Vereinbarung.",
+    bullets: [
+      "Termine unter der Woche nach Vereinbarung",
+      "Fokus auf individuelle Ziele",
+      "Ausrustung kann gestellt werden",
+    ],
+  },
+  {
+    type: "TASTER" as const,
+    title: "Schnupperstunden",
+    priceCHF: 70,
+    minHours: 2,
+    additionalPersonCHF: 40,
+    description:
+      "Kurzer Einstieg: Grundtechnik, Materialkunde und erste Wuerfe.",
+    bullets: [
+      "Termine unter der Woche nach Vereinbarung",
+      "Ausrustung kann gestellt werden",
+      "Kleingruppe oder privat",
+    ],
+  },
+];
+
+export const defaultVoucherOptions = [
+  {
+    title: "Wertgutschein",
+    description: "Frei waehlbarer Betrag, einloesbar fuer alle Kurse.",
+    kind: "VALUE" as const,
+    values: [100, 150, 200, 250],
+  },
+  {
+    title: "Kursgutschein",
+    description: "Direkt fuer einen Kurs oder 2h Privatstunde.",
+    kind: "COURSE" as const,
+    values: [140, 190, 200],
+  },
+];
+
+export const defaultReports = [
+  {
+    slug: "island-2010",
+    title: "Island 2010",
+    location: "Island",
+    year: "2010",
+    summary:
+      "Reisebericht mit Fokus auf Gewaesser, Technik und besondere Fangerlebnisse.",
+    highlights: [
+      "Gletscherfluesse und klare Seen",
+      "Wurftechnik bei Wind",
+      "Material- und Fliegenwahl",
+    ],
+    body:
+      "Dieser Bericht wird im Relaunch aus dem bestehenden Material neu aufbereitet. Ziel ist eine klare Struktur, groessere Bilder und eine bessere Lesbarkeit auf Mobilgeraeten.",
+  },
+  {
+    slug: "murgsee",
+    title: "Murgsee",
+    location: "Glarner Alpen",
+    year: "2012",
+    summary:
+      "Hochalpiner Tagestrip mit Blick auf Wetter, Sicherheit und Gewaesserlesen.",
+    highlights: [
+      "Zustieg und Ausruestung",
+      "Lesen von Standplaetzen",
+      "Schonende Landung",
+    ],
+    body:
+      "Dieser Bericht wird im Relaunch aus dem bestehenden Material neu aufbereitet. Ziel ist eine klare Struktur, groessere Bilder und eine bessere Lesbarkeit auf Mobilgeraeten.",
+  },
+  {
+    slug: "fischpass-wettingen",
+    title: "Fischpass Wettingen",
+    location: "Limmat",
+    year: "2014",
+    summary:
+      "Beobachtungen rund um den Fischpass und die Bedeutung von Gewaesserstrukturen.",
+    highlights: [
+      "Hydraulik und Stroemung",
+      "Spot-Analyse",
+      "Schonendes Handling",
+    ],
+    body:
+      "Dieser Bericht wird im Relaunch aus dem bestehenden Material neu aufbereitet. Ziel ist eine klare Struktur, groessere Bilder und eine bessere Lesbarkeit auf Mobilgeraeten.",
+  },
+];

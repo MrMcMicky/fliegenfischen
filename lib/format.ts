@@ -1,5 +1,5 @@
-export const formatDate = (value: string) => {
-  const date = new Date(value);
+export const formatDate = (value: Date | string) => {
+  const date = typeof value === "string" ? new Date(value) : value;
   return new Intl.DateTimeFormat("de-CH", {
     day: "2-digit",
     month: "2-digit",

@@ -1,13 +1,12 @@
 import type { MetadataRoute } from "next";
 
-import { courses } from "@/lib/courses";
-import { reports } from "@/lib/reports";
+import { prisma } from "@/lib/db";
 
 const baseUrl =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
   "http://localhost:3000";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     "",
     "/kurse",
@@ -21,6 +20,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/rechtliches",
     "/wetter",
   ];
+
+  const [courses, reports] = await Promise.all([
+    prisma.course.findMany({ select: { slug: true } }),
+    prisma.report.findMany({ select: { slug: true } }),
+  ]);
 
   const courseRoutes = courses.map((course) => `/kurse/${course.slug}`);
   const reportRoutes = reports.map((report) => `/berichte/${report.slug}`);

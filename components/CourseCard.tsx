@@ -1,23 +1,44 @@
 import Image from "next/image";
 
 import { Button } from "@/components/Button";
-import type { Course, CourseSession } from "@/lib/courses";
-import { formatDate, formatPrice } from "@/lib/utils";
+import { formatDate, formatPrice } from "@/lib/format";
+import {
+  courseCategoryLabels,
+  courseLevelLabels,
+} from "@/lib/public-types";
 
 export function CourseCard({
   course,
   sessions = [],
 }: {
-  course: Course;
-  sessions?: CourseSession[];
+  course: {
+    id: string;
+    slug: string;
+    title: string;
+    level: string;
+    category: string;
+    summary: string;
+    imageSrc?: string | null;
+    imageAlt?: string | null;
+    duration: string;
+    maxParticipants: number;
+    location: string;
+    priceCHF: number;
+  };
+  sessions?: {
+    id: string;
+    date: Date;
+    startTime: string;
+    endTime: string;
+  }[];
 }) {
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
-      {course.image ? (
+      {course.imageSrc ? (
         <div className="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
           <Image
-            src={course.image.src}
-            alt={course.image.alt}
+            src={course.imageSrc}
+            alt={course.imageAlt || course.title}
             width={520}
             height={240}
             className="h-24 w-full object-contain"
@@ -26,7 +47,8 @@ export function CourseCard({
       ) : null}
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-          {course.level} · {course.category}
+          {courseLevelLabels[course.level] ?? course.level} · {" "}
+          {courseCategoryLabels[course.category] ?? course.category}
         </p>
         <h3 className="mt-2 font-display text-2xl font-semibold text-[var(--color-text)]">
           {course.title}
@@ -48,7 +70,7 @@ export function CourseCard({
       {sessions.length > 0 ? (
         <div className="mt-4 space-y-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            Nächste Termine
+            Naechste Termine
           </p>
           {sessions.slice(0, 2).map((session) => (
             <div

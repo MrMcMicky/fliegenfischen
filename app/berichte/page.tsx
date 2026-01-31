@@ -1,20 +1,24 @@
 import Link from "next/link";
 
 import { SectionHeader } from "@/components/SectionHeader";
-import { reports } from "@/lib/reports";
+import { prisma } from "@/lib/db";
 
 export const metadata = {
   title: "Wissen & Berichte",
-  description: "Reiseberichte, Gewässer und Praxistipps aus der Region.",
+  description: "Reiseberichte, Gewaesser und Praxistipps aus der Region.",
 };
 
-export default function BerichtePage() {
+export const dynamic = "force-dynamic";
+
+export default async function BerichtePage() {
+  const reports = await prisma.report.findMany({ orderBy: { year: "desc" } });
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow="Wissen"
         title="Berichte & Einblicke"
-        description="Bestehende Inhalte werden hier modern aufbereitet: Reiseberichte, Technik und Gewässer-Wissen."
+        description="Bestehende Inhalte werden hier modern aufbereitet: Reiseberichte, Technik und Gewaesser-Wissen."
       />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {reports.map((report) => (

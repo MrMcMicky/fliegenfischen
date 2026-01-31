@@ -1,15 +1,20 @@
 import Link from "next/link";
 
 import { Button } from "@/components/Button";
-import type { CourseSession } from "@/lib/courses";
-import { homeHero } from "@/lib/data";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/format";
 
-type HeroSectionProps = {
-  nextSession?: CourseSession | null;
-};
-
-export function HeroSection({ nextSession }: HeroSectionProps) {
+export function HeroSection({
+  nextSession,
+  hero,
+}: {
+  nextSession?: { date: Date } | null;
+  hero: {
+    title: string;
+    description: string;
+    primaryCta: { label: string; href: string };
+    secondaryCta: { label: string; href: string };
+  };
+}) {
   return (
     <section className="relative overflow-hidden pb-16 pt-12">
       <div className="absolute inset-0 -z-10">
@@ -33,7 +38,7 @@ export function HeroSection({ nextSession }: HeroSectionProps) {
             href="/kurse/termine"
             className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--color-ember)]"
           >
-            Nächster Kurs · {formatDate(nextSession.date)}
+            Naechster Kurs · {formatDate(nextSession.date)}
           </Link>
         ) : (
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--color-ember)]">
@@ -41,17 +46,17 @@ export function HeroSection({ nextSession }: HeroSectionProps) {
           </p>
         )}
         <h1 className="mt-6 font-display text-4xl font-semibold sm:text-5xl lg:text-6xl">
-          {homeHero.title}
+          {hero.title}
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-base text-white/80 sm:text-lg">
-          {homeHero.description}
+          {hero.description}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Button href={homeHero.primaryCta.href} size="lg">
-            {homeHero.primaryCta.label}
+          <Button href={hero.primaryCta.href} size="lg">
+            {hero.primaryCta.label}
           </Button>
-          <Button href={homeHero.secondaryCta.href} variant="light" size="lg">
-            {homeHero.secondaryCta.label}
+          <Button href={hero.secondaryCta.href} variant="secondary" size="lg">
+            {hero.secondaryCta.label}
           </Button>
         </div>
       </div>

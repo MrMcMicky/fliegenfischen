@@ -4,6 +4,7 @@ import { Playfair_Display, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { prisma } from "@/lib/db";
 
 const sourceSans = Source_Sans_3({
   subsets: ["latin"],
@@ -19,25 +20,58 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "Fliegenfischerschule Urs Müller",
-    template: "%s | Fliegenfischerschule Urs Müller",
+    default: "Fliegenfischerschule Urs Mueller",
+    template: "%s | Fliegenfischerschule Urs Mueller",
   },
   description:
-    "Fliegenfischen lernen in der Region Zürich: Einhand- und Zweihandkurse, Privatunterricht, Schnupperstunden und Gutscheine.",
+    "Fliegenfischen lernen in der Region Zuerich: Einhand- und Zweihandkurse, Privatunterricht, Schnupperstunden und Gutscheine.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
+
+  const navLinks = (settings?.navLinks as { label: string; href: string }[]) || [];
+  const footerLinks =
+    (settings?.footerLinks as {
+      offer: { label: string; href: string }[];
+      resources: { label: string; href: string }[];
+    }) || { offer: [], resources: [] };
+  const contact =
+    (settings?.contact as {
+      instructor: string;
+      address: string[];
+      phone: string;
+      mobile: string;
+      email: string;
+    }) || {
+      instructor: "",
+      address: ["", ""],
+      phone: "",
+      mobile: "",
+      email: "",
+    };
+
   return (
     <html lang="de">
       <body className={`${sourceSans.variable} ${playfair.variable} antialiased`}>
         <div className="flex min-h-screen flex-col">
-          <Header />
+          <Header
+            siteName={settings?.name || "Fliegenfischerschule"}
+            location={settings?.location || ""}
+            navLinks={navLinks}
+          />
           <main className="flex-1">{children}</main>
-          <Footer />
+          <Footer
+            siteName={settings?.name || "Fliegenfischerschule"}
+            location={settings?.location || ""}
+            navLinks={navLinks}
+            footerLinks={footerLinks}
+            contact={contact}
+          />
         </div>
       </body>
     </html>

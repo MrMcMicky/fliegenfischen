@@ -2,13 +2,23 @@ import { notFound } from "next/navigation";
 
 import { Button } from "@/components/Button";
 import { SectionHeader } from "@/components/SectionHeader";
-import { getReportBySlug, reports } from "@/lib/reports";
+import { prisma } from "@/lib/db";
 
-export const generateStaticParams = async () =>
-  reports.map((report) => ({ slug: report.slug }));
+export const dynamic = "force-dynamic";
 
-export const generateMetadata = ({ params }: { params: { slug: string } }) => {
-  const report = getReportBySlug(params.slug);
+export const generateStaticParams = async () => {
+  const reports = await prisma.report.findMany({ select: { slug: true } });
+  return reports.map((report) => ({ slug: report.slug }));
+};
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: { slug: string };
+}) => {
+  const report = await prisma.report.findUnique({
+    where: { slug: params.slug },
+  });
   if (!report) return { title: "Bericht" };
   return {
     title: report.title,
@@ -16,12 +26,14 @@ export const generateMetadata = ({ params }: { params: { slug: string } }) => {
   };
 };
 
-export default function BerichtDetailPage({
+export default async function BerichtDetailPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const report = getReportBySlug(params.slug);
+  const report = await prisma.report.findUnique({
+    where: { slug: params.slug },
+  });
 
   if (!report) {
     notFound();
@@ -35,24 +47,16 @@ export default function BerichtDetailPage({
         description={report.summary}
       />
       <div className="space-y-6 rounded-xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
-        <p>
-          Dieser Bericht wird im Relaunch aus dem bestehenden Material neu
-          aufbereitet. Ziel ist eine klare Struktur, grössere Bilder und eine
-          bessere Lesbarkeit auf Mobilgeräten.
-        </p>
+        <p>{report.body}</p>
         <ul className="space-y-2">
           {report.highlights.map((highlight) => (
             <li key={highlight}>• {highlight}</li>
           ))}
         </ul>
-        <p>
-          Im nächsten Schritt integrieren wir die originalen Bilder, Karten und
-          Routeninformationen aus dem bestehenden Archiv.
-        </p>
       </div>
       <div className="flex flex-wrap gap-4">
         <Button href="/berichte" variant="secondary">
-          Zurück zu allen Berichten
+          Zurueck zu allen Berichten
         </Button>
         <Button href="/kurse">Zu den Kursen</Button>
       </div>

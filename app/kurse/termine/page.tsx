@@ -1,25 +1,32 @@
 import Link from "next/link";
 
 import { SectionHeader } from "@/components/SectionHeader";
-import { courseSessions, courses } from "@/lib/courses";
-import { formatDate, formatPrice } from "@/lib/utils";
+import { prisma } from "@/lib/db";
+import { formatDate, formatPrice } from "@/lib/format";
 
 export const metadata = {
   title: "Termine",
   description: "Alle Kursdaten und Preise auf einen Blick.",
 };
 
-export default function TerminePage() {
+export const dynamic = "force-dynamic";
+
+export default async function TerminePage() {
+  const sessions = await prisma.courseSession.findMany({
+    include: { course: true },
+    orderBy: { date: "asc" },
+  });
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
         eyebrow="Termine"
         title="Kursdaten & Preise"
-        description="Alle verfügbaren Termine. Für Privatstunden oder Schnuppern bitte direkt anfragen."
+        description="Alle verfuegbaren Termine. Fuer Privatstunden oder Schnuppern bitte direkt anfragen."
       />
       <div className="space-y-4">
-        {courseSessions.map((session) => {
-          const course = courses.find((item) => item.slug === session.courseSlug);
+        {sessions.map((session) => {
+          const course = session.course;
           if (!course) return null;
 
           return (
@@ -43,7 +50,7 @@ export default function TerminePage() {
                   {formatPrice(session.priceCHF)}
                 </p>
                 <p className="text-xs text-[var(--color-muted)]">
-                  Noch {session.availableSpots} Plätze
+                  Noch {session.availableSpots} Plaetze
                 </p>
                 <Link
                   href={`/kurse/${course.slug}`}

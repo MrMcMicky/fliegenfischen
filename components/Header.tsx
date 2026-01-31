@@ -5,10 +5,16 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/Button";
-import { navLinks } from "@/lib/data";
-import { siteConfig } from "@/lib/site";
 
-export function Header() {
+export function Header({
+  siteName,
+  location,
+  navLinks,
+}: {
+  siteName: string;
+  location: string;
+  navLinks: { label: string; href: string }[];
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,10 +22,10 @@ export function Header() {
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-4">
         <Link href="/" className="flex flex-col">
           <span className="font-display text-lg font-semibold text-[var(--color-text)]">
-            {siteConfig.name}
+            {siteName}
           </span>
           <span className="text-[11px] uppercase tracking-[0.28em] text-[var(--color-forest)]/60">
-            {siteConfig.location}
+            {location}
           </span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-medium text-[var(--color-text)] lg:flex">
@@ -41,7 +47,7 @@ export function Header() {
           </div>
           <button
             type="button"
-            aria-label={open ? "Menü schliessen" : "Menü öffnen"}
+            aria-label={open ? "Menue schliessen" : "Menue oeffnen"}
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
             className="inline-flex items-center justify-center rounded-full border border-[var(--color-border)] bg-white/80 p-2 text-[var(--color-text)] transition hover:bg-white lg:hidden"

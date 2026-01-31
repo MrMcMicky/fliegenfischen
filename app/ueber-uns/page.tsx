@@ -1,17 +1,44 @@
 import { Button } from "@/components/Button";
 import { SectionHeader } from "@/components/SectionHeader";
-import { aboutPage } from "@/lib/data";
+import { prisma } from "@/lib/db";
 
 export const metadata = {
-  title: "Über uns",
-  description: "Über die Fliegenfischerschule, Philosophie und Instruktor.",
+  title: "Ueber uns",
+  description: "Ueber die Fliegenfischerschule, Philosophie und Instruktor.",
 };
 
-export default function UeberUnsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function UeberUnsPage() {
+  const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
+  const aboutPage = settings?.aboutPage as {
+    title: string;
+    intro: string;
+    bio: string;
+    highlights: string[];
+    values: string[];
+    cta: {
+      title: string;
+      description: string;
+      primary: { label: string; href: string };
+      secondary: { label: string; href: string };
+    };
+  };
+
+  if (!aboutPage) {
+    return (
+      <div className="mx-auto w-full max-w-4xl px-4 pb-20 pt-16">
+        <p className="text-sm text-[var(--color-muted)]">
+          Inhalte werden vorbereitet.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <SectionHeader
-        eyebrow="Über uns"
+        eyebrow="Ueber uns"
         title={aboutPage.title}
         description={aboutPage.intro}
       />

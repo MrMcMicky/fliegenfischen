@@ -1,17 +1,30 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Button } from "@/components/Button";
 import { SectionHeader } from "@/components/SectionHeader";
-import { courses, getCourseBySlug, getSessionsForCourse } from "@/lib/courses";
-import { formatDate, formatPrice } from "@/lib/utils";
+import { prisma } from "@/lib/db";
+import { formatDate, formatPrice } from "@/lib/format";
+import {
+  courseCategoryLabels,
+  courseLevelLabels,
+} from "@/lib/public-types";
 
-export const generateStaticParams = async () =>
-  courses.map((course) => ({ slug: course.slug }));
+export const dynamic = "force-dynamic";
 
-export const generateMetadata = ({ params }: { params: { slug: string } }) => {
-  const course = getCourseBySlug(params.slug);
+export const generateStaticParams = async () => {
+  const courses = await prisma.course.findMany({ select: { slug: true } });
+  return courses.map((course) => ({ slug: course.slug }));
+};
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: { slug: string };
+}) => {
+  const course = await prisma.course.findUnique({
+    where: { slug: params.slug },
+  });
   if (!course) {
     return { title: "Kurs" };
   }
@@ -21,33 +34,40 @@ export const generateMetadata = ({ params }: { params: { slug: string } }) => {
   };
 };
 
-export default function CourseDetailPage({
+export default async function CourseDetailPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const course = getCourseBySlug(params.slug);
+  const course = await prisma.course.findUnique({
+    where: { slug: params.slug },
+  });
 
   if (!course) {
     notFound();
   }
 
-  const sessions = getSessionsForCourse(course.slug);
+  const sessions = await prisma.courseSession.findMany({
+    where: { courseId: course.id },
+    orderBy: { date: "asc" },
+  });
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-6">
           <SectionHeader
-            eyebrow={`${course.level} · ${course.category}`}
+            eyebrow={`${courseLevelLabels[course.level] ?? course.level} · ${
+              courseCategoryLabels[course.category] ?? course.category
+            }`}
             title={course.title}
             description={course.description}
           />
-          {course.image ? (
+          {course.imageSrc ? (
             <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
               <Image
-                src={course.image.src}
-                alt={course.image.alt}
+                src={course.imageSrc}
+                alt={course.imageAlt || course.title}
                 width={640}
                 height={280}
                 className="h-28 w-full object-contain"
@@ -73,7 +93,7 @@ export default function CourseDetailPage({
           </div>
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-              Ausrüstung
+              Ausruestung
             </p>
             <ul className="mt-4 space-y-2 text-sm text-[var(--color-muted)]">
               {course.equipment.map((item) => (
@@ -116,10 +136,17 @@ export default function CourseDetailPage({
               Kurs inkl. Betreuung in Kleingruppe.
             </p>
             <div className="mt-6 flex flex-col gap-3">
-              <Button href="/kontakt" variant="light">
-                Kurs anfragen
+              <Button
+                href={
+                  sessions[0]
+                    ? `/buchen?sessionId=${sessions[0].id}`
+                    : "/kontakt"
+                }
+                variant="secondary"
+              >
+                Platz sichern
               </Button>
-              <Button href="/kurse/termine" variant="ghostLight">
+              <Button href="/kurse/termine" variant="ghost">
                 Alle Termine
               </Button>
             </div>
@@ -143,7 +170,7 @@ export default function CourseDetailPage({
                         {session.startTime} - {session.endTime}
                       </p>
                     </div>
-                    <Button href="/kontakt" size="sm">
+                    <Button href={`/buchen?sessionId=${session.id}`} size="sm">
                       Platz sichern
                     </Button>
                   </div>
@@ -151,7 +178,7 @@ export default function CourseDetailPage({
               </div>
             ) : (
               <p className="mt-4 text-sm text-[var(--color-muted)]">
-                Termine auf Anfrage. Melde dich für den nächsten Kurs.
+                Termine auf Anfrage. Melde dich fuer den naechsten Kurs.
               </p>
             )}
           </div>

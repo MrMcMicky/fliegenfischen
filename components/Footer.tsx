@@ -1,23 +1,39 @@
 import Link from "next/link";
 
-import { footerLinks, navLinks } from "@/lib/data";
-import { siteConfig } from "@/lib/site";
-
-export function Footer() {
+export function Footer({
+  siteName,
+  location,
+  navLinks,
+  footerLinks,
+  contact,
+}: {
+  siteName: string;
+  location: string;
+  navLinks: { label: string; href: string }[];
+  footerLinks: {
+    offer: { label: string; href: string }[];
+    resources: { label: string; href: string }[];
+  };
+  contact: {
+    instructor: string;
+    address: string[];
+    phone: string;
+    mobile: string;
+    email: string;
+  };
+}) {
   return (
     <footer className="bg-[var(--color-forest)] text-white">
       <div className="mx-auto grid w-full max-w-5xl gap-10 px-4 py-14 md:grid-cols-4">
         <div className="space-y-4">
           <div>
-            <p className="font-display text-2xl font-semibold">
-              {siteConfig.name}
-            </p>
+            <p className="font-display text-2xl font-semibold">{siteName}</p>
             <p className="text-xs uppercase tracking-[0.3em] text-white/60">
-              {siteConfig.location}
+              {location}
             </p>
           </div>
           <p className="text-sm text-white/70">
-            Fliegenfischen lernen mit Ruhe, Technik und Blick für Details.
+            Fliegenfischen lernen mit Ruhe, Technik und Blick fuer Details.
           </p>
         </div>
         <div>
@@ -65,19 +81,19 @@ export function Footer() {
             Kontakt
           </p>
           <div className="mt-4 space-y-1">
-            <p className="font-semibold text-white">{siteConfig.contact.instructor}</p>
-            <p>{siteConfig.contact.address[0]}</p>
-            <p>{siteConfig.contact.address[1]}</p>
+            <p className="font-semibold text-white">{contact.instructor}</p>
+            <p>{contact.address[0]}</p>
+            <p>{contact.address[1]}</p>
           </div>
           <div className="mt-4 space-y-1">
-            <p>Tel. {siteConfig.contact.phone}</p>
-            <p>Natel {siteConfig.contact.mobile}</p>
-            <p>{siteConfig.contact.email}</p>
+            <p>Tel. {contact.phone}</p>
+            <p>Natel {contact.mobile}</p>
+            <p>{contact.email}</p>
           </div>
         </div>
       </div>
       <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-white/60">
-        © {new Date().getFullYear()} {siteConfig.name}. Alle Rechte vorbehalten.
+        © {new Date().getFullYear()} {siteName}. Alle Rechte vorbehalten.
       </div>
     </footer>
   );

@@ -3,15 +3,17 @@
 import { motion } from "framer-motion";
 import { Compass, Fish, Leaf, Sparkles, Waves } from "lucide-react";
 
-import { coursePathSteps } from "@/lib/data";
-
 const icons = [Leaf, Fish, Sparkles, Compass, Waves];
 
-export function TimelineSteps() {
+export function TimelineSteps({
+  steps,
+}: {
+  steps: { step: string; title: string; detail: string }[];
+}) {
   return (
     <div className="relative pl-12">
       <span className="absolute left-4 top-0 h-full border-l-2 border-dashed border-[var(--color-border)]" />
-      {coursePathSteps.map((step, index) => {
+      {steps.map((step, index) => {
         const Icon = icons[index % icons.length];
         return (
           <motion.div

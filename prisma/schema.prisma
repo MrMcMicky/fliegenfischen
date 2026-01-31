@@ -1,0 +1,248 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
+enum CourseLevel {
+  EINSTEIGER
+  LEICHT_FORTGESCHRITTEN
+  FORTGESCHRITTEN
+}
+
+enum CourseCategory {
+  EINHAND
+  ZWEIHAND
+  PRIVAT
+  SCHNUPPERN
+}
+
+enum SessionStatus {
+  VERFUEGBAR
+  AUSGEBUCHT
+  ABGESAGT
+}
+
+enum LessonType {
+  PRIVATE
+  TASTER
+}
+
+enum VoucherKind {
+  VALUE
+  COURSE
+}
+
+enum BookingType {
+  COURSE
+  PRIVATE
+  TASTER
+  VOUCHER
+}
+
+enum PaymentMode {
+  STRIPE
+  INVOICE
+}
+
+enum BookingStatus {
+  PENDING
+  PAYMENT_PENDING
+  PAID
+  INVOICE_REQUESTED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum VoucherStatus {
+  ACTIVE
+  REDEEMED
+  EXPIRED
+}
+
+model AdminUser {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  name         String
+  passwordHash String
+  role         AdminRole      @default(ADMIN)
+  isActive     Boolean        @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  sessions     AdminSession[]
+}
+
+model AdminSession {
+  tokenHash   String    @id
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  adminUserId String
+  expiresAt   DateTime
+}
+
+model Course {
+  id              String          @id @default(cuid())
+  slug            String          @unique
+  title           String
+  level           CourseLevel
+  category        CourseCategory
+  summary         String
+  description     String
+  imageSrc        String?
+  imageAlt        String?
+  highlights      String[]
+  duration        String
+  priceCHF        Int
+  maxParticipants Int
+  location        String
+  equipment       String[]
+  includes        String[]
+  prerequisites   String[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  sessions        CourseSession[]
+}
+
+model CourseSession {
+  id             String        @id @default(cuid())
+  course         Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId       String
+  date           DateTime      @db.Date
+  startTime      String
+  endTime        String
+  location       String
+  priceCHF       Int
+  availableSpots Int
+  status         SessionStatus @default(VERFUEGBAR)
+  notes          String[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  bookings       Booking[]
+}
+
+model LessonOffering {
+  id                  String     @id @default(cuid())
+  type                LessonType @unique
+  title               String
+  description         String
+  priceCHF            Int
+  minHours            Int
+  additionalPersonCHF Int
+  bullets             String[]
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+}
+
+model VoucherOption {
+  id          String     @id @default(cuid())
+  title       String
+  description String
+  kind        VoucherKind
+  values      Int[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  bookings    Booking[]
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  title      String
+  location   String
+  year       String
+  summary    String
+  highlights String[]
+  body       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model SiteSettings {
+  id                 Int      @id
+  name               String
+  tagline            String
+  location           String
+  contact            Json
+  navLinks           Json
+  footerLinks        Json
+  categorySummaries  Json
+  homeHero           Json
+  aboutSection       Json
+  aboutPage          Json
+  homeSections       Json
+  uspItems           Json
+  faqs               Json
+  testimonials       Json
+  testimonialSection Json
+  coursePathSteps    Json
+  updatedAt          DateTime @updatedAt
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  type            BookingType
+  courseSession   CourseSession? @relation(fields: [courseSessionId], references: [id], onDelete: SetNull)
+  courseSessionId String?
+  lessonType      LessonType?
+  voucherOption   VoucherOption? @relation(fields: [voucherOptionId], references: [id], onDelete: SetNull)
+  voucherOptionId String?
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  quantity        Int?
+  hours           Int?
+  amountCHF       Int
+  currency        String        @default("chf")
+  paymentMode     PaymentMode
+  status          BookingStatus @default(PENDING)
+  notes           String?
+  voucherRecipient String?
+  voucherMessage  String?
+  createdAt       DateTime      @default(now())
+  payment         Payment?
+  voucher         Voucher?
+}
+
+model Payment {
+  id                      String        @id @default(cuid())
+  booking                 Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  bookingId               String        @unique
+  status                  PaymentStatus @default(PENDING)
+  stripeCheckoutSessionId String?
+  stripePaymentIntentId   String?
+  paidAt                  DateTime?
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+}
+
+model Voucher {
+  id              String        @id @default(cuid())
+  code            String        @unique
+  originalAmount  Int
+  remainingAmount Int
+  status          VoucherStatus @default(ACTIVE)
+  booking         Booking?      @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  bookingId       String?       @unique
+  recipientName   String?
+  message         String?
+  createdAt       DateTime      @default(now())
+}
+
+model StripeEvent {
+  id        String   @id
+  type      String
+  createdAt DateTime @default(now())
+}

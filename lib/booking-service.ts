@@ -147,6 +147,8 @@ export const markBookingPaid = async ({
           if (booking.quantity) {
             lines.push(`Plätze: ${booking.quantity}`);
           }
+          lines.push("");
+          lines.push("Wir senden dir die letzten Details zum Treffpunkt und zur Ausrüstung rechtzeitig zu.");
         }
       }
 
@@ -175,6 +177,10 @@ export const markBookingPaid = async ({
       lines.push("");
       lines.push("Petri Heil");
       lines.push("Urs Müller");
+      lines.push("Fliegenfischerschule Urs Müller");
+      lines.push("Geroldswil / Limmat / Zürich");
+      lines.push("fliegenfischer-schule.shop");
+      lines.push("info@fliegenfischer-schule.shop");
 
       await sendBookingMail({
         to: booking.customerEmail,

@@ -82,7 +82,7 @@ export async function sendContactMail(payload: ContactPayload) {
     to,
     from,
     replyTo: payload.email,
-    subject: `Neue Kontaktanfrage: ${subject}`,
+    subject: `Kontaktanfrage von ${payload.name}: ${subject}`,
     text,
   });
 }
@@ -110,6 +110,10 @@ export async function sendVoucherMail(payload: VoucherEmailPayload) {
     "",
     "Petri Heil",
     "Urs Müller",
+    "Fliegenfischerschule Urs Müller",
+    "Geroldswil / Limmat / Zürich",
+    "fliegenfischer-schule.shop",
+    "info@fliegenfischer-schule.shop",
   ]
     .filter(Boolean)
     .join("\n");

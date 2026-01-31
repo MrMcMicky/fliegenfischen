@@ -22,7 +22,7 @@ export default async function AdminDashboard() {
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            Naechste Termine
+            Nächste Termine
           </p>
           <div className="mt-4 space-y-3 text-sm">
             {upcomingSessions.map((session) => (

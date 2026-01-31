@@ -1,6 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { Node } from "@tiptap/core";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
+import StarterKit from "@tiptap/starter-kit";
+import { EditorContent, useEditor } from "@tiptap/react";
 
 type ReportEditorInitial = {
   title: string;
@@ -27,6 +33,32 @@ const slugify = (value: string) =>
     .replace(/-{2,}/g, "-")
     .replace(/^-+|-+$/g, "");
 
+const ReportFigure = Node.create({
+  name: "reportFigure",
+  group: "block",
+  content: "image",
+  defining: true,
+  parseHTML() {
+    return [{ tag: "figure.report-figure" }];
+  },
+  renderHTML() {
+    return ["figure", { class: "report-figure" }, 0];
+  },
+});
+
+const ReportGallery = Node.create({
+  name: "reportGallery",
+  group: "block",
+  content: "image+",
+  defining: true,
+  parseHTML() {
+    return [{ tag: "div.report-gallery" }];
+  },
+  renderHTML() {
+    return ["div", { class: "report-gallery" }, 0];
+  },
+});
+
 export function ReportEditor({
   initial,
   action,
@@ -42,61 +74,51 @@ export function ReportEditor({
   const [highlights, setHighlights] = useState(
     initial.highlights.join("\n")
   );
-  const [tab, setTab] = useState<"editor" | "preview">("editor");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploaded, setUploaded] = useState<string[]>([]);
-  const bodyRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const insertAtCursor = (snippet: string) => {
-    const textarea = bodyRef.current;
-    if (!textarea) {
-      setBody((prev) => `${prev}\n${snippet}`.trim());
-      return;
-    }
-    const start = textarea.selectionStart ?? body.length;
-    const end = textarea.selectionEnd ?? body.length;
-    const next = `${body.slice(0, start)}${snippet}${body.slice(end)}`;
-    setBody(next);
-    requestAnimationFrame(() => {
-      textarea.focus();
-      const cursor = start + snippet.length;
-      textarea.setSelectionRange(cursor, cursor);
-    });
-  };
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({ heading: { levels: [2, 3] } }),
+      Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
+      Image.configure({ inline: false, allowBase64: false }),
+      Placeholder.configure({
+        placeholder: "Schreibe deinen Bericht...",
+      }),
+      ReportFigure,
+      ReportGallery,
+    ],
+    content: body,
+    editorProps: {
+      attributes: {
+        class: "report-editor__content",
+      },
+    },
+    onUpdate({ editor }) {
+      setBody(editor.getHTML());
+    },
+  });
 
-  const wrapSelection = (before: string, after: string) => {
-    const textarea = bodyRef.current;
-    if (!textarea) return;
-    const start = textarea.selectionStart ?? body.length;
-    const end = textarea.selectionEnd ?? body.length;
-    const selected = body.slice(start, end) || "Text";
-    const next = `${body.slice(0, start)}${before}${selected}${after}${body.slice(
-      end
-    )}`;
-    setBody(next);
-    requestAnimationFrame(() => {
-      textarea.focus();
-      textarea.setSelectionRange(
-        start + before.length,
-        start + before.length + selected.length
-      );
-    });
-  };
+  const toolbarButtonClass = (active?: boolean) =>
+    `rounded-full border border-[var(--color-border)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] transition ${
+      active
+        ? "bg-[var(--color-forest)] text-white"
+        : "text-[var(--color-muted)] hover:border-[var(--color-forest)]"
+    }`;
+
+  const safeSlug = useMemo(() => slugify(slug), [slug]);
 
   const buildFigure = (src: string) =>
     `<figure class="report-figure"><img src="${src}" alt="" loading="lazy" /></figure>`;
 
   const buildGallery = (sources: string[]) =>
     `<div class="report-gallery">${sources
-      .map(
-        (src) => `<img src="${src}" alt="" loading="lazy" />`
-      )
+      .map((src) => `<img src="${src}" alt="" loading="lazy" />`)
       .join("")}</div>`;
 
   const handleUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
-    const safeSlug = slugify(slug);
     if (!safeSlug) {
       setUploadError("Bitte zuerst einen gültigen Slug setzen.");
       return;
@@ -119,10 +141,13 @@ export function ReportEditor({
         throw new Error(payload.error || "upload_failed");
       }
       setUploaded(payload.files);
-      if (payload.files.length === 1) {
-        insertAtCursor(buildFigure(payload.files[0]));
-      } else {
-        insertAtCursor(buildGallery(payload.files));
+      if (editor) {
+        if (payload.files.length === 1) {
+          editor.commands.insertContent(buildFigure(payload.files[0]));
+        } else {
+          editor.commands.insertContent(buildGallery(payload.files));
+        }
+        editor.commands.focus();
       }
     } catch (error) {
       const message =
@@ -133,13 +158,29 @@ export function ReportEditor({
     }
   };
 
+  const handleLink = () => {
+    if (!editor) return;
+    const previousUrl = editor.getAttributes("link").href as string | undefined;
+    const url = window.prompt("Link URL", previousUrl || "https://");
+    if (url === null) return;
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: url })
+      .run();
+  };
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="font-display text-2xl font-semibold">Blog Editor</h2>
         <p className="text-sm text-[var(--color-muted)]">
-          Inhalte sind HTML. Nutze die Buttons oder lade Bilder hoch, um schnell
-          einen Beitrag zu bauen.
+          Nutze den Editor wie in Word: Tippen, markieren, formatieren.
         </p>
       </div>
       <form action={action} className="space-y-4">
@@ -195,112 +236,95 @@ export function ReportEditor({
           rows={3}
         />
 
+        <input type="hidden" name="body" value={body} />
+
         <div className="space-y-3">
-          <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.2em]">
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => insertAtCursor("<h2>Zwischentitel</h2>")}
-              className="rounded-full border border-[var(--color-border)] px-3 py-2"
-            >
-              Titel
-            </button>
-            <button
-              type="button"
-              onClick={() => insertAtCursor("<p>Neuer Absatz.</p>")}
-              className="rounded-full border border-[var(--color-border)] px-3 py-2"
-            >
-              Absatz
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                insertAtCursor(buildFigure(`/berichte/${slugify(slug)}/bild.jpg`))
-              }
-              className="rounded-full border border-[var(--color-border)] px-3 py-2"
-            >
-              Bild
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                insertAtCursor(
-                  buildGallery([
-                    `/berichte/${slugify(slug)}/bild-1.jpg`,
-                    `/berichte/${slugify(slug)}/bild-2.jpg`,
-                  ])
-                )
-              }
-              className="rounded-full border border-[var(--color-border)] px-3 py-2"
-            >
-              Galerie
-            </button>
-            <button
-              type="button"
-              onClick={() => insertAtCursor('<a href="https://">Link</a>')}
-              className="rounded-full border border-[var(--color-border)] px-3 py-2"
-            >
-              Link
-            </button>
-            <button
-              type="button"
-              onClick={() => wrapSelection("<strong>", "</strong>")}
-              className="rounded-full border border-[var(--color-border)] px-3 py-2"
+              onClick={() => editor?.chain().focus().toggleBold().run()}
+              className={toolbarButtonClass(editor?.isActive("bold"))}
             >
               Fett
             </button>
             <button
               type="button"
-              onClick={() => wrapSelection("<em>", "</em>")}
-              className="rounded-full border border-[var(--color-border)] px-3 py-2"
+              onClick={() => editor?.chain().focus().toggleItalic().run()}
+              className={toolbarButtonClass(editor?.isActive("italic"))}
             >
               Kursiv
             </button>
+            <button
+              type="button"
+              onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+              className={toolbarButtonClass(
+                editor?.isActive("heading", { level: 2 })
+              )}
+            >
+              Titel
+            </button>
+            <button
+              type="button"
+              onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
+              className={toolbarButtonClass(
+                editor?.isActive("heading", { level: 3 })
+              )}
+            >
+              Untertitel
+            </button>
+            <button
+              type="button"
+              onClick={() => editor?.chain().focus().toggleBulletList().run()}
+              className={toolbarButtonClass(editor?.isActive("bulletList"))}
+            >
+              Liste
+            </button>
+            <button
+              type="button"
+              onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+              className={toolbarButtonClass(editor?.isActive("orderedList"))}
+            >
+              Nummeriert
+            </button>
+            <button
+              type="button"
+              onClick={() => editor?.chain().focus().toggleBlockquote().run()}
+              className={toolbarButtonClass(editor?.isActive("blockquote"))}
+            >
+              Zitat
+            </button>
+            <button
+              type="button"
+              onClick={handleLink}
+              className={toolbarButtonClass(editor?.isActive("link"))}
+            >
+              Link
+            </button>
+            <button
+              type="button"
+              onClick={() => editor?.chain().focus().unsetLink().run()}
+              className={toolbarButtonClass()}
+            >
+              Link lösen
+            </button>
+            <button
+              type="button"
+              onClick={() => editor?.chain().focus().undo().run()}
+              className={toolbarButtonClass()}
+            >
+              Rückgängig
+            </button>
+            <button
+              type="button"
+              onClick={() => editor?.chain().focus().redo().run()}
+              className={toolbarButtonClass()}
+            >
+              Wiederholen
+            </button>
           </div>
 
-          <div className="rounded-xl border border-[var(--color-border)] bg-white">
-            <div className="flex gap-2 border-b border-[var(--color-border)] p-2 text-xs font-semibold uppercase tracking-[0.2em]">
-              <button
-                type="button"
-                onClick={() => setTab("editor")}
-                className={`rounded-full px-3 py-1 ${
-                  tab === "editor"
-                    ? "bg-[var(--color-forest)] text-white"
-                    : "text-[var(--color-muted)]"
-                }`}
-              >
-                Editor
-              </button>
-              <button
-                type="button"
-                onClick={() => setTab("preview")}
-                className={`rounded-full px-3 py-1 ${
-                  tab === "preview"
-                    ? "bg-[var(--color-forest)] text-white"
-                    : "text-[var(--color-muted)]"
-                }`}
-              >
-                Vorschau
-              </button>
-            </div>
-            <div className="p-4">
-              <textarea
-                ref={bodyRef}
-                name="body"
-                value={body}
-                onChange={(event) => setBody(event.target.value)}
-                placeholder="Inhalt"
-                className={`w-full resize-y rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm ${
-                  tab === "editor" ? "block" : "hidden"
-                }`}
-                rows={16}
-              />
-              {tab === "preview" ? (
-                <div
-                  className="report-content"
-                  dangerouslySetInnerHTML={{ __html: body }}
-                />
-              ) : null}
-            </div>
+          <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
+            <EditorContent editor={editor} className="report-editor" />
           </div>
 
           <div className="space-y-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4 text-sm">
@@ -310,7 +334,7 @@ export function ReportEditor({
                   Bilder hochladen
                 </p>
                 <p className="text-xs text-[var(--color-muted)]">
-                  Speichert unter /berichte/{slugify(slug) || "slug"}.
+                  Speichert unter /berichte/{safeSlug || "slug"}.
                 </p>
               </div>
               <label className="rounded-full bg-[var(--color-forest)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
@@ -333,7 +357,7 @@ export function ReportEditor({
             ) : null}
             {uploaded.length > 0 ? (
               <div className="text-xs text-[var(--color-muted)]">
-                Hochgeladen: {uploaded.join(", ")}
+                Eingefügt: {uploaded.join(", ")}
               </div>
             ) : null}
           </div>

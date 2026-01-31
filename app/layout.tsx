@@ -27,6 +27,8 @@ export const metadata: Metadata = {
     "Fliegenfischen lernen in der Region Zürich: Einhand- und Zweihandkurse, Privatunterricht, Schnupperstunden und Gutscheine.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: Readonly<{

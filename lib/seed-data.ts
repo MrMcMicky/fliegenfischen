@@ -235,7 +235,7 @@ export const defaultCourses = [
     summary: "Distanz, Varianten und Kontrolle für erfahrene Werfer.",
     description:
       "Tageskurs für Fortgeschrittene: Distanz, Varianten, Fehleranalyse und effiziente Schnurkontrolle.",
-    imageSrc: "/illustrations/course-einhand.svg",
+    imageSrc: "/illustrations/course-einhand.png",
     imageAlt: "Illustration Einhand Fliegenfischen",
     highlights: [
       "Doppelzug und Distanz",
@@ -266,7 +266,7 @@ export const defaultCourses = [
     summary: "Schusskopf, Rollwürfe und erste Spey-Varianten.",
     description:
       "Einsteigerkurs für Zweihand-Technik mit Fokus auf Schusskopf, Rollwurf und Spey-Varianten.",
-    imageSrc: "/illustrations/course-zweihand.svg",
+    imageSrc: "/illustrations/course-zweihand.png",
     imageAlt: "Illustration Zweihand Fliegenfischen",
     highlights: [
       "Schusskopf-Technik",

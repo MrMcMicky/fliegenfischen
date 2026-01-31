@@ -114,7 +114,7 @@ export default async function BookingPage({
   return (
     <div className="mx-auto w-full max-w-4xl px-4 pb-20 pt-16">
       <p className="text-sm text-[var(--color-muted)]">
-        Bitte waehle einen Kurs, eine Schnupperstunde oder einen Gutschein.
+        Bitte wähle einen Kurs, eine Schnupperstunde oder einen Gutschein.
       </p>
     </div>
   );

@@ -6,11 +6,6 @@ import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-export const generateStaticParams = async () => {
-  const reports = await prisma.report.findMany({ select: { slug: true } });
-  return reports.map((report) => ({ slug: report.slug }));
-};
-
 export const generateMetadata = async ({
   params,
 }: {
@@ -56,7 +51,7 @@ export default async function BerichtDetailPage({
       </div>
       <div className="flex flex-wrap gap-4">
         <Button href="/berichte" variant="secondary">
-          Zurueck zu allen Berichten
+          Zurück zu allen Berichten
         </Button>
         <Button href="/kurse">Zu den Kursen</Button>
       </div>

@@ -12,11 +12,6 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export const generateStaticParams = async () => {
-  const courses = await prisma.course.findMany({ select: { slug: true } });
-  return courses.map((course) => ({ slug: course.slug }));
-};
-
 export const generateMetadata = async ({
   params,
 }: {

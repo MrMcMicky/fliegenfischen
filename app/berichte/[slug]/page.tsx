@@ -41,13 +41,18 @@ export default async function BerichtDetailPage({
         title={report.title}
         description={report.summary}
       />
-      <div className="space-y-6 rounded-xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
-        <p>{report.body}</p>
-        <ul className="space-y-2">
-          {report.highlights.map((highlight) => (
-            <li key={highlight}>• {highlight}</li>
-          ))}
-        </ul>
+      <div className="space-y-8 rounded-xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
+        <div
+          className="report-content"
+          dangerouslySetInnerHTML={{ __html: report.body }}
+        />
+        {report.highlights.length > 0 ? (
+          <ul className="space-y-2">
+            {report.highlights.map((highlight) => (
+              <li key={highlight}>• {highlight}</li>
+            ))}
+          </ul>
+        ) : null}
       </div>
       <div className="flex flex-wrap gap-4">
         <Button href="/berichte" variant="secondary">

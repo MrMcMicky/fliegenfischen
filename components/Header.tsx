@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/Button";
@@ -17,6 +18,8 @@ export function Header({
 }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,18 +30,26 @@ export function Header({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const headerClass = scrolled
-    ? "bg-white/90 backdrop-blur-md border-b border-[var(--color-border)] text-[var(--color-text)]"
-    : "bg-transparent text-white";
-  const navLinkClass = scrolled
-    ? "text-[var(--color-text)] hover:text-[var(--color-forest)]/70"
-    : "text-white/85 hover:text-white";
-  const sublineClass = scrolled
-    ? "text-[var(--color-forest)]/60"
-    : "text-white/70";
-  const menuButtonClass = scrolled
-    ? "border-[var(--color-border)] bg-white/90 text-[var(--color-text)]"
-    : "border-white/30 bg-white/10 text-white";
+  const headerClass = isHome
+    ? scrolled
+      ? "bg-white/90 backdrop-blur-md border-b border-[var(--color-border)] text-[var(--color-text)]"
+      : "bg-transparent text-white"
+    : "bg-white/90 backdrop-blur-md border-b border-[var(--color-border)] text-[var(--color-text)]";
+  const navLinkClass = isHome
+    ? scrolled
+      ? "text-[var(--color-text)] hover:text-[var(--color-forest)]/70"
+      : "text-white/85 hover:text-white"
+    : "text-[var(--color-text)] hover:text-[var(--color-forest)]/70";
+  const sublineClass = isHome
+    ? scrolled
+      ? "text-[var(--color-forest)]/60"
+      : "text-white/70"
+    : "text-[var(--color-forest)]/60";
+  const menuButtonClass = isHome
+    ? scrolled
+      ? "border-[var(--color-border)] bg-white/90 text-[var(--color-text)]"
+      : "border-white/30 bg-white/10 text-white"
+    : "border-[var(--color-border)] bg-white/90 text-[var(--color-text)]";
 
   return (
     <header

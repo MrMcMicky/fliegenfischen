@@ -11,7 +11,7 @@ export default async function AdminSettingsPage() {
   if (!settings) {
     return (
       <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm">
-        Keine Settings gefunden. Bitte Seed ausfuehren.
+        Keine Settings gefunden. Bitte Seed ausführen.
       </div>
     );
   }

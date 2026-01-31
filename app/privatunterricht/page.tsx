@@ -13,9 +13,26 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function PrivatunterrichtPage() {
-  const lesson = await prisma.lessonOffering.findUnique({
-    where: { type: "PRIVATE" },
-  });
+  const [lesson, settings] = await Promise.all([
+    prisma.lessonOffering.findUnique({
+      where: { type: "PRIVATE" },
+    }),
+    prisma.siteSettings.findUnique({ where: { id: 1 } }),
+  ]);
+  const contact =
+    (settings?.contact as {
+      instructor: string;
+      address: string[];
+      phone: string;
+      mobile: string;
+      email: string;
+    }) || {
+      instructor: "",
+      address: ["", ""],
+      phone: "",
+      mobile: "",
+      email: "",
+    };
 
   if (!lesson) {
     return (
@@ -32,24 +49,26 @@ export default async function PrivatunterrichtPage() {
       <SectionHeader
         eyebrow="Privatunterricht"
         title="Individuelles Coaching am Wasser"
-        description={lesson.description}
+        description="Wir richten uns ganz nach dir: Ob Wurftechnik verfeinern, Gewässer lesen lernen oder die erste Forelle fangen."
       />
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="space-y-6 rounded-xl border border-[var(--color-border)] bg-white p-6">
-          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
-            <Image
-              src="/illustrations/private-lessons.png"
-              alt="Illustration Privatunterricht"
-              width={720}
-              height={480}
-              className="h-40 w-full object-contain sm:h-48"
-            />
+      <div className="grid gap-10 lg:grid-cols-[2fr_1fr]">
+        <div className="space-y-8">
+          <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
+            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
+              <Image
+                src="/illustrations/private-lessons.png"
+                alt="Illustration Privatunterricht"
+                width={720}
+                height={480}
+                className="h-48 w-full object-contain"
+              />
+            </div>
+            <p className="mt-6 text-sm text-[var(--color-muted)]">
+              Wir richten uns nach deinem Niveau: Ob Korrektur von Technikfehlern,
+              neue Wurfvarianten oder direkte Praxis am Wasser.
+            </p>
           </div>
-          <p className="text-sm text-[var(--color-muted)]">
-            Wir richten uns nach deinem Niveau: Technikfehler, Wurfvarianten,
-            Praxis am Wasser. Ideal für alle, die gezielt Fortschritt wollen.
-          </p>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <ul className="space-y-4">
             {lesson.bullets.map((bullet, index) => {
               const iconSrc = [
                 "/illustrations/icon-calendar.png",
@@ -58,38 +77,48 @@ export default async function PrivatunterrichtPage() {
               ][index] ?? "/illustrations/icon-rod.png";
 
               return (
-                <div
-                  key={bullet}
-                  className="flex flex-col items-center rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3 text-center text-sm text-[var(--color-muted)]"
-                >
-                  <Image
-                    src={iconSrc}
-                    alt=""
-                    width={96}
-                    height={96}
-                    className="h-12 w-12 object-contain"
-                  />
-                  <p className="mt-3">{bullet}</p>
-                </div>
+                <li key={bullet} className="flex items-start gap-4">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--color-border)] bg-white">
+                    <Image
+                      src={iconSrc}
+                      alt=""
+                      width={64}
+                      height={64}
+                      className="h-7 w-7 object-contain"
+                    />
+                  </span>
+                  <div className="pt-1 text-sm">
+                    <p className="font-semibold text-[var(--color-text)]">
+                      {bullet}
+                    </p>
+                  </div>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </div>
-        <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">
+        <div className="h-fit rounded-2xl bg-[var(--color-forest)] p-8 text-white shadow-lg lg:sticky lg:top-24">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
             Preis
           </p>
-          <p className="mt-3 text-3xl font-semibold">
+          <p className="mt-3 text-4xl font-semibold">
             {formatPrice(lesson.priceCHF)} / Std.
           </p>
-          <p className="mt-2 text-sm text-white/70">
+          <p className="mt-3 text-sm text-white/70">
             Mindestens {lesson.minHours} Stunden. Jede weitere Person +
             {formatPrice(lesson.additionalPersonCHF)} / Std.
           </p>
           <div className="mt-6">
-            <Button href="/buchen?lesson=PRIVATE" variant="secondary">
+            <Button href="/kontakt" className="w-full">
               Termin anfragen
             </Button>
+          </div>
+          <div className="mt-6 text-sm text-white/80">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+              Fragen?
+            </p>
+            {contact.phone ? <p className="mt-2">Tel. {contact.phone}</p> : null}
+            {contact.mobile ? <p>Natel {contact.mobile}</p> : null}
           </div>
         </div>
       </div>

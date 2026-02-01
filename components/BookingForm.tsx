@@ -12,6 +12,32 @@ const paymentOptions = [
   { value: "INVOICE", label: "Rechnung anfragen" },
 ] as const;
 
+const ERROR_MESSAGES: Record<string, string> = {
+  missing_fields: "Bitte fülle Name und E-Mail aus.",
+  missing_session: "Der Kurs ist nicht mehr verfügbar.",
+  session_not_found: "Der Kurs wurde nicht gefunden.",
+  not_enough_spots: "Für den Kurs sind nicht genug Plätze verfügbar.",
+  lesson_not_found: "Die Privatlektion wurde nicht gefunden.",
+  missing_voucher: "Bitte wähle einen Gutschein.",
+  voucher_not_found: "Dieser Gutschein ist nicht verfügbar.",
+  invalid_voucher_amount: "Bitte wähle einen gültigen Gutscheinbetrag.",
+  invalid_amount: "Der Betrag ist ungültig.",
+  use_invoice_checkout:
+    "Bitte wähle die Option Rechnung anfragen, um fortzufahren.",
+  use_stripe_checkout:
+    "Bitte wähle die Option Sofort bezahlen, um fortzufahren.",
+  missing_stripe:
+    "Die Onlinezahlung ist aktuell nicht verfügbar. Bitte wähle Rechnung anfragen.",
+  stripe_checkout_failed:
+    "Die Onlinezahlung konnte nicht gestartet werden. Bitte versuche es erneut oder wähle Rechnung anfragen.",
+  checkout_failed:
+    "Die Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.",
+};
+
+const getErrorMessage = (code?: string) =>
+  (code && ERROR_MESSAGES[code]) ||
+  "Buchung fehlgeschlagen. Bitte versuche es erneut.";
+
 type BookingType = "COURSE" | "PRIVATE" | "TASTER" | "VOUCHER";
 
 type BookingFormProps = {
@@ -125,9 +151,9 @@ export function BookingForm({
         }),
       });
 
-      const payload = await response.json();
+      const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(payload.error || "Buchung fehlgeschlagen");
+        throw new Error(payload.error || "booking_failed");
       }
 
       if (payload.url) {
@@ -142,7 +168,8 @@ export function BookingForm({
 
       throw new Error("Unbekannte Antwort vom Server");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Buchung fehlgeschlagen");
+      const code = err instanceof Error ? err.message : undefined;
+      setError(getErrorMessage(code));
     } finally {
       setLoading(false);
     }

@@ -15,7 +15,15 @@ export default async function CheckoutSuccessPage({
 }: {
   searchParams: { bookingId?: string };
 }) {
-  const bookingId = searchParams.bookingId;
+  const resolvedParams = await Promise.resolve(searchParams);
+  const params =
+    resolvedParams && typeof (resolvedParams as { get?: unknown }).get === "function"
+      ? Object.fromEntries(
+          (resolvedParams as URLSearchParams).entries()
+        )
+      : (resolvedParams ?? {});
+
+  const bookingId = (params as { bookingId?: string }).bookingId;
   const booking = bookingId
     ? await prisma.booking.findUnique({
         where: { id: bookingId },

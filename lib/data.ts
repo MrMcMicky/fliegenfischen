@@ -4,7 +4,7 @@ import { coursePathSteps, faqs, siteConfig, uspItems } from "@/lib/site";
 
 export const navLinks = [
   { label: "Kurse", href: "/kurse" },
-  { label: "Privat", href: "/privatunterricht" },
+  { label: "Privatlektion", href: "/privatunterricht" },
   { label: "Über uns", href: "/ueber-uns" },
   { label: "Kontakt", href: "/kontakt" },
 ];

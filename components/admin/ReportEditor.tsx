@@ -14,6 +14,7 @@ type ReportEditorInitial = {
   location: string;
   year: string;
   summary: string;
+  coverImage?: string | null;
   body: string;
   highlights: string[];
 };
@@ -70,6 +71,7 @@ export function ReportEditor({
   const [location, setLocation] = useState(initial.location);
   const [year, setYear] = useState(initial.year);
   const [summary, setSummary] = useState(initial.summary);
+  const [coverImage, setCoverImage] = useState(initial.coverImage || "");
   const [body, setBody] = useState(initial.body);
   const [highlights, setHighlights] = useState(
     initial.highlights.join("\n")
@@ -77,6 +79,8 @@ export function ReportEditor({
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploaded, setUploaded] = useState<string[]>([]);
+  const [coverUploading, setCoverUploading] = useState(false);
+  const [coverError, setCoverError] = useState<string | null>(null);
 
   const editor = useEditor({
     extensions: [
@@ -158,6 +162,40 @@ export function ReportEditor({
     }
   };
 
+  const handleCoverUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    if (!safeSlug) {
+      setCoverError("Bitte zuerst einen gültigen Slug setzen.");
+      return;
+    }
+    setCoverUploading(true);
+    setCoverError(null);
+    try {
+      const formData = new FormData();
+      formData.append("slug", safeSlug);
+      Array.from(files).forEach((file) => formData.append("files", file));
+      const response = await fetch("/api/admin/report-cover", {
+        method: "POST",
+        body: formData,
+      });
+      const payload = (await response.json()) as {
+        file?: string;
+        error?: string;
+      };
+      if (!response.ok || !payload.file) {
+        throw new Error(payload.error || "upload_failed");
+      }
+      setCoverImage(payload.file);
+      setUploaded((prev) => Array.from(new Set([payload.file!, ...prev])));
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Upload fehlgeschlagen.";
+      setCoverError(message);
+    } finally {
+      setCoverUploading(false);
+    }
+  };
+
   const handleLink = () => {
     if (!editor) return;
     const previousUrl = editor.getAttributes("link").href as string | undefined;
@@ -235,6 +273,81 @@ export function ReportEditor({
           className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
           rows={3}
         />
+
+        <div className="space-y-3 rounded-xl border border-[var(--color-border)] bg-white p-4">
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Kartenbild (Cover)
+            </label>
+            <input
+              name="coverImage"
+              value={coverImage}
+              onChange={(event) => setCoverImage(event.target.value)}
+              placeholder="/berichte/slug/cover.jpg"
+              className="mt-2 w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+            />
+          </div>
+          {coverImage ? (
+            <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
+              <img
+                src={coverImage}
+                alt="Cover Vorschau"
+                className="h-40 w-full rounded-lg object-cover"
+              />
+            </div>
+          ) : null}
+          <div
+            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-stone)] px-4 py-3 text-sm"
+            onDragOver={(event) => {
+              event.preventDefault();
+            }}
+            onDrop={(event) => {
+              event.preventDefault();
+              handleCoverUpload(event.dataTransfer.files);
+            }}
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Cover hochladen
+              </p>
+              <p className="text-xs text-[var(--color-muted)]">
+                Speichert unter /berichte/{safeSlug || "slug"}.
+              </p>
+            </div>
+            <label className="rounded-full bg-[var(--color-forest)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              {coverUploading ? "Upload..." : "Datei wählen"}
+              <input
+                type="file"
+                accept="image/*"
+                disabled={coverUploading}
+                onChange={(event) => {
+                  handleCoverUpload(event.target.files);
+                  event.currentTarget.value = "";
+                }}
+                className="hidden"
+              />
+            </label>
+          </div>
+          {coverError ? <p className="text-xs text-red-600">{coverError}</p> : null}
+          {uploaded.length > 0 ? (
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {uploaded.map((src) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setCoverImage(src)}
+                  className={`overflow-hidden rounded-lg border ${
+                    coverImage === src
+                      ? "border-[var(--color-forest)] ring-2 ring-[var(--color-forest)]/30"
+                      : "border-[var(--color-border)]"
+                  }`}
+                >
+                  <img src={src} alt="" className="h-20 w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
 
         <input type="hidden" name="body" value={body} />
 

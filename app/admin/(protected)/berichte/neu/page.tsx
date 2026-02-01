@@ -15,6 +15,7 @@ export default function AdminReportNewPage() {
     const location = String(formData.get("location") || "").trim();
     const year = String(formData.get("year") || "").trim();
     const summary = String(formData.get("summary") || "").trim();
+    const coverImage = String(formData.get("coverImage") || "").trim();
     const body = String(formData.get("body") || "").trim();
     const highlights = parseLines(String(formData.get("highlights") || ""));
 
@@ -25,6 +26,7 @@ export default function AdminReportNewPage() {
         location,
         year,
         summary,
+        coverImage: coverImage || null,
         body,
         highlights,
       },
@@ -42,6 +44,7 @@ export default function AdminReportNewPage() {
         location: "",
         year: "",
         summary: "",
+        coverImage: "",
         body: "",
         highlights: [],
       }}

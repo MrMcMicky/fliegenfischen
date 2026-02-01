@@ -28,6 +28,7 @@ export default async function AdminReportEditPage({
     const location = String(formData.get("location") || "").trim();
     const year = String(formData.get("year") || "").trim();
     const summary = String(formData.get("summary") || "").trim();
+    const coverImage = String(formData.get("coverImage") || "").trim();
     const body = String(formData.get("body") || "").trim();
     const highlights = parseLines(String(formData.get("highlights") || ""));
 
@@ -39,6 +40,7 @@ export default async function AdminReportEditPage({
         location,
         year,
         summary,
+        coverImage: coverImage || null,
         body,
         highlights,
       },
@@ -63,6 +65,7 @@ export default async function AdminReportEditPage({
         location: report.location,
         year: report.year,
         summary: report.summary,
+        coverImage: report.coverImage,
         body: report.body,
         highlights: report.highlights,
       }}

@@ -170,6 +170,7 @@ model Report {
   location   String
   year       String
   summary    String
+  coverImage String?
   highlights String[]
   body       String
   createdAt  DateTime @default(now())

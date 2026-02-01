@@ -27,7 +27,8 @@ export default async function BerichtePage() {
       />
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {reports.map((report) => {
-          const heroImage = extractFirstImage(report.body || "");
+          const heroImage =
+            report.coverImage || extractFirstImage(report.body || "");
           return (
             <Link
               key={report.slug}

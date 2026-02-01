@@ -48,8 +48,8 @@ export default async function UeberUnsPage() {
         <div className="space-y-4">
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
             <Image
-              src="/illustrations/about-flyfishing.png"
-              alt="Fliegenfischen an der Limmat"
+              src="/illustrations/urs-mueller.png"
+              alt="Urs Müller am Wasser"
               width={1200}
               height={800}
               className="h-56 w-full rounded-lg object-cover sm:h-64"

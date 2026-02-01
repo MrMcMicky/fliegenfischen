@@ -44,7 +44,7 @@ export default async function UeberUnsPage() {
         title={aboutPage.title}
         description={aboutPage.intro}
       />
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid items-start gap-6 lg:grid-cols-[1.3fr_0.7fr]">
         <div className="space-y-4">
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
             <Image
@@ -64,7 +64,7 @@ export default async function UeberUnsPage() {
             </ul>
           </div>
         </div>
-        <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">
+        <div className="h-fit rounded-2xl bg-[var(--color-forest)] p-6 text-white">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
             Qualifikation
           </p>

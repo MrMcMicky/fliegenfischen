@@ -109,8 +109,8 @@ export default async function PrivatunterrichtPage() {
             {formatPrice(lesson.additionalPersonCHF)} / Std.
           </p>
           <div className="mt-6">
-            <Button href="/kontakt" className="w-full">
-              Termin anfragen
+            <Button href="/buchen?lesson=private" className="w-full">
+              Privatlektion buchen
             </Button>
           </div>
           <div className="mt-6 text-sm text-white/80">

@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { Button } from "@/components/Button";
 import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
 import { formatDate, formatPrice } from "@/lib/format";
@@ -52,12 +51,20 @@ export default async function TerminePage() {
                 <p className="text-xs text-[var(--color-muted)]">
                   Noch {session.availableSpots} Plätze
                 </p>
-                <Link
-                  href={`/kurse/${course.slug}`}
-                  className="inline-flex items-center justify-center rounded-full border border-[var(--color-forest)]/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)] transition hover:border-[var(--color-forest)]"
-                >
-                  Details
-                </Link>
+                <div className="flex flex-wrap gap-3">
+                  {session.availableSpots > 0 ? (
+                    <Button href={`/buchen?sessionId=${session.id}`} size="sm">
+                      Platz sichern
+                    </Button>
+                  ) : null}
+                  <Button
+                    href={`/kurse/${course.slug}`}
+                    variant="secondary"
+                    size="sm"
+                  >
+                    Details
+                  </Button>
+                </div>
               </div>
             </div>
           );

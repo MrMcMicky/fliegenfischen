@@ -35,6 +35,7 @@ export function CourseCard({
 }) {
   const hasImage = Boolean(course.imageSrc);
   const isSvg = course.imageSrc?.endsWith(".svg") ?? false;
+  const nextSession = sessions[0];
 
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
@@ -94,11 +95,21 @@ export function CourseCard({
         </div>
       ) : null}
       <div className="mt-6 flex flex-wrap gap-3">
-        <Button href={`/kurse/${course.slug}`} variant="secondary" size="sm">
+        {nextSession ? (
+          <Button href={`/buchen?sessionId=${nextSession.id}`} size="sm">
+            Platz sichern
+          </Button>
+        ) : (
+          <Button href="/kontakt" variant="secondary" size="sm">
+            Termin anfragen
+          </Button>
+        )}
+        <Button
+          href={`/kurse/${course.slug}`}
+          variant={nextSession ? "secondary" : "ghost"}
+          size="sm"
+        >
           Details
-        </Button>
-        <Button href="/kontakt" variant="ghost" size="sm">
-          Anfrage
         </Button>
       </div>
     </div>

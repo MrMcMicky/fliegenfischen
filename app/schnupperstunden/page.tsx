@@ -73,8 +73,8 @@ export default async function SchnupperstundenPage() {
             {formatPrice(lesson.additionalPersonCHF)} / Std.
           </p>
           <div className="mt-6">
-            <Button href="/kontakt" variant="secondary">
-              Schnuppertermin anfragen
+            <Button href="/buchen?lesson=taster" variant="secondary">
+              Schnuppertermin buchen
             </Button>
           </div>
           <div className="mt-6 text-sm text-white/80">

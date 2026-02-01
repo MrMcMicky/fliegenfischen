@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Fish } from "lucide-react";
 
+import { Button } from "@/components/Button";
 import { formatDate, formatPrice } from "@/lib/format";
 
 export function CourseGrid({
@@ -69,15 +69,23 @@ export function CourseGrid({
             </p>
           ) : null}
           <p className="mt-2 text-xs text-[var(--color-forest)]/60">
-            Noch {session.availableSpots} Plätze
+            {session.availableSpots > 0
+              ? `Noch ${session.availableSpots} Plätze`
+              : "Aktuell ausgebucht"}
           </p>
-          <div className="mt-6">
-            <Link
+          <div className="mt-6 flex flex-wrap gap-3">
+            {session.availableSpots > 0 ? (
+              <Button href={`/buchen?sessionId=${session.id}`} size="sm">
+                Platz sichern
+              </Button>
+            ) : null}
+            <Button
               href={session.course ? `/kurse/${session.course.slug}` : "/kurse"}
-              className="inline-flex items-center justify-center rounded-full border border-[var(--color-forest)]/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)] transition hover:border-[var(--color-forest)]"
+              variant="secondary"
+              size="sm"
             >
               Details
-            </Link>
+            </Button>
           </div>
         </div>
       ))}

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/Button";
-import { formatPrice } from "@/lib/format";
+import { formatDate, formatPrice } from "@/lib/format";
 import { calculateLessonTotal, normalizePrice } from "@/lib/booking-utils";
 
 const paymentOptions = [
@@ -101,6 +101,61 @@ export function BookingForm({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const summary = useMemo(() => {
+    if (type === "COURSE" && session) {
+      return {
+        title: session.course?.title ?? "Kurs",
+        rows: [
+          {
+            label: "Termin",
+            value: `${formatDate(session.date)} · ${session.startTime}-${session.endTime}`,
+          },
+          { label: "Ort", value: session.location },
+          {
+            label: "Preis",
+            value: `${formatPrice(session.priceCHF)} pro Person`,
+          },
+          { label: "Teilnehmende", value: String(quantity) },
+        ],
+      };
+    }
+    if ((type === "PRIVATE" || type === "TASTER") && lesson) {
+      return {
+        title: lesson.title,
+        rows: [
+          { label: "Dauer", value: `${hours} Stunden` },
+          { label: "Teilnehmende", value: String(1 + additionalPeople) },
+          { label: "Preis", value: `${formatPrice(lesson.priceCHF)} / Std.` },
+        ],
+      };
+    }
+    if (type === "VOUCHER" && voucherOption) {
+      return {
+        title: voucherOption.title,
+        rows: [
+          {
+            label: "Gutscheinwert",
+            value: formatPrice(normalizePrice(voucherAmount)),
+          },
+          voucherRecipient
+            ? { label: "Empfänger", value: voucherRecipient }
+            : null,
+        ].filter(Boolean) as { label: string; value: string }[],
+      };
+    }
+    return null;
+  }, [
+    type,
+    session,
+    lesson,
+    voucherOption,
+    voucherAmount,
+    voucherRecipient,
+    quantity,
+    hours,
+    additionalPeople,
+  ]);
+
   const total = useMemo(() => {
     if (type === "COURSE" && session) {
       return session.priceCHF * quantity;
@@ -177,28 +232,60 @@ export function BookingForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {summary ? (
+        <div className="rounded-xl border border-[var(--color-border)] bg-white p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+            Zusammenfassung
+          </p>
+          <div className="mt-3 text-sm">
+            <p className="font-semibold text-[var(--color-text)]">
+              {summary.title}
+            </p>
+            <div className="mt-3 space-y-2 text-[var(--color-muted)]">
+              {summary.rows.map((row) => (
+                <div
+                  key={`${row.label}-${row.value}`}
+                  className="flex flex-wrap items-center justify-between gap-2"
+                >
+                  <span>{row.label}</span>
+                  <span className="font-medium text-[var(--color-text)]">
+                    {row.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="text-xs text-[var(--color-muted)]">
+        Pflichtfelder sind mit * markiert.
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            Name
+            Name*
           </label>
           <input
             required
             value={customerName}
             onChange={(event) => setCustomerName(event.target.value)}
+            disabled={loading}
             className="w-full rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-sm"
             placeholder="Vorname Nachname"
           />
         </div>
         <div className="space-y-2">
           <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            E-Mail
+            E-Mail*
           </label>
           <input
             required
             type="email"
             value={customerEmail}
             onChange={(event) => setCustomerEmail(event.target.value)}
+            disabled={loading}
             className="w-full rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-sm"
             placeholder="name@email.ch"
           />
@@ -210,6 +297,7 @@ export function BookingForm({
           <input
             value={customerPhone}
             onChange={(event) => setCustomerPhone(event.target.value)}
+            disabled={loading}
             className="w-full rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-sm"
             placeholder="Optional"
           />
@@ -222,7 +310,8 @@ export function BookingForm({
             {session.course?.title}
           </p>
           <p className="text-[var(--color-muted)]">
-            {session.date} · {session.startTime}-{session.endTime} · {session.location}
+            {formatDate(session.date)} · {session.startTime}-{session.endTime} ·{" "}
+            {session.location}
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-4">
             <div>
@@ -235,6 +324,7 @@ export function BookingForm({
                 max={session.availableSpots}
                 value={quantity}
                 onChange={(event) => setQuantity(Number(event.target.value))}
+                disabled={loading}
                 className="mt-2 w-24 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
               />
             </div>
@@ -259,6 +349,7 @@ export function BookingForm({
                 min={lesson.minHours}
                 value={hours}
                 onChange={(event) => setHours(Number(event.target.value))}
+                disabled={loading}
                 className="mt-2 w-24 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
               />
             </div>
@@ -271,6 +362,7 @@ export function BookingForm({
                 min={0}
                 value={additionalPeople}
                 onChange={(event) => setAdditionalPeople(Number(event.target.value))}
+                disabled={loading}
                 className="mt-2 w-24 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
               />
             </div>
@@ -296,6 +388,7 @@ export function BookingForm({
                   value={value}
                   checked={voucherAmount === value}
                   onChange={() => setVoucherAmount(value)}
+                  disabled={loading}
                 />
                 {formatPrice(value)}
               </label>
@@ -309,6 +402,7 @@ export function BookingForm({
               <input
                 value={voucherRecipient}
                 onChange={(event) => setVoucherRecipient(event.target.value)}
+                disabled={loading}
                 className="mt-2 w-full rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
               />
             </div>
@@ -319,6 +413,7 @@ export function BookingForm({
               <input
                 value={voucherMessage}
                 onChange={(event) => setVoucherMessage(event.target.value)}
+                disabled={loading}
                 className="mt-2 w-full rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
               />
             </div>
@@ -339,11 +434,16 @@ export function BookingForm({
                 value={option.value}
                 checked={paymentMode === option.value}
                 onChange={() => setPaymentMode(option.value)}
+                disabled={loading}
               />
               {option.label}
             </label>
           ))}
         </div>
+        <p className="mt-3 text-xs text-[var(--color-muted)]">
+          Sofortzahlung via Stripe (TWINT, Visa, Mastercard). Bei Rechnung
+          schicken wir dir die Zahlungsdetails per E-Mail.
+        </p>
       </div>
 
       <div>
@@ -354,6 +454,7 @@ export function BookingForm({
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
           rows={4}
+          disabled={loading}
           className="mt-2 w-full rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
           placeholder="Wunschdatum, Erfahrung, Ziel"
         />
@@ -368,7 +469,14 @@ export function BookingForm({
         </Button>
       </div>
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {error ? (
+        <div
+          role="alert"
+          className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          {error}
+        </div>
+      ) : null}
     </form>
   );
 }

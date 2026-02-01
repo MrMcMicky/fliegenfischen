@@ -59,6 +59,17 @@ const getReplyTo = () =>
   getEnv("CONTACT_EMAIL_TO") ||
   "info@fliegenfischer-schule.shop";
 
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+const formatMultiline = (value: string) =>
+  escapeHtml(value).replace(/\n/g, "<br/>");
+
 export async function sendContactMail(payload: ContactPayload) {
   const to =
     getEnv("CONTACT_EMAIL_TO") ||
@@ -69,12 +80,13 @@ export async function sendContactMail(payload: ContactPayload) {
 
   const subject = payload.subject?.trim();
   const subjectLine = subject ? `Kontaktanfrage · ${subject}` : "Kontaktanfrage";
+  const phoneLine = payload.phone ? payload.phone : "(nicht angegeben)";
   const text = [
     "Neue Kontaktanfrage über fliegenfischer-schule.shop",
     "",
     `Name: ${payload.name}`,
     `E-Mail: ${payload.email}`,
-    payload.phone ? `Telefon: ${payload.phone}` : "Telefon: (nicht angegeben)",
+    `Telefon: ${phoneLine}`,
     subject ? `Betreff: ${subject}` : null,
     "",
     "Nachricht:",
@@ -85,12 +97,60 @@ export async function sendContactMail(payload: ContactPayload) {
     .filter(Boolean)
     .join("\n");
 
+  const html = `
+    <div style="background:#f8f7f4;padding:24px;font-family:Arial,sans-serif;color:#1A202C;">
+      <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #E5E7EB;border-radius:14px;overflow:hidden;">
+        <div style="background:#0F3231;color:#ffffff;padding:16px 20px;font-size:16px;font-weight:700;">
+          Neue Kontaktanfrage
+        </div>
+        <div style="padding:20px 20px 16px;">
+          <p style="margin:0 0 12px;font-size:14px;color:#4A5568;">
+            Eingegangen über fliegenfischer-schule.shop
+          </p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tr>
+              <td style="padding:6px 0;color:#4A5568;width:140px;">Name</td>
+              <td style="padding:6px 0;font-weight:600;">${escapeHtml(payload.name)}</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0;color:#4A5568;">E-Mail</td>
+              <td style="padding:6px 0;">${escapeHtml(payload.email)}</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0;color:#4A5568;">Telefon</td>
+              <td style="padding:6px 0;">${escapeHtml(phoneLine)}</td>
+            </tr>
+            ${
+              subject
+                ? `<tr>
+                    <td style="padding:6px 0;color:#4A5568;">Betreff</td>
+                    <td style="padding:6px 0;">${escapeHtml(subject)}</td>
+                  </tr>`
+                : ""
+            }
+          </table>
+          <div style="margin:16px 0;border-top:1px solid #E5E7EB;"></div>
+          <div style="font-size:13px;color:#4A5568;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">
+            Nachricht
+          </div>
+          <div style="background:#F8F7F4;border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.5;">
+            ${formatMultiline(payload.message)}
+          </div>
+        </div>
+        <div style="padding:14px 20px 20px;font-size:12px;color:#4A5568;">
+          Reply-To ist auf die E-Mail des Absenders gesetzt.
+        </div>
+      </div>
+    </div>
+  `;
+
   await transporter.sendMail({
     to,
     from,
     replyTo: payload.email,
     subject: `${subjectLine} · ${payload.name}`,
     text,
+    html,
   });
 }
 
@@ -99,6 +159,8 @@ export async function sendContactConfirmationMail(payload: ContactPayload) {
   const from = getEnv("CONTACT_CONFIRMATION_FROM") || getDefaultFrom();
   const transporter = createTransporter();
 
+  const subject = payload.subject?.trim();
+  const phoneLine = payload.phone ? payload.phone : "(nicht angegeben)";
   const lines = [
     `Hallo ${payload.name},`,
     "",
@@ -108,8 +170,8 @@ export async function sendContactConfirmationMail(payload: ContactPayload) {
     "Zusammenfassung:",
     `Name: ${payload.name}`,
     `E-Mail: ${payload.email}`,
-    payload.phone ? `Telefon: ${payload.phone}` : "Telefon: (nicht angegeben)",
-    payload.subject ? `Betreff: ${payload.subject}` : null,
+    `Telefon: ${phoneLine}`,
+    subject ? `Betreff: ${subject}` : null,
     "",
     "Deine Nachricht:",
     payload.message,
@@ -124,12 +186,74 @@ export async function sendContactConfirmationMail(payload: ContactPayload) {
     .filter(Boolean)
     .join("\n");
 
+  const html = `
+    <div style="background:#f8f7f4;padding:24px;font-family:Arial,sans-serif;color:#1A202C;">
+      <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #E5E7EB;border-radius:14px;overflow:hidden;">
+        <div style="background:#0F3231;color:#ffffff;padding:16px 20px;font-size:16px;font-weight:700;">
+          Bestätigung deiner Anfrage
+        </div>
+        <div style="padding:20px;">
+          <p style="margin:0 0 10px;font-size:14px;">Hallo ${escapeHtml(
+            payload.name
+          )},</p>
+          <p style="margin:0 0 12px;font-size:14px;color:#4A5568;">
+            Vielen Dank für deine Anfrage. Wir melden uns in der Regel innert 48 Stunden.
+          </p>
+          <div style="margin:16px 0;border-top:1px solid #E5E7EB;"></div>
+          <div style="font-size:13px;color:#4A5568;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">
+            Zusammenfassung
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tr>
+              <td style="padding:6px 0;color:#4A5568;width:140px;">Name</td>
+              <td style="padding:6px 0;font-weight:600;">${escapeHtml(
+                payload.name
+              )}</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0;color:#4A5568;">E-Mail</td>
+              <td style="padding:6px 0;">${escapeHtml(payload.email)}</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0;color:#4A5568;">Telefon</td>
+              <td style="padding:6px 0;">${escapeHtml(phoneLine)}</td>
+            </tr>
+            ${
+              subject
+                ? `<tr>
+                    <td style="padding:6px 0;color:#4A5568;">Betreff</td>
+                    <td style="padding:6px 0;">${escapeHtml(subject)}</td>
+                  </tr>`
+                : ""
+            }
+          </table>
+          <div style="margin:16px 0;border-top:1px solid #E5E7EB;"></div>
+          <div style="font-size:13px;color:#4A5568;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">
+            Deine Nachricht
+          </div>
+          <div style="background:#F8F7F4;border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.5;">
+            ${formatMultiline(payload.message)}
+          </div>
+          <div style="margin-top:18px;font-size:13px;color:#4A5568;">
+            <div>Petri Heil</div>
+            <div style="font-weight:600;color:#1A202C;">Urs Müller</div>
+            <div>Fliegenfischerschule Urs Müller</div>
+            <div>Geroldswil / Limmat / Zürich</div>
+            <div>fliegenfischer-schule.shop</div>
+            <div>info@fliegenfischer-schule.shop</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
   await transporter.sendMail({
     to,
     from,
     replyTo: getReplyTo(),
     subject: "Bestätigung deiner Anfrage",
     text: lines,
+    html,
   });
 }
 

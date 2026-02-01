@@ -44,18 +44,20 @@ export default async function UeberUnsPage() {
         title={aboutPage.title}
         description={aboutPage.intro}
       />
-      <div className="grid items-start gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
-          <Image
-            src="/illustrations/urs-mueller.png"
-            alt="Urs Müller am Wasser"
-            width={1200}
-            height={800}
-            className="h-64 w-full rounded-lg object-cover sm:h-72"
-          />
+      <div className="grid items-stretch gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="h-full rounded-xl border border-[var(--color-border)] bg-white p-3">
+          <div className="relative h-full min-h-[320px]">
+            <Image
+              src="/illustrations/urs-mueller.png"
+              alt="Urs Müller am Wasser"
+              fill
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="rounded-lg object-cover"
+            />
+          </div>
         </div>
-        <div className="space-y-4">
-          <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
+        <div className="flex h-full flex-col gap-4">
+          <div className="flex-1 space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
             <p>{aboutPage.bio}</p>
             <ul className="space-y-2">
               {aboutPage.values.map((value) => (
@@ -63,7 +65,7 @@ export default async function UeberUnsPage() {
               ))}
             </ul>
           </div>
-          <div className="h-fit rounded-2xl bg-[var(--color-forest)] p-6 text-white">
+          <div className="flex-1 rounded-2xl bg-[var(--color-forest)] p-6 text-white">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
               Qualifikation
             </p>

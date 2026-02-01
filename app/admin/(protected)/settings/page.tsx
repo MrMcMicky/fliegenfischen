@@ -1,12 +1,42 @@
+import { readdir, stat } from "fs/promises";
+import path from "path";
+import { redirect } from "next/navigation";
+
 import { prisma } from "@/lib/db";
 import { parseJson } from "@/lib/admin-utils";
+import { getAdminFromSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 const stringify = (value: unknown) => JSON.stringify(value, null, 2);
 
 export default async function AdminSettingsPage() {
+  const admin = await getAdminFromSession();
+  if (!admin || admin.role !== "SUPER_ADMIN") {
+    redirect("/admin");
+  }
+
   const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
+  const backupRoot = "/home/michael/backups/fliegenfischen";
+  let backups: { name: string; size: number; updatedAt: Date }[] = [];
+
+  try {
+    const entries = await readdir(backupRoot, { withFileTypes: true });
+    const files = await Promise.all(
+      entries
+        .filter((entry) => entry.isFile())
+        .map(async (entry) => {
+          const filePath = path.join(backupRoot, entry.name);
+          const info = await stat(filePath);
+          return { name: entry.name, size: info.size, updatedAt: info.mtime };
+        })
+    );
+    backups = files.sort(
+      (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+    );
+  } catch {
+    backups = [];
+  }
 
   if (!settings) {
     return (
@@ -51,9 +81,41 @@ export default async function AdminSettingsPage() {
       <div>
         <h2 className="font-display text-2xl font-semibold">Einstellungen</h2>
         <p className="text-sm text-[var(--color-muted)]">
-          JSON-Inhalte für Navigation und Inhalte.
+          Erweiterte JSON-Inhalte für Navigation und Inhalte.
         </p>
       </div>
+      <section className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+            Automatische Backups
+          </p>
+          <p className="mt-2 text-sm text-[var(--color-muted)]">
+            Hier siehst du die vorhandenen Backups.
+          </p>
+        </div>
+        <div className="mt-4 space-y-2 text-sm">
+          {backups.length ? (
+            backups.map((backup) => (
+              <div
+                key={backup.name}
+                className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] px-4 py-3"
+              >
+                <span className="font-semibold text-[var(--color-text)]">
+                  {backup.name}
+                </span>
+                <span className="text-[var(--color-muted)]">
+                  {(backup.size / 1024 / 1024).toFixed(2)} MB ·{" "}
+                  {backup.updatedAt.toLocaleString("de-CH")}
+                </span>
+              </div>
+            ))
+          ) : (
+            <p className="text-[var(--color-muted)]">
+              Keine Backups gefunden.
+            </p>
+          )}
+        </div>
+      </section>
       <form action={updateSettings} className="space-y-6">
         <div className="grid gap-4 md:grid-cols-3">
           <input name="name" defaultValue={settings.name} placeholder="Name" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />

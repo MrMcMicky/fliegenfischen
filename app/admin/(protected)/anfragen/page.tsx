@@ -163,7 +163,7 @@ export default async function AdminAnfragenPage({
                       <input type="hidden" name="id" value={request.id} />
                       <button
                         type="submit"
-                        className="rounded-full border border-[var(--color-border)] px-3 py-1 font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]"
+                        className="rounded-full border border-[var(--color-border)] px-3 py-1 font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)] cursor-pointer"
                       >
                         Zurücksetzen
                       </button>
@@ -173,7 +173,7 @@ export default async function AdminAnfragenPage({
                       <input type="hidden" name="id" value={request.id} />
                       <button
                         type="submit"
-                        className="rounded-full border border-[var(--color-border)] px-3 py-1 font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]"
+                        className="rounded-full border border-[var(--color-border)] px-3 py-1 font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)] cursor-pointer"
                       >
                         Erledigt
                       </button>
@@ -183,7 +183,7 @@ export default async function AdminAnfragenPage({
                       <input type="hidden" name="id" value={request.id} />
                       <button
                         type="submit"
-                        className="rounded-full border border-[var(--color-border)] px-3 py-1 font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]"
+                        className="rounded-full border border-[var(--color-border)] px-3 py-1 font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)] cursor-pointer"
                       >
                         Zurücksetzen
                       </button>
@@ -194,7 +194,7 @@ export default async function AdminAnfragenPage({
                       <input type="hidden" name="id" value={request.id} />
                       <button
                         type="submit"
-                        className="rounded-full border border-[var(--color-border)] px-3 py-1 font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]"
+                        className="rounded-full border border-[var(--color-border)] px-3 py-1 font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)] cursor-pointer"
                       >
                         Archivieren
                       </button>

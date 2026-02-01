@@ -67,13 +67,20 @@ export async function sendContactMail(payload: ContactPayload) {
   const from = getEnv("CONTACT_EMAIL_FROM") || getDefaultFrom();
   const transporter = createTransporter();
 
-  const subject = payload.subject?.trim() || "Kontaktanfrage";
+  const subject = payload.subject?.trim();
+  const subjectLine = subject ? `Kontaktanfrage · ${subject}` : "Kontaktanfrage";
   const text = [
+    "Neue Kontaktanfrage über fliegenfischer-schule.shop",
+    "",
     `Name: ${payload.name}`,
     `E-Mail: ${payload.email}`,
-    payload.phone ? `Telefon: ${payload.phone}` : null,
+    payload.phone ? `Telefon: ${payload.phone}` : "Telefon: (nicht angegeben)",
+    subject ? `Betreff: ${subject}` : null,
     "",
+    "Nachricht:",
     payload.message,
+    "",
+    "Hinweis: Reply-To ist auf die E-Mail des Absenders gesetzt.",
   ]
     .filter(Boolean)
     .join("\n");
@@ -82,7 +89,7 @@ export async function sendContactMail(payload: ContactPayload) {
     to,
     from,
     replyTo: payload.email,
-    subject: `Kontaktanfrage von ${payload.name}: ${subject}`,
+    subject: `${subjectLine} · ${payload.name}`,
     text,
   });
 }
@@ -95,7 +102,13 @@ export async function sendContactConfirmationMail(payload: ContactPayload) {
   const lines = [
     `Hallo ${payload.name},`,
     "",
-    "Danke für deine Anfrage! Wir melden uns in der Regel innert 48 Stunden.",
+    "Vielen Dank für deine Anfrage.",
+    "Wir melden uns in der Regel innert 48 Stunden.",
+    "",
+    "Zusammenfassung:",
+    `Name: ${payload.name}`,
+    `E-Mail: ${payload.email}`,
+    payload.phone ? `Telefon: ${payload.phone}` : "Telefon: (nicht angegeben)",
     payload.subject ? `Betreff: ${payload.subject}` : null,
     "",
     "Deine Nachricht:",

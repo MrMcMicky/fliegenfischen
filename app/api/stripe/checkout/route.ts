@@ -14,6 +14,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "missing_stripe" }, { status: 500 });
     }
 
+    if (!payload) {
+      return NextResponse.json({ error: "invalid_request" }, { status: 400 });
+    }
+
     if (payload?.paymentMode === "INVOICE") {
       return NextResponse.json({ error: "use_invoice_checkout" }, { status: 400 });
     }

@@ -1,7 +1,41 @@
+import type { Prisma } from "@prisma/client";
+
 import { prisma } from "@/lib/db";
 import { parseLines } from "@/lib/admin-utils";
 
 export const dynamic = "force-dynamic";
+
+type CtaLink = { label?: string; href?: string };
+type HeroContent = {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  primaryCta?: CtaLink;
+  secondaryCta?: CtaLink;
+};
+type AboutContent = {
+  title?: string;
+  description?: string;
+  note?: string;
+  highlights?: string[];
+};
+type SectionContent = {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+};
+type CtaContent = {
+  title?: string;
+  description?: string;
+  note?: string;
+  primary?: CtaLink;
+  secondary?: CtaLink;
+  tertiary?: CtaLink;
+};
+type HomeSectionsContent = Record<string, SectionContent> & {
+  cta?: CtaContent;
+  contactCard?: Prisma.InputJsonValue;
+};
 
 const textValue = (value: unknown) =>
   typeof value === "string" ? value : "";
@@ -17,10 +51,10 @@ export default async function AdminFrontpageTextPage() {
     );
   }
 
-  const homeHero = (settings.homeHero as any) ?? {};
-  const aboutSection = (settings.aboutSection as any) ?? {};
-  const homeSections = (settings.homeSections as any) ?? {};
-  const contactCard = homeSections.contactCard ?? {};
+  const homeHero = (settings.homeHero ?? {}) as HeroContent;
+  const aboutSection = (settings.aboutSection ?? {}) as AboutContent;
+  const homeSections = (settings.homeSections ?? {}) as HomeSectionsContent;
+  const contactCard = (homeSections.contactCard ?? null) as Prisma.InputJsonValue | null;
 
   async function updateFrontpage(formData: FormData) {
     "use server";
@@ -84,7 +118,7 @@ export default async function AdminFrontpageTextPage() {
           faq: section("faq"),
           cta,
           contactCard,
-        },
+        } as Prisma.InputJsonValue,
       },
     });
   }

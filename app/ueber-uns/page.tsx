@@ -44,16 +44,24 @@ export default async function UeberUnsPage() {
         title={aboutPage.title}
         description={aboutPage.intro}
       />
-      <div className="space-y-6">
-        <div className="grid items-start gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
-            <Image
-              src="/illustrations/urs-mueller.png"
-              alt="Urs Müller am Wasser"
-              width={1200}
-              height={800}
-              className="h-56 w-full rounded-lg object-cover sm:h-64"
-            />
+      <div className="grid items-start gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
+          <Image
+            src="/illustrations/urs-mueller.png"
+            alt="Urs Müller am Wasser"
+            width={1200}
+            height={800}
+            className="h-64 w-full rounded-lg object-cover sm:h-72"
+          />
+        </div>
+        <div className="space-y-4">
+          <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
+            <p>{aboutPage.bio}</p>
+            <ul className="space-y-2">
+              {aboutPage.values.map((value) => (
+                <li key={value}>• {value}</li>
+              ))}
+            </ul>
           </div>
           <div className="h-fit rounded-2xl bg-[var(--color-forest)] p-6 text-white">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
@@ -65,14 +73,6 @@ export default async function UeberUnsPage() {
               ))}
             </ul>
           </div>
-        </div>
-        <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
-          <p>{aboutPage.bio}</p>
-          <ul className="space-y-2">
-            {aboutPage.values.map((value) => (
-              <li key={value}>• {value}</li>
-            ))}
-          </ul>
         </div>
       </div>
       <div className="grid gap-8 rounded-2xl border border-[var(--color-border)] bg-white p-10 lg:grid-cols-[1.2fr_0.8fr]">

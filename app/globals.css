@@ -32,6 +32,17 @@
   box-sizing: border-box;
 }
 
+a,
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 body {
   min-height: 100vh;
   background: var(--color-stone);

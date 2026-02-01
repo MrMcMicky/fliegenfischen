@@ -28,11 +28,9 @@ export async function POST(request: Request) {
     }
 
     const stripe = getStripe();
-    const customerEmail = payload.customer?.email?.trim() || undefined;
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["twint", "card"],
-      customer_email: customerEmail,
       success_url: `${env.appUrl}/checkout/erfolg?bookingId=${result.booking.id}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${env.appUrl}/checkout/cancel?bookingId=${result.booking.id}`,
       metadata: {

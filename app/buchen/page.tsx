@@ -22,7 +22,21 @@ export default async function BookingPage({
     voucherAmount?: string;
   };
 }) {
-  const { sessionId, lesson, voucherOptionId, voucherAmount } = searchParams;
+  const resolvedParams = await Promise.resolve(searchParams);
+  const params =
+    resolvedParams && typeof (resolvedParams as { get?: unknown }).get === "function"
+      ? Object.fromEntries(
+          (resolvedParams as URLSearchParams).entries()
+        )
+      : (resolvedParams ?? {});
+
+  const { sessionId, lesson, voucherOptionId, voucherAmount } =
+    params as {
+      sessionId?: string;
+      lesson?: string;
+      voucherOptionId?: string;
+      voucherAmount?: string;
+    };
 
   if (sessionId) {
     const session = await prisma.courseSession.findUnique({

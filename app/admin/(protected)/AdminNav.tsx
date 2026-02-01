@@ -5,7 +5,7 @@ export type AdminNavGroup = { label: string; items: AdminNavItem[] };
 
 export default function AdminNav({ groups }: { groups: AdminNavGroup[] }) {
   return (
-    <nav className="flex flex-col gap-4 text-sm">
+    <nav className="grid gap-4 text-sm sm:grid-cols-2 xl:grid-cols-3">
       {groups.map((group) => (
         <div key={group.label} className="space-y-2">
           <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60">

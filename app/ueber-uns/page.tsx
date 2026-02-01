@@ -44,8 +44,8 @@ export default async function UeberUnsPage() {
         title={aboutPage.title}
         description={aboutPage.intro}
       />
-      <div className="grid items-start gap-6 lg:grid-cols-[1.3fr_0.7fr]">
-        <div className="space-y-4">
+      <div className="space-y-6">
+        <div className="grid items-start gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
             <Image
               src="/illustrations/urs-mueller.png"
@@ -55,22 +55,22 @@ export default async function UeberUnsPage() {
               className="h-56 w-full rounded-lg object-cover sm:h-64"
             />
           </div>
-          <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
-            <p>{aboutPage.bio}</p>
-            <ul className="space-y-2">
-              {aboutPage.values.map((value) => (
-                <li key={value}>• {value}</li>
+          <div className="h-fit rounded-2xl bg-[var(--color-forest)] p-6 text-white">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+              Qualifikation
+            </p>
+            <ul className="mt-4 space-y-2 text-sm text-white/80">
+              {aboutPage.highlights.map((item) => (
+                <li key={item}>• {item}</li>
               ))}
             </ul>
           </div>
         </div>
-        <div className="h-fit rounded-2xl bg-[var(--color-forest)] p-6 text-white">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
-            Qualifikation
-          </p>
-          <ul className="mt-4 space-y-2 text-sm text-white/80">
-            {aboutPage.highlights.map((item) => (
-              <li key={item}>• {item}</li>
+        <div className="space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
+          <p>{aboutPage.bio}</p>
+          <ul className="space-y-2">
+            {aboutPage.values.map((value) => (
+              <li key={value}>• {value}</li>
             ))}
           </ul>
         </div>

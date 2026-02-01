@@ -11,9 +11,26 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function SchnupperstundenPage() {
-  const lesson = await prisma.lessonOffering.findUnique({
-    where: { type: "TASTER" },
-  });
+  const [lesson, settings] = await Promise.all([
+    prisma.lessonOffering.findUnique({
+      where: { type: "TASTER" },
+    }),
+    prisma.siteSettings.findUnique({ where: { id: 1 } }),
+  ]);
+  const contact =
+    (settings?.contact as {
+      instructor: string;
+      address: string[];
+      phone: string;
+      mobile: string;
+      email: string;
+    }) || {
+      instructor: "",
+      address: ["", ""],
+      phone: "",
+      mobile: "",
+      email: "",
+    };
 
   if (!lesson) {
     return (
@@ -56,9 +73,16 @@ export default async function SchnupperstundenPage() {
             {formatPrice(lesson.additionalPersonCHF)} / Std.
           </p>
           <div className="mt-6">
-            <Button href="/buchen?lesson=TASTER" variant="secondary">
-              Schnuppertermin sichern
+            <Button href="/kontakt" variant="secondary">
+              Schnuppertermin anfragen
             </Button>
+          </div>
+          <div className="mt-6 text-sm text-white/80">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+              Fragen?
+            </p>
+            {contact.phone ? <p className="mt-2">Tel. {contact.phone}</p> : null}
+            {contact.mobile ? <p>Natel {contact.mobile}</p> : null}
           </div>
         </div>
       </div>

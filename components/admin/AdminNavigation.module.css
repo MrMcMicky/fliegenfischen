@@ -1,0 +1,135 @@
+/* Container */
+.headerContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* --- LEVEL 1 (Dunkel) --- */
+.topNav {
+  background-color: #0d2b2e;
+  color: #fff;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 180px;
+}
+
+.brandKicker {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.brandName {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.topLinks {
+  display: flex;
+  list-style: none;
+  gap: 0.25rem;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.topLinks li {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.topLinks a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.topLinks a:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Aktiver Zustand Top Level */
+.activeTop a {
+  color: #fff;
+  border-bottom-color: #e48646;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+.userName {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .userName {
+    display: inline;
+  }
+}
+
+/* --- LEVEL 2 (Hell) --- */
+.subNav {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 2rem;
+}
+
+.subLinks {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.subLinks a {
+  text-decoration: none;
+  color: #4b5563;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.subLinks a:hover {
+  background-color: #f3f4f6;
+  color: #111;
+}
+
+/* Aktiver Zustand Sub Level */
+.activeSub {
+  background-color: #e3f2f3 !important;
+  color: #0d2b2e !important;
+  font-weight: 600 !important;
+}

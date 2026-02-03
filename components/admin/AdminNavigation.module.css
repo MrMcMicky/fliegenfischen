@@ -107,6 +107,10 @@
   padding: 2rem;
 }
 
+.shellNoNav {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .sideNav {
   position: sticky;
   top: 96px;
@@ -160,6 +164,10 @@
 
 .mainContent {
   min-width: 0;
+}
+
+.mainFull {
+  grid-column: 1 / -1;
 }
 
 @media (max-width: 1024px) {

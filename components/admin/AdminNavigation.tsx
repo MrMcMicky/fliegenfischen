@@ -46,6 +46,7 @@ export default function AdminNavigation({
   const activeTop =
     filteredItems.find((item) => isTopActive(item.href, item.children)) ||
     filteredItems[0];
+  const hasSideNav = Boolean(activeTop?.children?.length);
 
   return (
     <div className={styles.headerContainer}>
@@ -72,8 +73,8 @@ export default function AdminNavigation({
         </nav>
       </header>
 
-      <div className={styles.shell}>
-        {activeTop?.children && activeTop.children.length > 0 ? (
+      <div className={`${styles.shell} ${!hasSideNav ? styles.shellNoNav : ""}`}>
+        {hasSideNav ? (
           <aside className={styles.sideNav}>
             <p className={styles.sideTitle}>{activeTop.label}</p>
             <ul className={styles.sideLinks}>
@@ -93,7 +94,11 @@ export default function AdminNavigation({
             </ul>
           </aside>
         ) : null}
-        <main className={styles.mainContent}>{children}</main>
+        <main
+          className={`${styles.mainContent} ${!hasSideNav ? styles.mainFull : ""}`}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );

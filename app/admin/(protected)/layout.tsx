@@ -18,8 +18,9 @@ export default async function AdminLayout({
       <AdminNavigation
         adminName={admin.name}
         isSuperAdmin={admin.role === "SUPER_ADMIN"}
-      />
-      <main className="mx-auto w-full max-w-6xl px-6 py-10">{children}</main>
+      >
+        {children}
+      </AdminNavigation>
     </div>
   );
 }

@@ -96,41 +96,84 @@
   }
 }
 
-/* --- LEVEL 2 (Hell) --- */
-.subNav {
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 0.75rem 2rem;
+/* --- Layout (Side Navigation) --- */
+.shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 2rem;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-.subLinks {
-  display: flex;
+.sideNav {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(15, 50, 49, 0.06);
+}
+
+.sideTitle {
+  margin: 0 0 1rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(15, 50, 49, 0.6);
+  font-weight: 600;
+}
+
+.sideLinks {
   list-style: none;
-  gap: 1rem;
   margin: 0;
   padding: 0;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
-.subLinks a {
+.sideLinks a {
   text-decoration: none;
-  color: #4b5563;
-  font-size: 0.875rem;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
+  color: #374151;
+  font-size: 0.9rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 12px;
   transition: all 0.2s;
   font-weight: 500;
+  display: block;
 }
 
-.subLinks a:hover {
+.sideLinks a:hover {
   background-color: #f3f4f6;
-  color: #111;
+  color: #111827;
 }
 
-/* Aktiver Zustand Sub Level */
 .activeSub {
   background-color: #e3f2f3 !important;
   color: #0d2b2e !important;
   font-weight: 600 !important;
+}
+
+.mainContent {
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .shell {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+
+  .sideNav {
+    position: static;
+  }
+
+  .sideLinks {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 }

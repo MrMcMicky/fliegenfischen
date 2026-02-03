@@ -35,7 +35,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isAdmin = headers().get("x-admin-section") === "1";
+  const requestHeaders = await headers();
+  const isAdmin = requestHeaders.get("x-admin-section") === "1";
 
   if (isAdmin) {
     return (

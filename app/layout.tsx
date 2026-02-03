@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Source_Sans_3 } from "next/font/google";
+import { headers } from "next/headers";
 
 import "./globals.css";
 import { Footer } from "@/components/Footer";
@@ -34,6 +35,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isAdmin = headers().get("x-admin-section") === "1";
+
+  if (isAdmin) {
+    return (
+      <html lang="de">
+        <body className={`${sourceSans.variable} ${playfair.variable} antialiased`}>
+          <div className="min-h-screen bg-[var(--color-stone)]">{children}</div>
+        </body>
+      </html>
+    );
+  }
+
   const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
 
   const navLinks = (settings?.navLinks as { label: string; href: string }[]) || [];

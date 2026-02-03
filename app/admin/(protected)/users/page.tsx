@@ -67,7 +67,10 @@ export default async function AdminUsersPage() {
           <option value="ADMIN">Admin</option>
           <option value="SUPER_ADMIN">Super Admin</option>
         </select>
-        <button type="submit" className="rounded-full bg-[var(--color-forest)] px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white md:col-span-4">
+        <button
+          type="submit"
+          className="rounded-full bg-[var(--color-ember)] px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:shadow md:col-span-4"
+        >
           Benutzer anlegen
         </button>
       </form>

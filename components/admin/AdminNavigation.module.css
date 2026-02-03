@@ -61,7 +61,7 @@
   height: 100%;
   display: flex;
   align-items: center;
-  border-bottom: 3px solid transparent;
+  border-bottom: 2px solid transparent;
   transition: all 0.2s;
 }
 
@@ -73,8 +73,9 @@
 /* Aktiver Zustand Top Level */
 .activeTop a {
   color: #fff;
-  border-bottom-color: #e48646;
-  background-color: rgba(255, 255, 255, 0.05);
+  border-bottom-color: var(--color-ember);
+  background-color: transparent;
+  font-weight: 600;
 }
 
 .userProfile {
@@ -105,6 +106,7 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
+  align-items: start;
 }
 
 .shellNoNav {
@@ -113,7 +115,7 @@
 
 .sideNav {
   position: sticky;
-  top: 96px;
+  top: 20px;
   align-self: start;
   background: #ffffff;
   border: 1px solid #e5e7eb;
@@ -127,7 +129,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(15, 50, 49, 0.6);
+  color: rgba(15, 50, 49, 0.55);
   font-weight: 600;
 }
 
@@ -144,11 +146,13 @@
   text-decoration: none;
   color: #374151;
   font-size: 0.9rem;
-  padding: 0.6rem 0.75rem;
+  padding: 0.65rem 0.85rem;
   border-radius: 12px;
   transition: all 0.2s;
   font-weight: 500;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .sideLinks a:hover {
@@ -157,9 +161,20 @@
 }
 
 .activeSub {
-  background-color: #e3f2f3 !important;
+  background-color: #f2f7f6 !important;
   color: #0d2b2e !important;
   font-weight: 600 !important;
+  box-shadow: inset 3px 0 0 var(--color-ember);
+}
+
+.sideIcon {
+  height: 18px;
+  width: 18px;
+  color: rgba(15, 50, 49, 0.6);
+}
+
+.activeSub .sideIcon {
+  color: var(--color-ember);
 }
 
 .mainContent {

@@ -2,6 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { LucideIcon } from "lucide-react";
+import {
+  BookOpen,
+  CalendarDays,
+  ClipboardList,
+  CreditCard,
+  FileText,
+  Gift,
+  Mail,
+  Newspaper,
+  Settings,
+  Tag,
+  Users,
+} from "lucide-react";
 
 import LogoutButton from "@/app/admin/(protected)/LogoutButton";
 import { adminNavItems } from "@/config/adminNavigation";
@@ -18,6 +32,20 @@ const isPathActive = (pathname: string, href: string, exact = false) => {
     return pathname === href;
   }
   return pathname.startsWith(href);
+};
+
+const sideNavIcons: Record<string, LucideIcon> = {
+  "/admin/kurse": BookOpen,
+  "/admin/termine": CalendarDays,
+  "/admin/angebote": Tag,
+  "/admin/buchungen": ClipboardList,
+  "/admin/zahlungen": CreditCard,
+  "/admin/inhalte/texte": FileText,
+  "/admin/berichte": Newspaper,
+  "/admin/gutscheine": Gift,
+  "/admin/anfragen": Mail,
+  "/admin/users": Users,
+  "/admin/settings": Settings,
 };
 
 export default function AdminNavigation({
@@ -80,13 +108,15 @@ export default function AdminNavigation({
             <ul className={styles.sideLinks}>
               {activeTop.children.map((subItem) => {
                 const isSubActive = isPathActive(pathname, subItem.href);
+                const Icon = sideNavIcons[subItem.href];
                 return (
                   <li key={subItem.href}>
                     <Link
                       href={subItem.href}
                       className={isSubActive ? styles.activeSub : undefined}
                     >
-                      {subItem.label}
+                      {Icon ? <Icon className={styles.sideIcon} aria-hidden="true" /> : null}
+                      <span>{subItem.label}</span>
                     </Link>
                   </li>
                 );

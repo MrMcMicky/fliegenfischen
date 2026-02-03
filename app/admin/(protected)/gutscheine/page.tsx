@@ -21,7 +21,7 @@ export default async function AdminGutscheinePage() {
         </div>
         <Link
           href="/admin/gutscheine/neu"
-          className="rounded-full bg-[var(--color-forest)] px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white"
+          className="rounded-full bg-[var(--color-ember)] px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:shadow"
         >
           Neue Option
         </Link>

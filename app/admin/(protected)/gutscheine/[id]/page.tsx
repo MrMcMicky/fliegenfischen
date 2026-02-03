@@ -88,7 +88,7 @@ export default async function AdminGutscheinEditPage({
         <div className="flex flex-wrap gap-3">
           <button
             type="submit"
-            className="rounded-full bg-[var(--color-forest)] px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white"
+            className="rounded-full bg-[var(--color-ember)] px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:shadow"
           >
             Speichern
           </button>

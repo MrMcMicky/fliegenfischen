@@ -53,9 +53,9 @@ export default async function BookingPage({
           title={session.course?.title || "Kurs"}
           description={`${formatDate(session.date)} · ${session.startTime}-${session.endTime} · ${session.location}`}
         />
-        <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
+        <p className="text-base font-semibold text-[var(--color-forest)]">
           Preis pro Person: {formatPrice(session.priceCHF)}
-        </div>
+        </p>
         <BookingForm
           type="COURSE"
           session={{

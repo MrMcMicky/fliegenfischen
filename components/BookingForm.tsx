@@ -233,7 +233,7 @@ export function BookingForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {summary ? (
-        <div className="rounded-xl border border-[var(--color-border)] bg-white p-5">
+        <div className="rounded-xl bg-[var(--color-mist)]/80 p-5">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
             Zusammenfassung
           </p>
@@ -272,7 +272,7 @@ export function BookingForm({
             value={customerName}
             onChange={(event) => setCustomerName(event.target.value)}
             disabled={loading}
-            className="w-full rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-sm"
+            className="form-input w-full"
             placeholder="Vorname Nachname"
           />
         </div>
@@ -286,7 +286,7 @@ export function BookingForm({
             value={customerEmail}
             onChange={(event) => setCustomerEmail(event.target.value)}
             disabled={loading}
-            className="w-full rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-sm"
+            className="form-input w-full"
             placeholder="name@email.ch"
           />
         </div>
@@ -298,7 +298,7 @@ export function BookingForm({
             value={customerPhone}
             onChange={(event) => setCustomerPhone(event.target.value)}
             disabled={loading}
-            className="w-full rounded-lg border border-[var(--color-border)] bg-white px-3 py-2 text-sm"
+            className="form-input w-full"
             placeholder="Optional"
           />
         </div>
@@ -325,7 +325,7 @@ export function BookingForm({
                 value={quantity}
                 onChange={(event) => setQuantity(Number(event.target.value))}
                 disabled={loading}
-                className="mt-2 w-24 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
+                className="form-input mt-2 w-24"
               />
             </div>
             <div className="text-sm text-[var(--color-muted)]">
@@ -350,7 +350,7 @@ export function BookingForm({
                 value={hours}
                 onChange={(event) => setHours(Number(event.target.value))}
                 disabled={loading}
-                className="mt-2 w-24 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
+                className="form-input mt-2 w-24"
               />
             </div>
             <div>
@@ -363,7 +363,7 @@ export function BookingForm({
                 value={additionalPeople}
                 onChange={(event) => setAdditionalPeople(Number(event.target.value))}
                 disabled={loading}
-                className="mt-2 w-24 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
+                className="form-input mt-2 w-24"
               />
             </div>
           </div>
@@ -403,7 +403,7 @@ export function BookingForm({
                 value={voucherRecipient}
                 onChange={(event) => setVoucherRecipient(event.target.value)}
                 disabled={loading}
-                className="mt-2 w-full rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
+                className="form-input mt-2 w-full"
               />
             </div>
             <div>
@@ -414,7 +414,7 @@ export function BookingForm({
                 value={voucherMessage}
                 onChange={(event) => setVoucherMessage(event.target.value)}
                 disabled={loading}
-                className="mt-2 w-full rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
+                className="form-input mt-2 w-full"
               />
             </div>
           </div>
@@ -455,7 +455,7 @@ export function BookingForm({
           onChange={(event) => setNotes(event.target.value)}
           rows={4}
           disabled={loading}
-          className="mt-2 w-full rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
+          className="form-input mt-2 w-full"
           placeholder="Wunschdatum, Erfahrung, Ziel"
         />
       </div>

@@ -85,6 +85,34 @@ body::after {
   font-family: var(--font-display), "Times New Roman", serif;
 }
 
+.form-input {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.form-input::placeholder {
+  color: #94a3b8;
+}
+
+.form-input:focus,
+.form-input:focus-visible {
+  outline: none;
+  border-color: var(--color-ember);
+  box-shadow: 0 0 0 3px rgba(232, 134, 72, 0.2);
+}
+
+.form-input:disabled {
+  background-color: #f8fafc;
+  color: var(--color-muted);
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;

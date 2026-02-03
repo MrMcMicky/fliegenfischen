@@ -229,7 +229,7 @@ export function ReportEditor({
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             placeholder="Titel"
-            className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="w-full form-input px-3 py-2"
           />
           <div className="flex gap-2">
             <input
@@ -238,7 +238,7 @@ export function ReportEditor({
               value={slug}
               onChange={(event) => setSlug(event.target.value)}
               placeholder="slug"
-              className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="w-full form-input px-3 py-2"
             />
             <button
               type="button"
@@ -255,14 +255,14 @@ export function ReportEditor({
             value={location}
             onChange={(event) => setLocation(event.target.value)}
             placeholder="Ort"
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="form-input px-3 py-2"
           />
           <input
             name="year"
             value={year}
             onChange={(event) => setYear(event.target.value)}
             placeholder="Jahr"
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="form-input px-3 py-2"
           />
         </div>
         <textarea
@@ -270,7 +270,7 @@ export function ReportEditor({
           value={summary}
           onChange={(event) => setSummary(event.target.value)}
           placeholder="Summary"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="w-full form-input px-3 py-2"
           rows={3}
         />
 
@@ -284,7 +284,7 @@ export function ReportEditor({
               value={coverImage}
               onChange={(event) => setCoverImage(event.target.value)}
               placeholder="/berichte/slug/cover.jpg"
-              className="mt-2 w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="mt-2 w-full form-input px-3 py-2"
             />
           </div>
           {coverImage ? (
@@ -481,7 +481,7 @@ export function ReportEditor({
           value={highlights}
           onChange={(event) => setHighlights(event.target.value)}
           placeholder="Highlights (eine Zeile pro Punkt)"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="w-full form-input px-3 py-2"
           rows={4}
         />
         <div className="flex flex-wrap gap-3">

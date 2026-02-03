@@ -76,41 +76,41 @@ export default async function AdminAngebotePage() {
                 name="title"
                 defaultValue={lesson.title}
                 placeholder="Titel"
-                className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+                className="form-input px-3 py-2"
               />
               <input
                 name="priceCHF"
                 type="number"
                 defaultValue={lesson.priceCHF}
                 placeholder="Preis CHF"
-                className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+                className="form-input px-3 py-2"
               />
               <input
                 name="minHours"
                 type="number"
                 defaultValue={lesson.minHours}
                 placeholder="Mindeststunden"
-                className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+                className="form-input px-3 py-2"
               />
               <input
                 name="additionalPersonCHF"
                 type="number"
                 defaultValue={lesson.additionalPersonCHF}
                 placeholder="Zusatzperson CHF"
-                className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+                className="form-input px-3 py-2"
               />
             </div>
             <textarea
               name="description"
               defaultValue={lesson.description}
               placeholder="Beschreibung"
-              className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="w-full form-input px-3 py-2"
             />
             <textarea
               name="bullets"
               defaultValue={lesson.bullets.join("\n")}
               placeholder="Bullet Points"
-              className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="w-full form-input px-3 py-2"
             />
           </form>
         );

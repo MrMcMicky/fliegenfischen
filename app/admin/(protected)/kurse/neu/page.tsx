@@ -74,36 +74,36 @@ export default async function AdminCourseNewPage() {
       </div>
       <form action={createCourse} className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
-          <input name="title" required placeholder="Titel" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="slug" required placeholder="slug" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <select name="level" className="rounded-lg border border-[var(--color-border)] px-3 py-2">
+          <input name="title" required placeholder="Titel" className="form-input px-3 py-2" />
+          <input name="slug" required placeholder="slug" className="form-input px-3 py-2" />
+          <select name="level" className="form-input px-3 py-2">
             <option value="EINSTEIGER">Einsteiger</option>
             <option value="LEICHT_FORTGESCHRITTEN">Leicht Fortgeschritten</option>
             <option value="FORTGESCHRITTEN">Fortgeschritten</option>
           </select>
-          <select name="category" className="rounded-lg border border-[var(--color-border)] px-3 py-2">
+          <select name="category" className="form-input px-3 py-2">
             <option value="EINHAND">Einhand</option>
             <option value="ZWEIHAND">Zweihand</option>
             <option value="PRIVAT">Privat</option>
             <option value="SCHNUPPERN">Schnuppern</option>
           </select>
-          <input name="duration" placeholder="Dauer (z.B. 09:00-16:00)" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="location" placeholder="Ort" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="priceCHF" type="number" placeholder="Preis CHF" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="maxParticipants" type="number" placeholder="Max. Teilnehmer" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
+          <input name="duration" placeholder="Dauer (z.B. 09:00-16:00)" className="form-input px-3 py-2" />
+          <input name="location" placeholder="Ort" className="form-input px-3 py-2" />
+          <input name="priceCHF" type="number" placeholder="Preis CHF" className="form-input px-3 py-2" />
+          <input name="maxParticipants" type="number" placeholder="Max. Teilnehmer" className="form-input px-3 py-2" />
         </div>
-        <textarea name="summary" placeholder="Kurzbeschreibung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="description" placeholder="Beschreibung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
+        <textarea name="summary" placeholder="Kurzbeschreibung" className="w-full form-input px-3 py-2" />
+        <textarea name="description" placeholder="Beschreibung" className="w-full form-input px-3 py-2" />
         <CourseImagePicker availableImages={courseImages} />
         <input
           name="imageAlt"
           placeholder="Bild Alt Text"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="w-full form-input px-3 py-2"
         />
-        <textarea name="highlights" placeholder="Highlights (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="equipment" placeholder="Ausrüstung (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="includes" placeholder="Inklusive (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="prerequisites" placeholder="Voraussetzungen (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
+        <textarea name="highlights" placeholder="Highlights (eine Zeile pro Punkt)" className="w-full form-input px-3 py-2" />
+        <textarea name="equipment" placeholder="Ausrüstung (eine Zeile pro Punkt)" className="w-full form-input px-3 py-2" />
+        <textarea name="includes" placeholder="Inklusive (eine Zeile pro Punkt)" className="w-full form-input px-3 py-2" />
+        <textarea name="prerequisites" placeholder="Voraussetzungen (eine Zeile pro Punkt)" className="w-full form-input px-3 py-2" />
         <button
           type="submit"
           className="rounded-full bg-[var(--color-ember)] px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:shadow"

@@ -91,26 +91,26 @@ export default async function AdminCourseEditPage({
       </div>
       <form action={updateCourse} className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
-          <input name="title" required defaultValue={course.title} placeholder="Titel" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="slug" required defaultValue={course.slug} placeholder="slug" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <select name="level" defaultValue={course.level} className="rounded-lg border border-[var(--color-border)] px-3 py-2">
+          <input name="title" required defaultValue={course.title} placeholder="Titel" className="form-input px-3 py-2" />
+          <input name="slug" required defaultValue={course.slug} placeholder="slug" className="form-input px-3 py-2" />
+          <select name="level" defaultValue={course.level} className="form-input px-3 py-2">
             <option value="EINSTEIGER">Einsteiger</option>
             <option value="LEICHT_FORTGESCHRITTEN">Leicht Fortgeschritten</option>
             <option value="FORTGESCHRITTEN">Fortgeschritten</option>
           </select>
-          <select name="category" defaultValue={course.category} className="rounded-lg border border-[var(--color-border)] px-3 py-2">
+          <select name="category" defaultValue={course.category} className="form-input px-3 py-2">
             <option value="EINHAND">Einhand</option>
             <option value="ZWEIHAND">Zweihand</option>
             <option value="PRIVAT">Privat</option>
             <option value="SCHNUPPERN">Schnuppern</option>
           </select>
-          <input name="duration" defaultValue={course.duration} placeholder="Dauer" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="location" defaultValue={course.location} placeholder="Ort" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="priceCHF" type="number" defaultValue={course.priceCHF} placeholder="Preis CHF" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="maxParticipants" type="number" defaultValue={course.maxParticipants} placeholder="Max. Teilnehmer" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
+          <input name="duration" defaultValue={course.duration} placeholder="Dauer" className="form-input px-3 py-2" />
+          <input name="location" defaultValue={course.location} placeholder="Ort" className="form-input px-3 py-2" />
+          <input name="priceCHF" type="number" defaultValue={course.priceCHF} placeholder="Preis CHF" className="form-input px-3 py-2" />
+          <input name="maxParticipants" type="number" defaultValue={course.maxParticipants} placeholder="Max. Teilnehmer" className="form-input px-3 py-2" />
         </div>
-        <textarea name="summary" defaultValue={course.summary} placeholder="Kurzbeschreibung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="description" defaultValue={course.description} placeholder="Beschreibung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
+        <textarea name="summary" defaultValue={course.summary} placeholder="Kurzbeschreibung" className="w-full form-input px-3 py-2" />
+        <textarea name="description" defaultValue={course.description} placeholder="Beschreibung" className="w-full form-input px-3 py-2" />
         <CourseImagePicker
           availableImages={courseImages}
           initialSrc={course.imageSrc}
@@ -119,12 +119,12 @@ export default async function AdminCourseEditPage({
           name="imageAlt"
           defaultValue={course.imageAlt || ""}
           placeholder="Bild Alt Text"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="w-full form-input px-3 py-2"
         />
-        <textarea name="highlights" defaultValue={course.highlights.join("\n")} placeholder="Highlights" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="equipment" defaultValue={course.equipment.join("\n")} placeholder="Ausrüstung" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="includes" defaultValue={course.includes.join("\n")} placeholder="Inklusive" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <textarea name="prerequisites" defaultValue={course.prerequisites.join("\n")} placeholder="Voraussetzungen" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
+        <textarea name="highlights" defaultValue={course.highlights.join("\n")} placeholder="Highlights" className="w-full form-input px-3 py-2" />
+        <textarea name="equipment" defaultValue={course.equipment.join("\n")} placeholder="Ausrüstung" className="w-full form-input px-3 py-2" />
+        <textarea name="includes" defaultValue={course.includes.join("\n")} placeholder="Inklusive" className="w-full form-input px-3 py-2" />
+        <textarea name="prerequisites" defaultValue={course.prerequisites.join("\n")} placeholder="Voraussetzungen" className="w-full form-input px-3 py-2" />
         <div className="flex flex-wrap gap-3">
           <button
             type="submit"

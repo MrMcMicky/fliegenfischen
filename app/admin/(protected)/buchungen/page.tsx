@@ -68,7 +68,7 @@ export default async function AdminBuchungenPage() {
                 <select
                   name="status"
                   defaultValue={booking.status}
-                  className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+                  className="form-input px-3 py-2"
                 >
                   <option value="PENDING">Offen</option>
                   <option value="PAYMENT_PENDING">Zahlung offen</option>

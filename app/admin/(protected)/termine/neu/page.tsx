@@ -53,7 +53,7 @@ export default async function AdminTermineNewPage() {
         <p className="text-sm text-[var(--color-muted)]">Kursdatum erfassen.</p>
       </div>
       <form action={createSession} className="space-y-6">
-        <select name="courseId" className="rounded-lg border border-[var(--color-border)] px-3 py-2">
+        <select name="courseId" className="form-input px-3 py-2">
           {courses.map((course) => (
             <option key={course.id} value={course.id}>
               {course.title}
@@ -61,19 +61,19 @@ export default async function AdminTermineNewPage() {
           ))}
         </select>
         <div className="grid gap-4 md:grid-cols-2">
-          <input name="date" type="date" required className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="location" placeholder="Ort" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="startTime" placeholder="Startzeit" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="endTime" placeholder="Endzeit" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="priceCHF" type="number" placeholder="Preis CHF" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="availableSpots" type="number" placeholder="Plätze" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <select name="status" className="rounded-lg border border-[var(--color-border)] px-3 py-2">
+          <input name="date" type="date" required className="form-input px-3 py-2" />
+          <input name="location" placeholder="Ort" className="form-input px-3 py-2" />
+          <input name="startTime" placeholder="Startzeit" className="form-input px-3 py-2" />
+          <input name="endTime" placeholder="Endzeit" className="form-input px-3 py-2" />
+          <input name="priceCHF" type="number" placeholder="Preis CHF" className="form-input px-3 py-2" />
+          <input name="availableSpots" type="number" placeholder="Plätze" className="form-input px-3 py-2" />
+          <select name="status" className="form-input px-3 py-2">
             <option value="VERFUEGBAR">Verfügbar</option>
             <option value="AUSGEBUCHT">Ausgebucht</option>
             <option value="ABGESAGT">Abgesagt</option>
           </select>
         </div>
-        <textarea name="notes" placeholder="Notizen (eine Zeile pro Punkt)" className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2" />
+        <textarea name="notes" placeholder="Notizen (eine Zeile pro Punkt)" className="w-full form-input px-3 py-2" />
         <button
           type="submit"
           className="rounded-full bg-[var(--color-ember)] px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:shadow"

@@ -60,10 +60,10 @@ export default async function AdminUsersPage() {
       </div>
 
       <form action={createUser} className="grid gap-4 rounded-2xl border border-[var(--color-border)] bg-white p-6 md:grid-cols-4">
-        <input name="name" placeholder="Name" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <input name="email" placeholder="Email" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <input name="password" placeholder="Passwort" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-        <select name="role" className="rounded-lg border border-[var(--color-border)] px-3 py-2">
+        <input name="name" placeholder="Name" className="form-input px-3 py-2" />
+        <input name="email" placeholder="Email" className="form-input px-3 py-2" />
+        <input name="password" placeholder="Passwort" className="form-input px-3 py-2" />
+        <select name="role" className="form-input px-3 py-2">
           <option value="ADMIN">Admin</option>
           <option value="SUPER_ADMIN">Super Admin</option>
         </select>

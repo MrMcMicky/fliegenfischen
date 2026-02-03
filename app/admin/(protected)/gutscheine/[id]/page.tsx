@@ -63,18 +63,18 @@ export default async function AdminGutscheinEditPage({
           required
           defaultValue={option.title}
           placeholder="Titel"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="w-full form-input px-3 py-2"
         />
         <textarea
           name="description"
           defaultValue={option.description}
           placeholder="Beschreibung"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="w-full form-input px-3 py-2"
         />
         <select
           name="kind"
           defaultValue={option.kind}
-          className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="form-input px-3 py-2"
         >
           <option value="VALUE">Wertgutschein</option>
           <option value="COURSE">Kursgutschein</option>
@@ -83,7 +83,7 @@ export default async function AdminGutscheinEditPage({
           name="values"
           defaultValue={option.values.join("\n")}
           placeholder="Werte (eine Zahl pro Zeile)"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="w-full form-input px-3 py-2"
         />
         <div className="flex flex-wrap gap-3">
           <button

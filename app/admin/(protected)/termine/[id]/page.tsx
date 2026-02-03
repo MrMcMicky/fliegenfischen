@@ -77,7 +77,7 @@ export default async function AdminTerminEditPage({
         <select
           name="courseId"
           defaultValue={session.courseId}
-          className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="form-input px-3 py-2"
         >
           {courses.map((course) => (
             <option key={course.id} value={course.id}>
@@ -90,44 +90,44 @@ export default async function AdminTerminEditPage({
             name="date"
             type="date"
             defaultValue={session.date.toISOString().split("T")[0]}
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="form-input px-3 py-2"
           />
           <input
             name="location"
             defaultValue={session.location}
             placeholder="Ort"
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="form-input px-3 py-2"
           />
           <input
             name="startTime"
             defaultValue={session.startTime}
             placeholder="Startzeit"
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="form-input px-3 py-2"
           />
           <input
             name="endTime"
             defaultValue={session.endTime}
             placeholder="Endzeit"
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="form-input px-3 py-2"
           />
           <input
             name="priceCHF"
             type="number"
             defaultValue={session.priceCHF}
             placeholder="Preis CHF"
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="form-input px-3 py-2"
           />
           <input
             name="availableSpots"
             type="number"
             defaultValue={session.availableSpots}
             placeholder="Plätze"
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="form-input px-3 py-2"
           />
           <select
             name="status"
             defaultValue={session.status}
-            className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="form-input px-3 py-2"
           >
             <option value="VERFUEGBAR">Verfügbar</option>
             <option value="AUSGEBUCHT">Ausgebucht</option>
@@ -138,7 +138,7 @@ export default async function AdminTerminEditPage({
           name="notes"
           defaultValue={session.notes.join("\n")}
           placeholder="Notizen"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="w-full form-input px-3 py-2"
         />
         <div className="flex flex-wrap gap-3">
           <button

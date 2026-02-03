@@ -65,7 +65,7 @@ export function CourseImagePicker({
           value={imageSrc}
           onChange={(event) => setImageSrc(event.target.value)}
           placeholder="/illustrations/course-einhand-v2.png"
-          className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+          className="w-full form-input px-3 py-2"
         />
         {imageSrc ? (
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">

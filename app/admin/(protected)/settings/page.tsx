@@ -118,24 +118,24 @@ export default async function AdminSettingsPage() {
       </section>
       <form action={updateSettings} className="space-y-6">
         <div className="grid gap-4 md:grid-cols-3">
-          <input name="name" defaultValue={settings.name} placeholder="Name" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="tagline" defaultValue={settings.tagline} placeholder="Tagline" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
-          <input name="location" defaultValue={settings.location} placeholder="Location" className="rounded-lg border border-[var(--color-border)] px-3 py-2" />
+          <input name="name" defaultValue={settings.name} placeholder="Name" className="form-input px-3 py-2" />
+          <input name="tagline" defaultValue={settings.tagline} placeholder="Tagline" className="form-input px-3 py-2" />
+          <input name="location" defaultValue={settings.location} placeholder="Location" className="form-input px-3 py-2" />
         </div>
 
-        <textarea name="contact" defaultValue={stringify(settings.contact)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="navLinks" defaultValue={stringify(settings.navLinks)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="footerLinks" defaultValue={stringify(settings.footerLinks)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="categorySummaries" defaultValue={stringify(settings.categorySummaries)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="homeHero" defaultValue={stringify(settings.homeHero)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="aboutSection" defaultValue={stringify(settings.aboutSection)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="aboutPage" defaultValue={stringify(settings.aboutPage)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="homeSections" defaultValue={stringify(settings.homeSections)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="uspItems" defaultValue={stringify(settings.uspItems)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="faqs" defaultValue={stringify(settings.faqs)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="testimonials" defaultValue={stringify(settings.testimonials)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="testimonialSection" defaultValue={stringify(settings.testimonialSection)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
-        <textarea name="coursePathSteps" defaultValue={stringify(settings.coursePathSteps)} rows={6} className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2 font-mono text-xs" />
+        <textarea name="contact" defaultValue={stringify(settings.contact)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="navLinks" defaultValue={stringify(settings.navLinks)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="footerLinks" defaultValue={stringify(settings.footerLinks)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="categorySummaries" defaultValue={stringify(settings.categorySummaries)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="homeHero" defaultValue={stringify(settings.homeHero)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="aboutSection" defaultValue={stringify(settings.aboutSection)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="aboutPage" defaultValue={stringify(settings.aboutPage)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="homeSections" defaultValue={stringify(settings.homeSections)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="uspItems" defaultValue={stringify(settings.uspItems)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="faqs" defaultValue={stringify(settings.faqs)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="testimonials" defaultValue={stringify(settings.testimonials)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="testimonialSection" defaultValue={stringify(settings.testimonialSection)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
+        <textarea name="coursePathSteps" defaultValue={stringify(settings.coursePathSteps)} rows={6} className="w-full form-input px-3 py-2 font-mono text-xs" />
 
         <button
           type="submit"

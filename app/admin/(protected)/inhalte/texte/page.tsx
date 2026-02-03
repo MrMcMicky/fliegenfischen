@@ -142,20 +142,20 @@ export default async function AdminFrontpageTextPage() {
               name="hero.eyebrow"
               defaultValue={textValue(homeHero.eyebrow)}
               placeholder="Eyebrow"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="hero.title"
               defaultValue={textValue(homeHero.title)}
               placeholder="Titel"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
           </div>
           <textarea
             name="hero.description"
             defaultValue={textValue(homeHero.description)}
             placeholder="Beschreibung"
-            className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="w-full form-input px-3 py-2"
             rows={3}
           />
           <div className="grid gap-4 md:grid-cols-2">
@@ -163,25 +163,25 @@ export default async function AdminFrontpageTextPage() {
               name="hero.primary.label"
               defaultValue={textValue(homeHero.primaryCta?.label)}
               placeholder="Primary Button Text"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="hero.primary.href"
               defaultValue={textValue(homeHero.primaryCta?.href)}
               placeholder="Primary Button Link"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="hero.secondary.label"
               defaultValue={textValue(homeHero.secondaryCta?.label)}
               placeholder="Secondary Button Text"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="hero.secondary.href"
               defaultValue={textValue(homeHero.secondaryCta?.href)}
               placeholder="Secondary Button Link"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
           </div>
         </section>
@@ -195,27 +195,27 @@ export default async function AdminFrontpageTextPage() {
               name="about.title"
               defaultValue={textValue(aboutSection.title)}
               placeholder="Titel"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="about.note"
               defaultValue={textValue(aboutSection.note)}
               placeholder="Hinweis"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
           </div>
           <textarea
             name="about.description"
             defaultValue={textValue(aboutSection.description)}
             placeholder="Beschreibung"
-            className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="w-full form-input px-3 py-2"
             rows={3}
           />
           <textarea
             name="about.highlights"
             defaultValue={(aboutSection.highlights || []).join("\n")}
             placeholder="Highlights (eine Zeile pro Punkt)"
-            className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="w-full form-input px-3 py-2"
             rows={3}
           />
         </section>
@@ -240,20 +240,20 @@ export default async function AdminFrontpageTextPage() {
                     name={`${section.key}.eyebrow`}
                     defaultValue={textValue(data.eyebrow)}
                     placeholder="Eyebrow"
-                    className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+                    className="form-input px-3 py-2"
                   />
                   <input
                     name={`${section.key}.title`}
                     defaultValue={textValue(data.title)}
                     placeholder="Titel"
-                    className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+                    className="form-input px-3 py-2"
                   />
                 </div>
                 <textarea
                   name={`${section.key}.description`}
                   defaultValue={textValue(data.description)}
                   placeholder="Beschreibung"
-                  className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+                  className="w-full form-input px-3 py-2"
                   rows={2}
                 />
               </div>
@@ -268,20 +268,20 @@ export default async function AdminFrontpageTextPage() {
               name="cta.title"
               defaultValue={textValue(homeSections.cta?.title)}
               placeholder="Titel"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="cta.note"
               defaultValue={textValue(homeSections.cta?.note)}
               placeholder="Hinweis"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
           </div>
           <textarea
             name="cta.description"
             defaultValue={textValue(homeSections.cta?.description)}
             placeholder="Beschreibung"
-            className="w-full rounded-lg border border-[var(--color-border)] px-3 py-2"
+            className="w-full form-input px-3 py-2"
             rows={3}
           />
           <div className="grid gap-4 md:grid-cols-2">
@@ -289,37 +289,37 @@ export default async function AdminFrontpageTextPage() {
               name="cta.primary.label"
               defaultValue={textValue(homeSections.cta?.primary?.label)}
               placeholder="Primary Button Text"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="cta.primary.href"
               defaultValue={textValue(homeSections.cta?.primary?.href)}
               placeholder="Primary Button Link"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="cta.secondary.label"
               defaultValue={textValue(homeSections.cta?.secondary?.label)}
               placeholder="Secondary Button Text"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="cta.secondary.href"
               defaultValue={textValue(homeSections.cta?.secondary?.href)}
               placeholder="Secondary Button Link"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="cta.tertiary.label"
               defaultValue={textValue(homeSections.cta?.tertiary?.label)}
               placeholder="Tertiary Button Text"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
             <input
               name="cta.tertiary.href"
               defaultValue={textValue(homeSections.cta?.tertiary?.href)}
               placeholder="Tertiary Button Link"
-              className="rounded-lg border border-[var(--color-border)] px-3 py-2"
+              className="form-input px-3 py-2"
             />
           </div>
         </section>

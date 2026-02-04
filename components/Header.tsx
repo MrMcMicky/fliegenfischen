@@ -37,9 +37,18 @@ export function Header({
     : "bg-white/90 backdrop-blur-md border-b border-[var(--color-border)] text-[var(--color-text)]";
   const navLinkClass = isHome
     ? scrolled
-      ? "text-[var(--color-text)] hover:text-[var(--color-forest)]/70"
-      : "text-white/85 hover:text-white"
-    : "text-[var(--color-text)] hover:text-[var(--color-forest)]/70";
+      ? "text-[var(--color-forest)]/70 hover:text-[var(--color-forest)]"
+      : "text-white/75 hover:text-white"
+    : "text-[var(--color-forest)]/70 hover:text-[var(--color-forest)]";
+  const primaryLinks = new Set(["/kurse", "/privatunterricht"]);
+  const primaryNav = navLinks.filter((item) => primaryLinks.has(item.href));
+  const secondaryNav = navLinks.filter((item) => !primaryLinks.has(item.href));
+  const primaryNavClass = isHome
+    ? scrolled
+      ? "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold"
+      : "rounded-full bg-black/35 px-3 py-1.5 text-white/95 font-semibold backdrop-blur-sm"
+    : "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold";
+  const dividerClass = isHome && !scrolled ? "bg-white/30" : "bg-[var(--color-border)]";
   const sublineClass = isHome
     ? scrolled
       ? "text-[var(--color-forest)]/60"
@@ -62,16 +71,28 @@ export function Header({
             {location}
           </span>
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium lg:flex">
-          {navLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`transition-colors ${navLinkClass}`}
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav className="hidden items-center gap-4 text-sm lg:flex">
+          <div className="flex items-center gap-2">
+            {primaryNav.map((item) => (
+              <Link key={item.href} href={item.href} className={primaryNavClass}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          {secondaryNav.length > 0 ? (
+            <span className={`h-5 w-px ${dividerClass}`} />
+          ) : null}
+          <div className="flex items-center gap-4 text-[0.85rem] font-semibold">
+            {secondaryNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`transition-colors ${navLinkClass}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </nav>
         <div className="flex items-center gap-3">
           <div className="hidden lg:block">
@@ -93,12 +114,22 @@ export function Header({
       {open ? (
         <div className="border-t border-[var(--color-border)] bg-white/95 backdrop-blur-md lg:hidden">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-4">
-            {navLinks.map((item) => (
+            {primaryNav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="text-sm font-medium text-[var(--color-text)]"
+                className="rounded-lg bg-[var(--color-forest)]/10 px-3 py-2 text-sm font-semibold text-[var(--color-forest)]"
+              >
+                {item.label}
+              </Link>
+            ))}
+            {secondaryNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="text-sm font-medium text-[var(--color-text)]/80"
               >
                 {item.label}
               </Link>

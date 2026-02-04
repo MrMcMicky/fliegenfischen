@@ -54,7 +54,7 @@ export function HeroSection({
           <Button href={hero.primaryCta.href} size="lg">
             {hero.primaryCta.label}
           </Button>
-          <Button href={hero.secondaryCta.href} variant="secondary" size="lg">
+          <Button href={hero.secondaryCta.href} variant="light" size="lg">
             {hero.secondaryCta.label}
           </Button>
         </div>

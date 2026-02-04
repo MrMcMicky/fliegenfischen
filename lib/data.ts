@@ -3,10 +3,11 @@ import { reports } from "@/lib/reports";
 import { coursePathSteps, faqs, siteConfig, uspItems } from "@/lib/site";
 
 export const navLinks = [
-  { label: "Kurse", href: "/kurse" },
-  { label: "Privatlektion", href: "/privatunterricht" },
-  { label: "Über uns", href: "/ueber-uns" },
-  { label: "Kontakt", href: "/kontakt" },
+  { label: "Kurse", href: "/#kurse" },
+  { label: "Privatlektion", href: "/#privat" },
+  { label: "Über uns", href: "/#ueber" },
+  { label: "Berichte", href: "/#berichte" },
+  { label: "Kontakt", href: "/#kontakt" },
 ];
 
 export const footerLinks = {

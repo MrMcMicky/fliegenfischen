@@ -1,12 +1,15 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/Button";
+import { ContactForm } from "@/components/ContactForm";
 import { CourseGrid } from "@/components/CourseGrid";
 import { HeroSection } from "@/components/HeroSection";
 import { SectionHeader } from "@/components/SectionHeader";
 import { TestimonialSection } from "@/components/TestimonialSection";
 import { TimelineSteps } from "@/components/TimelineSteps";
 import { prisma } from "@/lib/db";
+import { formatPrice } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -16,16 +19,18 @@ const extractFirstImage = (body: string) => {
 };
 
 export default async function Home() {
-  const [settings, upcomingSessions, reports] = await Promise.all([
-    prisma.siteSettings.findUnique({ where: { id: 1 } }),
-    prisma.courseSession.findMany({
-      where: { status: "VERFUEGBAR" },
-      include: { course: true },
-      orderBy: { date: "asc" },
-      take: 3,
-    }),
-    prisma.report.findMany({ orderBy: { year: "desc" } }),
-  ]);
+  const [settings, upcomingSessions, reports, privateLesson] =
+    await Promise.all([
+      prisma.siteSettings.findUnique({ where: { id: 1 } }),
+      prisma.courseSession.findMany({
+        where: { status: "VERFUEGBAR" },
+        include: { course: true },
+        orderBy: { date: "asc" },
+        take: 3,
+      }),
+      prisma.report.findMany({ orderBy: { year: "desc" } }),
+      prisma.lessonOffering.findUnique({ where: { type: "PRIVATE" } }),
+    ]);
 
   if (!settings) {
     return (
@@ -80,6 +85,20 @@ export default async function Home() {
     title: string;
     detail: string;
   }[];
+  const contact =
+    (settings.contact as {
+      instructor: string;
+      address: string[];
+      phone: string;
+      mobile: string;
+      email: string;
+    }) || {
+      instructor: "",
+      address: ["", ""],
+      phone: "",
+      mobile: "",
+      email: "",
+    };
   const categorySummaries = (settings.categorySummaries as {
     title: string;
     description: string;
@@ -109,7 +128,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-5xl px-4 py-10">
+      <section id="kurse" className="mx-auto w-full max-w-5xl px-4 py-10">
         <SectionHeader
           eyebrow={homeSections.upcoming?.eyebrow}
           title={homeSections.upcoming?.title}
@@ -143,6 +162,64 @@ export default async function Home() {
           ))}
         </div>
       </section>
+
+      {privateLesson ? (
+        <section id="privat" className="mx-auto w-full max-w-5xl px-4 py-10">
+          <SectionHeader
+            eyebrow="Privatlektion"
+            title="Individuelles Coaching am Wasser"
+            description="Wir richten uns nach deinem Niveau: Technik verfeinern, Gewässer lesen lernen oder gezielt Fehler korrigieren."
+          />
+          <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
+              <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
+                <Image
+                  src="/illustrations/private-lessons.png"
+                  alt="Illustration Privatlektion"
+                  width={720}
+                  height={480}
+                  className="h-48 w-full object-contain"
+                />
+              </div>
+              <p className="mt-5 text-sm text-[var(--color-muted)]">
+                {privateLesson.description}
+              </p>
+              <ul className="mt-6 space-y-3 text-sm text-[var(--color-muted)]">
+                {privateLesson.bullets.map((bullet) => (
+                  <li key={bullet} className="flex items-start gap-3">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-[var(--color-ember)]" />
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="h-fit rounded-2xl bg-[var(--color-forest)] p-8 text-white shadow-lg">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+                Preis
+              </p>
+              <p className="mt-3 text-4xl font-semibold">
+                {formatPrice(privateLesson.priceCHF)} / Std.
+              </p>
+              <p className="mt-3 text-sm text-white/70">
+                Mindestens {privateLesson.minHours} Stunden. Jede weitere Person +
+                {formatPrice(privateLesson.additionalPersonCHF)} / Std.
+              </p>
+              <div className="mt-6">
+                <Button href="/buchen?lesson=private" className="w-full">
+                  Privatlektion buchen
+                </Button>
+              </div>
+              <div className="mt-6 text-sm text-white/80">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+                  Fragen?
+                </p>
+                {contact.phone ? <p className="mt-2">Tel. {contact.phone}</p> : null}
+                {contact.mobile ? <p>Natel {contact.mobile}</p> : null}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section id="ueber" className="mx-auto w-full max-w-5xl px-4 py-10">
         <SectionHeader
@@ -186,7 +263,7 @@ export default async function Home() {
         testimonials={testimonials}
       />
 
-      <section className="mx-auto w-full max-w-5xl px-4 py-10">
+      <section id="berichte" className="mx-auto w-full max-w-5xl px-4 py-10">
         <SectionHeader
           eyebrow={homeSections.reports?.eyebrow}
           title={homeSections.reports?.title}
@@ -245,6 +322,56 @@ export default async function Home() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section id="kontakt" className="mx-auto w-full max-w-5xl px-4 py-10">
+        <SectionHeader
+          eyebrow="Kontakt"
+          title="Lass uns deinen Termin planen"
+          description="Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausrüstung und Terminen."
+        />
+        <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
+            <div className="mb-6 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
+              <Image
+                src="/illustrations/contact-map.png"
+                alt="Illustration Treffpunkt und Limmat"
+                width={720}
+                height={480}
+                className="h-40 w-full object-contain sm:h-48"
+              />
+            </div>
+            <p className="font-semibold text-[var(--color-text)]">
+              {contact.instructor}
+            </p>
+            <p>{contact.address[0]}</p>
+            <p>{contact.address[1]}</p>
+            {contact.phone ? <p className="mt-4">Tel. {contact.phone}</p> : null}
+            {contact.mobile ? <p>Natel {contact.mobile}</p> : null}
+            {contact.email ? <p>{contact.email}</p> : null}
+            <div className="mt-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                Treffpunkt
+              </p>
+              <p className="mt-2">
+                Kursdetails und genaue Treffpunkte senden wir mit der
+                Bestätigungsmail.
+              </p>
+            </div>
+          </div>
+          <div className="rounded-2xl bg-[var(--color-forest)] p-8 text-white">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+              Anfrage
+            </p>
+            <p className="mt-3 text-sm text-white/70">
+              Teile uns kurz dein Ziel und mögliche Termine mit. Wir melden uns
+              innert 48 Stunden.
+            </p>
+            <div className="mt-6">
+              <ContactForm />
+            </div>
+          </div>
         </div>
       </section>
 

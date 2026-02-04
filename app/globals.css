@@ -14,6 +14,10 @@
   --font-display: var(--font-fraunces);
 }
 
+html {
+  scroll-padding-top: 120px;
+}
+
 @theme inline {
   --color-forest: var(--color-forest);
   --color-river: var(--color-river);
@@ -75,6 +79,10 @@ body::after {
   mix-blend-mode: multiply;
   pointer-events: none;
   z-index: -1;
+}
+
+main section[id] {
+  scroll-margin-top: 120px;
 }
 
 ::selection {

@@ -47,7 +47,8 @@ export default async function AdminAngebotePage() {
       <div>
         <h2 className="font-display text-2xl font-semibold">Angebote</h2>
         <p className="text-sm text-[var(--color-muted)]">
-          Privatunterricht und Schnupperstunden verwalten.
+          Preise und Texte für Privatunterricht und Schnupperstunden. Diese Angaben
+          erscheinen auf der Website und im Checkout.
         </p>
       </div>
 
@@ -72,46 +73,89 @@ export default async function AdminAngebotePage() {
               </button>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <input
-                name="title"
-                defaultValue={lesson.title}
-                placeholder="Titel"
-                className="form-input px-3 py-2"
-              />
-              <input
-                name="priceCHF"
-                type="number"
-                defaultValue={lesson.priceCHF}
-                placeholder="Preis CHF"
-                className="form-input px-3 py-2"
-              />
-              <input
-                name="minHours"
-                type="number"
-                defaultValue={lesson.minHours}
-                placeholder="Mindeststunden"
-                className="form-input px-3 py-2"
-              />
-              <input
-                name="additionalPersonCHF"
-                type="number"
-                defaultValue={lesson.additionalPersonCHF}
-                placeholder="Zusatzperson CHF"
-                className="form-input px-3 py-2"
+              <div className="space-y-1.5">
+                <label htmlFor={`${lesson.type}-title`} className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  Angebots‑Titel (sichtbar auf der Website)
+                </label>
+                <input
+                  id={`${lesson.type}-title`}
+                  name="title"
+                  defaultValue={lesson.title}
+                  placeholder="z. B. Privatunterricht"
+                  className="form-input px-3 py-2"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor={`${lesson.type}-price`} className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  Preis pro Stunde (CHF)
+                </label>
+                <input
+                  id={`${lesson.type}-price`}
+                  name="priceCHF"
+                  type="number"
+                  defaultValue={lesson.priceCHF}
+                  placeholder="z. B. 70"
+                  className="form-input px-3 py-2"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor={`${lesson.type}-min-hours`} className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  Mindestdauer (Stunden)
+                </label>
+                <input
+                  id={`${lesson.type}-min-hours`}
+                  name="minHours"
+                  type="number"
+                  defaultValue={lesson.minHours}
+                  placeholder="z. B. 2"
+                  className="form-input px-3 py-2"
+                />
+                <p className="text-xs text-[var(--color-muted)]">
+                  Wird im Text „Mindestens X Stunden“ angezeigt.
+                </p>
+              </div>
+              <div className="space-y-1.5">
+                <label htmlFor={`${lesson.type}-additional`} className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  Zuschlag pro zusätzlicher Person (CHF)
+                </label>
+                <input
+                  id={`${lesson.type}-additional`}
+                  name="additionalPersonCHF"
+                  type="number"
+                  defaultValue={lesson.additionalPersonCHF}
+                  placeholder="z. B. 40"
+                  className="form-input px-3 py-2"
+                />
+                <p className="text-xs text-[var(--color-muted)]">
+                  Beispiel: „jede weitere Person +CHF X / Std.“
+                </p>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor={`${lesson.type}-description`} className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Kurzbeschreibung (1–2 Sätze)
+              </label>
+              <textarea
+                id={`${lesson.type}-description`}
+                name="description"
+                defaultValue={lesson.description}
+                placeholder="Wird unter dem Titel angezeigt."
+                className="w-full form-input px-3 py-2"
               />
             </div>
-            <textarea
-              name="description"
-              defaultValue={lesson.description}
-              placeholder="Beschreibung"
-              className="w-full form-input px-3 py-2"
-            />
-            <textarea
-              name="bullets"
-              defaultValue={lesson.bullets.join("\n")}
-              placeholder="Bullet Points"
-              className="w-full form-input px-3 py-2"
-            />
+            <div className="space-y-1.5">
+              <label htmlFor={`${lesson.type}-bullets`} className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Stichpunkte (Liste)
+              </label>
+              <textarea
+                id={`${lesson.type}-bullets`}
+                name="bullets"
+                defaultValue={lesson.bullets.join("\n")}
+                placeholder="Eine Zeile pro Punkt (z. B. Termine nach Vereinbarung)"
+                className="w-full form-input px-3 py-2"
+              />
+              <p className="text-xs text-[var(--color-muted)]">Jede Zeile wird als Bullet angezeigt.</p>
+            </div>
           </form>
         );
       })}

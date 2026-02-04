@@ -130,98 +130,184 @@ export default async function AdminFrontpageTextPage() {
           Texte Frontpage
         </h2>
         <p className="text-sm text-[var(--color-muted)]">
-          Inhalte der Startseite bearbeiten (ohne JSON).
+          Inhalte der Startseite bearbeiten. Änderungen wirken sofort auf die
+          öffentliche Startseite.
         </p>
       </div>
 
       <form action={updateFrontpage} className="space-y-8">
         <section className="space-y-4 rounded-2xl border border-[var(--color-border)] bg-white p-6">
-          <h3 className="font-display text-lg font-semibold">Hero</h3>
+          <div>
+            <h3 className="font-display text-lg font-semibold">Hero</h3>
+            <p className="text-xs text-[var(--color-muted)]">
+              Bereich ganz oben auf der Startseite (Headline, Text, Buttons).
+            </p>
+          </div>
           <div className="grid gap-4 md:grid-cols-2">
-            <input
-              name="hero.eyebrow"
-              defaultValue={textValue(homeHero.eyebrow)}
-              placeholder="Eyebrow"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="hero.title"
-              defaultValue={textValue(homeHero.title)}
-              placeholder="Titel"
-              className="form-input px-3 py-2"
+            <div className="space-y-1.5">
+              <label htmlFor="hero.eyebrow" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Eyebrow (kleine Überschrift)
+              </label>
+              <input
+                id="hero.eyebrow"
+                name="hero.eyebrow"
+                defaultValue={textValue(homeHero.eyebrow)}
+                placeholder="z. B. Fliegenfischerschule"
+                className="form-input px-3 py-2"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="hero.title" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Haupttitel (H1)
+              </label>
+              <input
+                id="hero.title"
+                name="hero.title"
+                defaultValue={textValue(homeHero.title)}
+                placeholder="z. B. Fliegenfischen in der Region Zürich — ruhig, präzise, draussen."
+                className="form-input px-3 py-2"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="hero.description" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Kurzbeschreibung (1–2 Sätze)
+            </label>
+            <textarea
+              id="hero.description"
+              name="hero.description"
+              defaultValue={textValue(homeHero.description)}
+              placeholder="Kurzer Einleitungstext unter dem Titel."
+              className="w-full form-input px-3 py-2"
+              rows={3}
             />
           </div>
-          <textarea
-            name="hero.description"
-            defaultValue={textValue(homeHero.description)}
-            placeholder="Beschreibung"
-            className="w-full form-input px-3 py-2"
-            rows={3}
-          />
           <div className="grid gap-4 md:grid-cols-2">
-            <input
-              name="hero.primary.label"
-              defaultValue={textValue(homeHero.primaryCta?.label)}
-              placeholder="Primary Button Text"
-              className="form-input px-3 py-2"
+            <div className="space-y-1.5">
+              <label htmlFor="hero.primary.label" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Primärer Button – Text
+              </label>
+              <input
+                id="hero.primary.label"
+                name="hero.primary.label"
+                defaultValue={textValue(homeHero.primaryCta?.label)}
+                placeholder="z. B. Gruppenkurse entdecken"
+                className="form-input px-3 py-2"
+              />
+              <p className="text-xs text-[var(--color-muted)]">Leerlassen blendet den Button aus.</p>
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="hero.primary.href" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Primärer Button – Link (URL)
+              </label>
+              <input
+                id="hero.primary.href"
+                name="hero.primary.href"
+                defaultValue={textValue(homeHero.primaryCta?.href)}
+                placeholder="z. B. /kurse/termine"
+                className="form-input px-3 py-2"
+              />
+              <p className="text-xs text-[var(--color-muted)]">Interne Links bitte mit / beginnen.</p>
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="hero.secondary.label" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Sekundärer Button – Text
+              </label>
+              <input
+                id="hero.secondary.label"
+                name="hero.secondary.label"
+                defaultValue={textValue(homeHero.secondaryCta?.label)}
+                placeholder="z. B. Privatlektion buchen"
+                className="form-input px-3 py-2"
+              />
+              <p className="text-xs text-[var(--color-muted)]">Leerlassen blendet den Button aus.</p>
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="hero.secondary.href" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Sekundärer Button – Link (URL)
+              </label>
+              <input
+                id="hero.secondary.href"
+                name="hero.secondary.href"
+                defaultValue={textValue(homeHero.secondaryCta?.href)}
+                placeholder="z. B. /buchen?lesson=private"
+                className="form-input px-3 py-2"
+              />
+              <p className="text-xs text-[var(--color-muted)]">Interne Links bitte mit / beginnen.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-4 rounded-2xl border border-[var(--color-border)] bg-white p-6">
+          <div>
+            <h3 className="font-display text-lg font-semibold">
+              Über-Urs Teaser
+            </h3>
+            <p className="text-xs text-[var(--color-muted)]">
+              Kurzblock auf der Startseite, der auf die Über‑uns‑Seite verweist.
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-1.5">
+              <label htmlFor="about.title" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Titel
+              </label>
+              <input
+                id="about.title"
+                name="about.title"
+                defaultValue={textValue(aboutSection.title)}
+                placeholder="z. B. Über Urs Müller"
+                className="form-input px-3 py-2"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="about.note" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Kurznotiz (rechts oben)
+              </label>
+              <input
+                id="about.note"
+                name="about.note"
+                defaultValue={textValue(aboutSection.note)}
+                placeholder="z. B. Treffpunkte entlang der Limmat..."
+                className="form-input px-3 py-2"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="about.description" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Beschreibung (1–2 Sätze)
+            </label>
+            <textarea
+              id="about.description"
+              name="about.description"
+              defaultValue={textValue(aboutSection.description)}
+              placeholder="Kurzer Text unter dem Titel."
+              className="w-full form-input px-3 py-2"
+              rows={3}
             />
-            <input
-              name="hero.primary.href"
-              defaultValue={textValue(homeHero.primaryCta?.href)}
-              placeholder="Primary Button Link"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="hero.secondary.label"
-              defaultValue={textValue(homeHero.secondaryCta?.label)}
-              placeholder="Secondary Button Text"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="hero.secondary.href"
-              defaultValue={textValue(homeHero.secondaryCta?.href)}
-              placeholder="Secondary Button Link"
-              className="form-input px-3 py-2"
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="about.highlights" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Highlights (Liste)
+            </label>
+            <textarea
+              id="about.highlights"
+              name="about.highlights"
+              defaultValue={(aboutSection.highlights || []).join("\n")}
+              placeholder="Eine Zeile pro Punkt (z. B. Kleine Gruppen, Praxis am Wasser, ...)"
+              className="w-full form-input px-3 py-2"
+              rows={3}
             />
           </div>
         </section>
 
         <section className="space-y-4 rounded-2xl border border-[var(--color-border)] bg-white p-6">
-          <h3 className="font-display text-lg font-semibold">
-            Über-Urs Teaser
-          </h3>
-          <div className="grid gap-4 md:grid-cols-2">
-            <input
-              name="about.title"
-              defaultValue={textValue(aboutSection.title)}
-              placeholder="Titel"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="about.note"
-              defaultValue={textValue(aboutSection.note)}
-              placeholder="Hinweis"
-              className="form-input px-3 py-2"
-            />
+          <div>
+            <h3 className="font-display text-lg font-semibold">Sektionen</h3>
+            <p className="text-xs text-[var(--color-muted)]">
+              Überschriften und Kurztexte für die einzelnen Startseiten‑Abschnitte.
+            </p>
           </div>
-          <textarea
-            name="about.description"
-            defaultValue={textValue(aboutSection.description)}
-            placeholder="Beschreibung"
-            className="w-full form-input px-3 py-2"
-            rows={3}
-          />
-          <textarea
-            name="about.highlights"
-            defaultValue={(aboutSection.highlights || []).join("\n")}
-            placeholder="Highlights (eine Zeile pro Punkt)"
-            className="w-full form-input px-3 py-2"
-            rows={3}
-          />
-        </section>
-
-        <section className="space-y-4 rounded-2xl border border-[var(--color-border)] bg-white p-6">
-          <h3 className="font-display text-lg font-semibold">Sektionen</h3>
           {[
             { key: "upcoming", label: "Nächste Kurse" },
             { key: "formats", label: "Kursformate" },
@@ -236,91 +322,170 @@ export default async function AdminFrontpageTextPage() {
                   {section.label}
                 </p>
                 <div className="grid gap-3 md:grid-cols-2">
-                  <input
-                    name={`${section.key}.eyebrow`}
-                    defaultValue={textValue(data.eyebrow)}
-                    placeholder="Eyebrow"
-                    className="form-input px-3 py-2"
-                  />
-                  <input
-                    name={`${section.key}.title`}
-                    defaultValue={textValue(data.title)}
-                    placeholder="Titel"
-                    className="form-input px-3 py-2"
+                  <div className="space-y-1.5">
+                    <label htmlFor={`${section.key}.eyebrow`} className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                      Eyebrow (kleiner Label‑Text)
+                    </label>
+                    <input
+                      id={`${section.key}.eyebrow`}
+                      name={`${section.key}.eyebrow`}
+                      defaultValue={textValue(data.eyebrow)}
+                      placeholder="z. B. Termine"
+                      className="form-input px-3 py-2"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label htmlFor={`${section.key}.title`} className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                      Titel
+                    </label>
+                    <input
+                      id={`${section.key}.title`}
+                      name={`${section.key}.title`}
+                      defaultValue={textValue(data.title)}
+                      placeholder="z. B. Nächste Kurse"
+                      className="form-input px-3 py-2"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label htmlFor={`${section.key}.description`} className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    Kurzbeschreibung
+                  </label>
+                  <textarea
+                    id={`${section.key}.description`}
+                    name={`${section.key}.description`}
+                    defaultValue={textValue(data.description)}
+                    placeholder="1–2 Sätze für den Abschnitt."
+                    className="w-full form-input px-3 py-2"
+                    rows={2}
                   />
                 </div>
-                <textarea
-                  name={`${section.key}.description`}
-                  defaultValue={textValue(data.description)}
-                  placeholder="Beschreibung"
-                  className="w-full form-input px-3 py-2"
-                  rows={2}
-                />
               </div>
             );
           })}
         </section>
 
         <section className="space-y-4 rounded-2xl border border-[var(--color-border)] bg-white p-6">
-          <h3 className="font-display text-lg font-semibold">CTA Abschnitt</h3>
+          <div>
+            <h3 className="font-display text-lg font-semibold">CTA Abschnitt</h3>
+            <p className="text-xs text-[var(--color-muted)]">
+              Der Abschluss‑Block „Bereit für den nächsten Schritt?“.
+            </p>
+          </div>
           <div className="grid gap-4 md:grid-cols-2">
-            <input
-              name="cta.title"
-              defaultValue={textValue(homeSections.cta?.title)}
-              placeholder="Titel"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="cta.note"
-              defaultValue={textValue(homeSections.cta?.note)}
-              placeholder="Hinweis"
-              className="form-input px-3 py-2"
+            <div className="space-y-1.5">
+              <label htmlFor="cta.title" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Titel
+              </label>
+              <input
+                id="cta.title"
+                name="cta.title"
+                defaultValue={textValue(homeSections.cta?.title)}
+                placeholder="z. B. Bereit für den nächsten Schritt?"
+                className="form-input px-3 py-2"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="cta.note" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Kurznotiz (optional)
+              </label>
+              <input
+                id="cta.note"
+                name="cta.note"
+                defaultValue={textValue(homeSections.cta?.note)}
+                placeholder="z. B. Antwort i. d. R. innert 48h"
+                className="form-input px-3 py-2"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="cta.description" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Beschreibung (1–2 Sätze)
+            </label>
+            <textarea
+              id="cta.description"
+              name="cta.description"
+              defaultValue={textValue(homeSections.cta?.description)}
+              placeholder="Kurztext unter dem Titel."
+              className="w-full form-input px-3 py-2"
+              rows={3}
             />
           </div>
-          <textarea
-            name="cta.description"
-            defaultValue={textValue(homeSections.cta?.description)}
-            placeholder="Beschreibung"
-            className="w-full form-input px-3 py-2"
-            rows={3}
-          />
           <div className="grid gap-4 md:grid-cols-2">
-            <input
-              name="cta.primary.label"
-              defaultValue={textValue(homeSections.cta?.primary?.label)}
-              placeholder="Primary Button Text"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="cta.primary.href"
-              defaultValue={textValue(homeSections.cta?.primary?.href)}
-              placeholder="Primary Button Link"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="cta.secondary.label"
-              defaultValue={textValue(homeSections.cta?.secondary?.label)}
-              placeholder="Secondary Button Text"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="cta.secondary.href"
-              defaultValue={textValue(homeSections.cta?.secondary?.href)}
-              placeholder="Secondary Button Link"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="cta.tertiary.label"
-              defaultValue={textValue(homeSections.cta?.tertiary?.label)}
-              placeholder="Tertiary Button Text"
-              className="form-input px-3 py-2"
-            />
-            <input
-              name="cta.tertiary.href"
-              defaultValue={textValue(homeSections.cta?.tertiary?.href)}
-              placeholder="Tertiary Button Link"
-              className="form-input px-3 py-2"
-            />
+            <div className="space-y-1.5">
+              <label htmlFor="cta.primary.label" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Button 1 – Text
+              </label>
+              <input
+                id="cta.primary.label"
+                name="cta.primary.label"
+                defaultValue={textValue(homeSections.cta?.primary?.label)}
+                placeholder="z. B. Kontakt aufnehmen"
+                className="form-input px-3 py-2"
+              />
+              <p className="text-xs text-[var(--color-muted)]">Leerlassen blendet den Button aus.</p>
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="cta.primary.href" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Button 1 – Link (URL)
+              </label>
+              <input
+                id="cta.primary.href"
+                name="cta.primary.href"
+                defaultValue={textValue(homeSections.cta?.primary?.href)}
+                placeholder="z. B. /kontakt"
+                className="form-input px-3 py-2"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="cta.secondary.label" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Button 2 – Text
+              </label>
+              <input
+                id="cta.secondary.label"
+                name="cta.secondary.label"
+                defaultValue={textValue(homeSections.cta?.secondary?.label)}
+                placeholder="z. B. Schnuppern"
+                className="form-input px-3 py-2"
+              />
+              <p className="text-xs text-[var(--color-muted)]">Leerlassen blendet den Button aus.</p>
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="cta.secondary.href" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Button 2 – Link (URL)
+              </label>
+              <input
+                id="cta.secondary.href"
+                name="cta.secondary.href"
+                defaultValue={textValue(homeSections.cta?.secondary?.href)}
+                placeholder="z. B. /schnupperstunden"
+                className="form-input px-3 py-2"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="cta.tertiary.label" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Button 3 – Text (optional)
+              </label>
+              <input
+                id="cta.tertiary.label"
+                name="cta.tertiary.label"
+                defaultValue={textValue(homeSections.cta?.tertiary?.label)}
+                placeholder="z. B. Gutscheine"
+                className="form-input px-3 py-2"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="cta.tertiary.href" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Button 3 – Link (URL)
+              </label>
+              <input
+                id="cta.tertiary.href"
+                name="cta.tertiary.href"
+                defaultValue={textValue(homeSections.cta?.tertiary?.href)}
+                placeholder="z. B. /gutscheine"
+                className="form-input px-3 py-2"
+              />
+            </div>
           </div>
         </section>
 

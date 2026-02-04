@@ -36,25 +36,11 @@ export function Header({
       ? "bg-white/90 backdrop-blur-md border-b border-[var(--color-border)] text-[var(--color-text)]"
       : "bg-transparent text-white"
     : "bg-white/90 backdrop-blur-md border-b border-[var(--color-border)] text-[var(--color-text)]";
-  const navLinkClass = isHome
+  const navPillClass = isHome
     ? scrolled
-      ? "text-[var(--color-forest)]/70 hover:text-[var(--color-forest)]"
-      : "text-white/75 hover:text-white"
-    : "text-[var(--color-forest)]/70 hover:text-[var(--color-forest)]";
-  const primaryLinks = new Set([
-    "/#kurse",
-    "/#privat",
-    "/kurse",
-    "/privatunterricht",
-  ]);
-  const primaryNav = navLinks.filter((item) => primaryLinks.has(item.href));
-  const secondaryNav = navLinks.filter((item) => !primaryLinks.has(item.href));
-  const primaryNavClass = isHome
-    ? scrolled
-      ? "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold"
-      : "rounded-full bg-black/35 px-3 py-1.5 text-white/95 font-semibold backdrop-blur-sm"
-    : "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold";
-  const dividerClass = isHome && !scrolled ? "bg-white/30" : "bg-[var(--color-border)]";
+      ? "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold hover:bg-[var(--color-forest)]/15"
+      : "rounded-full bg-black/35 px-3 py-1.5 text-white/95 font-semibold backdrop-blur-sm hover:bg-black/45"
+    : "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold hover:bg-[var(--color-forest)]/15";
   const sublineClass = isHome
     ? scrolled
       ? "text-[var(--color-forest)]/60"
@@ -111,17 +97,11 @@ export function Header({
     return pathname === href;
   };
 
-  const activePrimaryClass = isHome
+  const activeNavClass = isHome
     ? scrolled
-      ? "ring-1 ring-[var(--color-ember)]/40 bg-[var(--color-ember)]/10"
-      : "ring-1 ring-white/30 bg-black/50"
-    : "ring-1 ring-[var(--color-ember)]/30 bg-[var(--color-ember)]/10";
-
-  const activeSecondaryClass = isHome
-    ? scrolled
-      ? "text-[var(--color-ember)]"
-      : "text-white"
-    : "text-[var(--color-ember)]";
+      ? "ring-1 ring-[var(--color-ember)]/40 bg-[var(--color-ember)]/10 text-[var(--color-forest)]"
+      : "ring-1 ring-white/40 bg-black/55 text-white"
+    : "ring-1 ring-[var(--color-ember)]/40 bg-[var(--color-ember)]/10 text-[var(--color-forest)]";
 
   return (
     <header
@@ -134,36 +114,19 @@ export function Header({
             {location}
           </span>
         </Link>
-        <nav className="hidden items-center gap-4 text-sm lg:flex">
-          <div className="flex items-center gap-2">
-            {primaryNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`${primaryNavClass} ${isActive(item.href) ? activePrimaryClass : ""}`}
-                aria-current={isActive(item.href) ? "page" : undefined}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-          {secondaryNav.length > 0 ? (
-            <span className={`h-5 w-px ${dividerClass}`} />
-          ) : null}
-          <div className="flex items-center gap-4 text-[0.85rem] font-semibold">
-            {secondaryNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`transition-colors ${navLinkClass} ${
-                  isActive(item.href) ? activeSecondaryClass : ""
-                }`}
-                aria-current={isActive(item.href) ? "page" : undefined}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+        <nav className="hidden items-center gap-2 text-sm lg:flex">
+          {navLinks.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`transition-colors ${navPillClass} ${
+                isActive(item.href) ? activeNavClass : ""
+              }`}
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
         <div className="flex items-center gap-3">
           <div className="hidden lg:block">
@@ -185,7 +148,7 @@ export function Header({
       {open ? (
         <div className="border-t border-[var(--color-border)] bg-white/95 backdrop-blur-md lg:hidden">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-4">
-            {primaryNav.map((item) => (
+            {navLinks.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -194,20 +157,6 @@ export function Header({
                   isActive(item.href)
                     ? "bg-[var(--color-ember)]/15 text-[var(--color-ember)]"
                     : "bg-[var(--color-forest)]/10 text-[var(--color-forest)]"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            {secondaryNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={`text-sm font-medium ${
-                  isActive(item.href)
-                    ? "text-[var(--color-ember)]"
-                    : "text-[var(--color-text)]/80"
                 }`}
               >
                 {item.label}

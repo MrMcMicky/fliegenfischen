@@ -114,12 +114,12 @@ export function Header({
                 scrolled ? "/branding/logo-mark.png" : "/branding/logo-hero.png"
               }
               alt="Fliegenfischerschule Urs Müller"
-              width={scrolled ? 110 : 220}
-              height={scrolled ? 36 : 58}
+              width={scrolled ? 110 : 260}
+              height={scrolled ? 36 : 66}
               className={
                 scrolled
                   ? "h-8 w-auto"
-                  : "h-12 w-auto drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)]"
+                  : "h-12 w-auto drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)] sm:h-14"
               }
               priority
             />

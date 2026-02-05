@@ -15,7 +15,7 @@
 }
 
 html {
-  scroll-padding-top: 90px;
+  scroll-padding-top: 72px;
 }
 
 @theme inline {
@@ -82,7 +82,7 @@ body::after {
 }
 
 main section[id] {
-  scroll-margin-top: 90px;
+  scroll-margin-top: 72px;
 }
 
 ::selection {

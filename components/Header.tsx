@@ -110,11 +110,17 @@ export function Header({
           <span className="sr-only">{siteName}</span>
           <div className={logoWrapClass}>
             <Image
-              src={scrolled ? "/branding/logo-mark.png" : "/branding/logo.png"}
+              src={
+                scrolled ? "/branding/logo-mark.png" : "/branding/logo-hero.png"
+              }
               alt="Fliegenfischerschule Urs Müller"
-              width={scrolled ? 110 : 180}
-              height={scrolled ? 36 : 50}
-              className={scrolled ? "h-8 w-auto" : "h-10 w-auto"}
+              width={scrolled ? 110 : 220}
+              height={scrolled ? 36 : 58}
+              className={
+                scrolled
+                  ? "h-8 w-auto"
+                  : "h-12 w-auto drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)]"
+              }
               priority
             />
           </div>

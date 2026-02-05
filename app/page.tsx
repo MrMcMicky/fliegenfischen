@@ -187,6 +187,11 @@ export default async function Home() {
         </div>
       </section>
 
+      <TestimonialSection
+        section={testimonialSection}
+        testimonials={testimonials}
+      />
+
       {privateLesson ? (
         <section id="privat" className="bg-[var(--color-sage)] py-12">
           <div className="mx-auto w-full max-w-5xl px-4">
@@ -286,11 +291,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      <TestimonialSection
-        section={testimonialSection}
-        testimonials={testimonials}
-      />
 
       <section id="berichte" className="bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">

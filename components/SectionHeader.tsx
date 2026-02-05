@@ -20,7 +20,7 @@ export function SectionHeader({
           {eyebrow}
         </span>
       ) : null}
-      <h2 className="font-display text-3xl font-semibold text-[var(--color-text)] sm:text-4xl">
+      <h2 className="whitespace-pre-line font-display text-3xl font-semibold text-[var(--color-text)] sm:text-4xl">
         {title}
       </h2>
       {description ? (

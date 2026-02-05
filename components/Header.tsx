@@ -97,11 +97,13 @@ export function Header({
     return pathname === href;
   };
 
+  const activeUnderline =
+    "relative after:content-[''] after:absolute after:inset-x-2 after:-bottom-1 after:h-0.5 after:rounded-full";
   const activeNavClass = isHome
     ? scrolled
-      ? "ring-1 ring-[var(--color-ember)]/40 bg-[var(--color-ember)]/10 text-[var(--color-forest)]"
-      : "ring-1 ring-white/40 bg-black/55 text-white"
-    : "ring-1 ring-[var(--color-ember)]/40 bg-[var(--color-ember)]/10 text-[var(--color-forest)]";
+      ? `${activeUnderline} ring-1 ring-[var(--color-ember)]/45 bg-[var(--color-ember)]/20 text-[var(--color-forest)] shadow-sm after:bg-[var(--color-ember)]/70`
+      : `${activeUnderline} ring-1 ring-white/45 bg-white/20 text-white shadow-sm after:bg-white/70`
+    : `${activeUnderline} ring-1 ring-[var(--color-ember)]/45 bg-[var(--color-ember)]/20 text-[var(--color-forest)] shadow-sm after:bg-[var(--color-ember)]/70`;
 
   return (
     <header

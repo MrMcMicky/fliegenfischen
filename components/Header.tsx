@@ -9,11 +9,9 @@ import { Button } from "@/components/Button";
 
 export function Header({
   siteName,
-  location,
   navLinks,
 }: {
   siteName: string;
-  location: string;
   navLinks: { label: string; href: string }[];
 }) {
   const [open, setOpen] = useState(false);
@@ -41,11 +39,6 @@ export function Header({
       ? "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold hover:bg-[var(--color-forest)]/15"
       : "rounded-full bg-black/35 px-3 py-1.5 text-white/95 font-semibold backdrop-blur-sm hover:bg-black/45"
     : "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold hover:bg-[var(--color-forest)]/15";
-  const sublineClass = isHome
-    ? scrolled
-      ? "text-[var(--color-forest)]/60"
-      : "text-white/70"
-    : "text-[var(--color-forest)]/60";
   const menuButtonClass = isHome
     ? scrolled
       ? "border-[var(--color-border)] bg-white/90 text-[var(--color-text)]"
@@ -97,6 +90,12 @@ export function Header({
     return pathname === href;
   };
 
+  const nameParts = siteName.split("Urs Müller");
+  const primaryName = nameParts[0]?.trim() || siteName;
+  const secondaryName = siteName.includes("Urs Müller")
+    ? "Urs Müller"
+    : nameParts[1]?.trim() || null;
+
   const activeNavClass = isHome
     ? scrolled
       ? "ring-1 ring-[var(--color-ember)]/45 bg-[var(--color-ember)]/20 text-[var(--color-forest)] shadow-sm"
@@ -109,10 +108,14 @@ export function Header({
     >
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-4">
         <Link href="/" className="flex flex-col">
-          <span className="font-display text-lg font-semibold">{siteName}</span>
-          <span className={`text-[11px] uppercase tracking-[0.28em] ${sublineClass}`}>
-            {location}
+          <span className="font-display text-lg font-semibold leading-tight">
+            {primaryName}
           </span>
+          {secondaryName ? (
+            <span className="font-display text-lg font-semibold leading-tight">
+              {secondaryName}
+            </span>
+          ) : null}
         </Link>
         <nav className="hidden items-center gap-2 text-sm lg:flex">
           {navLinks.map((item) => (

@@ -128,7 +128,7 @@ export default async function Home() {
     <div className="pb-20">
       <HeroSection nextSession={nextSession} hero={homeHero} />
 
-      <section className="bg-white/70 py-12">
+      <section className="bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {uspItems.map((item) => (
@@ -148,7 +148,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="kurse" className="bg-[var(--color-mist)] py-12">
+      <section id="kurse" className="bg-[var(--color-river-mist)] py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow={homeSections.upcoming?.eyebrow}
@@ -161,7 +161,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-white/70 py-12">
+      <section className="bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow={homeSections.formats?.eyebrow}
@@ -188,7 +188,7 @@ export default async function Home() {
       </section>
 
       {privateLesson ? (
-        <section id="privat" className="bg-[var(--color-mist)] py-12">
+        <section id="privat" className="bg-[var(--color-sage)] py-12">
           <div className="mx-auto w-full max-w-5xl px-4">
             <SectionHeader
               eyebrow="Privatlektion"
@@ -249,7 +249,7 @@ export default async function Home() {
         </section>
       ) : null}
 
-      <section id="ueber" className="bg-white/70 py-12">
+      <section id="ueber" className="bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow="Über uns"
@@ -277,7 +277,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-[var(--color-mist)] py-12">
+      <section className="bg-[var(--color-sage)] py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow={homeSections.timeline?.eyebrow}
@@ -295,7 +295,7 @@ export default async function Home() {
         testimonials={testimonials}
       />
 
-      <section id="berichte" className="bg-white/70 py-12">
+      <section id="berichte" className="bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow={homeSections.reports?.eyebrow}
@@ -336,7 +336,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="faq" className="bg-[var(--color-mist)] py-12">
+      <section id="faq" className="bg-[var(--color-pebble)] py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow={homeSections.faq?.eyebrow}
@@ -361,7 +361,10 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="links" className="bg-white/70 py-12">
+      <section
+        id="links"
+        className="section-pattern bg-[var(--color-river-mist)] py-12"
+      >
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow="Links"
@@ -419,7 +422,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="wetter" className="bg-[var(--color-mist)] py-12">
+      <section id="wetter" className="bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow="Wetter"
@@ -534,7 +537,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="kontakt" className="bg-white/70 py-12">
+      <section id="kontakt" className="bg-[var(--color-pebble)] py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow="Kontakt"
@@ -586,7 +589,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-[var(--color-mist)] py-12">
+      <section className="bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <div className="grid gap-8 rounded-2xl border border-[var(--color-border)] bg-white p-10 lg:grid-cols-[1.2fr_0.8fr]">
             <div>

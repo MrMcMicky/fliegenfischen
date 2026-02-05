@@ -4,6 +4,9 @@
   --color-forest: #0f3231;
   --color-river: #355a58;
   --color-mist: #f1eee8;
+  --color-river-mist: #eff6f7;
+  --color-pebble: #ebebe9;
+  --color-sage: #e8efe6;
   --color-stone: #f8f7f4;
   --color-ember: #e88648;
   --color-slate: #4a5568;
@@ -22,6 +25,9 @@ html {
   --color-forest: var(--color-forest);
   --color-river: var(--color-river);
   --color-mist: var(--color-mist);
+  --color-river-mist: var(--color-river-mist);
+  --color-pebble: var(--color-pebble);
+  --color-sage: var(--color-sage);
   --color-stone: var(--color-stone);
   --color-ember: var(--color-ember);
   --color-slate: var(--color-slate);
@@ -119,6 +125,12 @@ main section[id] {
 .form-input:disabled {
   background-color: #f8fafc;
   color: var(--color-muted);
+}
+
+.section-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='240' height='240' viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 50c40-30 80-30 120 0s80 30 120 0' fill='none' stroke='%2394a3a3' stroke-width='1' stroke-opacity='0.2'/%3E%3Cpath d='M-20 120c50-25 100-25 150 0s100 25 150 0' fill='none' stroke='%2394a3a3' stroke-width='1' stroke-opacity='0.18'/%3E%3Cpath d='M20 190c40-20 80-20 120 0s80 20 120 0' fill='none' stroke='%2394a3a3' stroke-width='1' stroke-opacity='0.16'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  background-repeat: repeat;
 }
 
 @keyframes fade-up {

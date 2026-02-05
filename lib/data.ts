@@ -71,7 +71,7 @@ export const aboutPage = {
 export const homeSections = {
   upcoming: {
     eyebrow: "Kurse",
-    title: "Kurse\nNächste Termine",
+    title: "Nächste Termine",
     description:
       "Früh buchen lohnt sich: Die Gruppen bleiben klein und die Plätze sind limitiert.",
   },

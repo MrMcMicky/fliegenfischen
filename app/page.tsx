@@ -16,6 +16,7 @@ import {
   getWeatherForecast,
   getWeatherIcon,
   getWeatherLabel,
+  weatherLocations,
 } from "@/lib/weather";
 
 export const dynamic = "force-dynamic";
@@ -30,7 +31,15 @@ const formatMetric = (value: number | null | undefined, unit: string) => {
   return `${Math.round(value)}${unit}`;
 };
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: { w?: string };
+}) {
+  const selectedWeatherId =
+    searchParams?.w && weatherLocations.some((loc) => loc.id === searchParams.w)
+      ? searchParams.w
+      : weatherLocations[0]?.id;
   const [settings, upcomingSessions, reports, privateLesson, weather] =
     await Promise.all([
       prisma.siteSettings.findUnique({ where: { id: 1 } }),
@@ -42,7 +51,7 @@ export default async function Home() {
       }),
       prisma.report.findMany({ orderBy: { year: "desc" } }),
       prisma.lessonOffering.findUnique({ where: { type: "PRIVATE" } }),
-      getWeatherForecast(),
+      getWeatherForecast(selectedWeatherId),
     ]);
 
   if (!settings) {
@@ -423,9 +432,31 @@ export default async function Home() {
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow="Wetter"
-            title="Vorhersage für Geroldswil"
+            title={`Vorhersage für ${weather?.location || "Geroldswil"}`}
             description="Wind, Niederschlag und Luftdruck – die wichtigsten Faktoren fürs Fliegenfischen."
           />
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            {weatherLocations.map((location) => {
+              const isActive = location.id === selectedWeatherId;
+              return (
+                <Link
+                  key={location.id}
+                  href={`/?w=${location.id}#wetter`}
+                  className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                    isActive
+                      ? "border-[var(--color-ember)]/60 bg-[var(--color-ember)]/10 text-[var(--color-forest)]"
+                      : "border-[var(--color-border)] bg-white text-[var(--color-forest)] hover:border-[var(--color-ember)]/40 hover:text-[var(--color-ember)]"
+                  }`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {location.label}
+                </Link>
+              );
+            })}
+            <span className="text-xs text-[var(--color-muted)]">
+              Standard: Schulstandort Geroldswil.
+            </span>
+          </div>
           {weather ? (
             <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
               <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">

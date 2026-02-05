@@ -7,6 +7,8 @@ export const navLinks = [
   { label: "Privatlektion", href: "/#privat" },
   { label: "Über uns", href: "/#ueber" },
   { label: "Berichte", href: "/#berichte" },
+  { label: "Links", href: "/#links" },
+  { label: "Wetter", href: "/#wetter" },
   { label: "Kontakt", href: "/#kontakt" },
 ];
 

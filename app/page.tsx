@@ -10,6 +10,13 @@ import { TestimonialSection } from "@/components/TestimonialSection";
 import { TimelineSteps } from "@/components/TimelineSteps";
 import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
+import { resourceLinks, sfvLinks } from "@/lib/links";
+import {
+  formatWindDirection,
+  getWeatherForecast,
+  getWeatherIcon,
+  getWeatherLabel,
+} from "@/lib/weather";
 
 export const dynamic = "force-dynamic";
 
@@ -18,8 +25,13 @@ const extractFirstImage = (body: string) => {
   return match?.[1] || null;
 };
 
+const formatMetric = (value: number | null | undefined, unit: string) => {
+  if (typeof value !== "number" || Number.isNaN(value)) return "—";
+  return `${Math.round(value)}${unit}`;
+};
+
 export default async function Home() {
-  const [settings, upcomingSessions, reports, privateLesson] =
+  const [settings, upcomingSessions, reports, privateLesson, weather] =
     await Promise.all([
       prisma.siteSettings.findUnique({ where: { id: 1 } }),
       prisma.courseSession.findMany({
@@ -30,6 +42,7 @@ export default async function Home() {
       }),
       prisma.report.findMany({ orderBy: { year: "desc" } }),
       prisma.lessonOffering.findUnique({ where: { type: "PRIVATE" } }),
+      getWeatherForecast(),
     ]);
 
   if (!settings) {
@@ -105,6 +118,11 @@ export default async function Home() {
     href: string;
   }[]) || [];
   const nextSession = upcomingSessions[0] ?? null;
+  const dayFormatter = new Intl.DateTimeFormat("de-CH", {
+    weekday: "short",
+    day: "2-digit",
+    month: "2-digit",
+  });
 
   return (
     <div className="pb-20">
@@ -340,6 +358,179 @@ export default async function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section id="links" className="bg-white/70 py-12">
+        <div className="mx-auto w-full max-w-5xl px-4">
+          <SectionHeader
+            eyebrow="Links"
+            title="Wissenswertes & Partner"
+            description="Empfehlungen zu Vereinen, Gewässern und Ausrüstung sowie Hinweise zu SFV und Instruktorenkursen."
+          />
+          <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {resourceLinks.map((group) => (
+              <div
+                key={group.title}
+                className="rounded-xl border border-[var(--color-border)] bg-white p-6"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                  {group.title}
+                </p>
+                <ul className="mt-4 space-y-2 text-sm">
+                  {group.items.map((item) => (
+                    <li key={item.href}>
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-semibold text-[var(--color-forest)] transition hover:text-[var(--color-ember)]"
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-forest)] p-6 text-white">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+                SFV
+              </p>
+              <p className="mt-3 text-sm text-white/80">
+                Offizielle Verbandsinfos und Hinweise zu Instruktorenkursen.
+              </p>
+              <ul className="mt-4 space-y-2 text-sm">
+                {sfvLinks.map((item) => (
+                  <li key={item.href}>
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold text-white transition hover:text-[var(--color-ember)]"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="wetter" className="bg-[var(--color-mist)] py-12">
+        <div className="mx-auto w-full max-w-5xl px-4">
+          <SectionHeader
+            eyebrow="Wetter"
+            title="Vorhersage für Geroldswil"
+            description="Wind, Niederschlag und Luftdruck – die wichtigsten Faktoren fürs Fliegenfischen."
+          />
+          {weather ? (
+            <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+              <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                      Aktuell in {weather.location}
+                    </p>
+                    <div className="mt-3 flex items-baseline gap-3">
+                      <p className="text-4xl font-semibold text-[var(--color-text)]">
+                        {formatMetric(weather.current?.temperature ?? null, "°")}
+                      </p>
+                      <p className="text-sm text-[var(--color-muted)]">
+                        {getWeatherLabel(weather.current?.weatherCode ?? null)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-4xl">
+                    {getWeatherIcon(weather.current?.weatherCode ?? null)}
+                  </div>
+                </div>
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                      Wind
+                    </p>
+                    <p className="mt-2 text-sm text-[var(--color-muted)]">
+                      {formatMetric(weather.current?.windSpeed ?? null, " km/h")}{" "}
+                      {weather.current?.windDirection != null
+                        ? `(${formatWindDirection(weather.current.windDirection)})`
+                        : ""}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                      Luftdruck
+                    </p>
+                    <p className="mt-2 text-sm text-[var(--color-muted)]">
+                      {formatMetric(weather.current?.pressure ?? null, " hPa")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                      Niederschlag
+                    </p>
+                    <p className="mt-2 text-sm text-[var(--color-muted)]">
+                      {formatMetric(weather.current?.precipitation ?? null, " mm")}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                      Höhe
+                    </p>
+                    <p className="mt-2 text-sm text-[var(--color-muted)]">
+                      {formatMetric(weather.elevation ?? null, " m")}
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-6 text-xs text-[var(--color-muted)]">
+                  Quelle: MeteoSwiss ICON CH1 (Open-Meteo)
+                </p>
+              </div>
+              <div className="space-y-4">
+                {weather.days.map((day) => (
+                  <div
+                    key={day.date}
+                    className="rounded-xl border border-[var(--color-border)] bg-white p-5"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                          {dayFormatter.format(new Date(day.date))}
+                        </p>
+                        <p className="mt-2 text-sm text-[var(--color-muted)]">
+                          {getWeatherLabel(day.weatherCode)}
+                        </p>
+                      </div>
+                      <div className="text-2xl">
+                        {getWeatherIcon(day.weatherCode)}
+                      </div>
+                    </div>
+                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--color-muted)]">
+                      <span>
+                        {formatMetric(day.tempMax, "°")} /{" "}
+                        {formatMetric(day.tempMin, "°")}
+                      </span>
+                      <span>
+                        Regen {formatMetric(day.precipitationSum, " mm")}
+                      </span>
+                      <span>
+                        Wind {formatMetric(day.windMax ?? null, " km/h")}
+                      </span>
+                      {day.precipitationProb != null ? (
+                        <span>{Math.round(day.precipitationProb)}% Regen</span>
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="mt-6 text-sm text-[var(--color-muted)]">
+              Wetterdaten sind aktuell nicht verfügbar.
+            </p>
+          )}
         </div>
       </section>
 

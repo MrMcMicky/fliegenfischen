@@ -58,33 +58,60 @@ export default async function AdminGutscheinEditPage({
         <h2 className="font-display text-2xl font-semibold">Gutscheinoption bearbeiten</h2>
       </div>
       <form action={updateOption} className="space-y-4">
-        <input
-          name="title"
-          required
-          defaultValue={option.title}
-          placeholder="Titel"
-          className="w-full form-input px-3 py-2"
-        />
-        <textarea
-          name="description"
-          defaultValue={option.description}
-          placeholder="Beschreibung"
-          className="w-full form-input px-3 py-2"
-        />
-        <select
-          name="kind"
-          defaultValue={option.kind}
-          className="form-input px-3 py-2"
-        >
-          <option value="VALUE">Wertgutschein</option>
-          <option value="COURSE">Kursgutschein</option>
-        </select>
-        <textarea
-          name="values"
-          defaultValue={option.values.join("\n")}
-          placeholder="Werte (eine Zahl pro Zeile)"
-          className="w-full form-input px-3 py-2"
-        />
+        <div className="space-y-1.5">
+          <label htmlFor="voucher-title" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            Titel (sichtbar auf der Website)
+          </label>
+          <input
+            id="voucher-title"
+            name="title"
+            required
+            defaultValue={option.title}
+            placeholder="z. B. Wertgutschein"
+            className="w-full form-input px-3 py-2"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label htmlFor="voucher-description" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            Beschreibung (Kurztext)
+          </label>
+          <textarea
+            id="voucher-description"
+            name="description"
+            defaultValue={option.description}
+            placeholder="Kurzer Text unter dem Titel."
+            className="w-full form-input px-3 py-2"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label htmlFor="voucher-kind" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            Gutschein‑Typ
+          </label>
+          <select
+            id="voucher-kind"
+            name="kind"
+            defaultValue={option.kind}
+            className="form-input px-3 py-2"
+          >
+            <option value="VALUE">Wertgutschein</option>
+            <option value="COURSE">Kursgutschein</option>
+          </select>
+          <p className="text-xs text-[var(--color-muted)]">
+            Wertgutschein = Betrag frei wählbar aus der Liste, Kursgutschein = fester Kurs.
+          </p>
+        </div>
+        <div className="space-y-1.5">
+          <label htmlFor="voucher-values" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            Beträge (eine Zahl pro Zeile, CHF)
+          </label>
+          <textarea
+            id="voucher-values"
+            name="values"
+            defaultValue={option.values.join("\n")}
+            placeholder="z. B. 100\n150\n200"
+            className="w-full form-input px-3 py-2"
+          />
+        </div>
         <div className="flex flex-wrap gap-3">
           <button
             type="submit"

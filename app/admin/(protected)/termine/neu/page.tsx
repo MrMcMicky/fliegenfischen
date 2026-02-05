@@ -53,27 +53,80 @@ export default async function AdminTermineNewPage() {
         <p className="text-sm text-[var(--color-muted)]">Kursdatum erfassen.</p>
       </div>
       <form action={createSession} className="space-y-6">
-        <select name="courseId" className="form-input px-3 py-2">
-          {courses.map((course) => (
-            <option key={course.id} value={course.id}>
-              {course.title}
-            </option>
-          ))}
-        </select>
-        <div className="grid gap-4 md:grid-cols-2">
-          <input name="date" type="date" required className="form-input px-3 py-2" />
-          <input name="location" placeholder="Ort" className="form-input px-3 py-2" />
-          <input name="startTime" placeholder="Startzeit" className="form-input px-3 py-2" />
-          <input name="endTime" placeholder="Endzeit" className="form-input px-3 py-2" />
-          <input name="priceCHF" type="number" placeholder="Preis CHF" className="form-input px-3 py-2" />
-          <input name="availableSpots" type="number" placeholder="Plätze" className="form-input px-3 py-2" />
-          <select name="status" className="form-input px-3 py-2">
-            <option value="VERFUEGBAR">Verfügbar</option>
-            <option value="AUSGEBUCHT">Ausgebucht</option>
-            <option value="ABGESAGT">Abgesagt</option>
-          </select>
-        </div>
-        <textarea name="notes" placeholder="Notizen (eine Zeile pro Punkt)" className="w-full form-input px-3 py-2" />
+        <section className="space-y-4 rounded-2xl border border-[var(--color-border)] bg-white p-6">
+          <div>
+            <h3 className="font-display text-lg font-semibold">Termin-Daten</h3>
+            <p className="text-xs text-[var(--color-muted)]">
+              Dieser Termin erscheint in der Kursübersicht und im Checkout.
+            </p>
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="session-course" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Kurs auswählen
+            </label>
+            <select id="session-course" name="courseId" className="form-input px-3 py-2">
+              {courses.map((course) => (
+                <option key={course.id} value={course.id}>
+                  {course.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-1.5">
+              <label htmlFor="session-date" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Datum
+              </label>
+              <input id="session-date" name="date" type="date" required className="form-input px-3 py-2" />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="session-location" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Ort (falls abweichend)
+              </label>
+              <input id="session-location" name="location" placeholder="z. B. Limmat (Dietikon/Wettingen)" className="form-input px-3 py-2" />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="session-start" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Startzeit
+              </label>
+              <input id="session-start" name="startTime" placeholder="z. B. 09:00" className="form-input px-3 py-2" />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="session-end" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Endzeit
+              </label>
+              <input id="session-end" name="endTime" placeholder="z. B. 16:00" className="form-input px-3 py-2" />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="session-price" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Preis pro Person (CHF)
+              </label>
+              <input id="session-price" name="priceCHF" type="number" placeholder="z. B. 200" className="form-input px-3 py-2" />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="session-spots" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Verfügbare Plätze
+              </label>
+              <input id="session-spots" name="availableSpots" type="number" placeholder="z. B. 6" className="form-input px-3 py-2" />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="session-status" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                Status
+              </label>
+              <select id="session-status" name="status" className="form-input px-3 py-2">
+                <option value="VERFUEGBAR">Verfügbar</option>
+                <option value="AUSGEBUCHT">Ausgebucht</option>
+                <option value="ABGESAGT">Abgesagt</option>
+              </select>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="session-notes" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Notizen (optional)
+            </label>
+            <textarea id="session-notes" name="notes" placeholder="Eine Zeile pro Punkt." className="w-full form-input px-3 py-2" />
+          </div>
+        </section>
         <button
           type="submit"
           className="rounded-full bg-[var(--color-ember)] px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:shadow"

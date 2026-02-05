@@ -60,13 +60,33 @@ export default async function AdminUsersPage() {
       </div>
 
       <form action={createUser} className="grid gap-4 rounded-2xl border border-[var(--color-border)] bg-white p-6 md:grid-cols-4">
-        <input name="name" placeholder="Name" className="form-input px-3 py-2" />
-        <input name="email" placeholder="Email" className="form-input px-3 py-2" />
-        <input name="password" placeholder="Passwort" className="form-input px-3 py-2" />
-        <select name="role" className="form-input px-3 py-2">
-          <option value="ADMIN">Admin</option>
-          <option value="SUPER_ADMIN">Super Admin</option>
-        </select>
+        <div className="space-y-1.5">
+          <label htmlFor="user-name" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            Name
+          </label>
+          <input id="user-name" name="name" placeholder="z. B. Urs Müller" className="form-input px-3 py-2" />
+        </div>
+        <div className="space-y-1.5">
+          <label htmlFor="user-email" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            E‑Mail (Login)
+          </label>
+          <input id="user-email" name="email" placeholder="name@domain.ch" className="form-input px-3 py-2" />
+        </div>
+        <div className="space-y-1.5">
+          <label htmlFor="user-password" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            Passwort (Initial)
+          </label>
+          <input id="user-password" name="password" placeholder="mind. 8 Zeichen" className="form-input px-3 py-2" />
+        </div>
+        <div className="space-y-1.5">
+          <label htmlFor="user-role" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            Rolle
+          </label>
+          <select id="user-role" name="role" className="form-input px-3 py-2">
+            <option value="ADMIN">Admin (Standard)</option>
+            <option value="SUPER_ADMIN">Super Admin (alle Rechte)</option>
+          </select>
+        </div>
         <button
           type="submit"
           className="rounded-full bg-[var(--color-ember)] px-6 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:shadow md:col-span-4"

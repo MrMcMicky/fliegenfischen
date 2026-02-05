@@ -223,56 +223,87 @@ export function ReportEditor({
       </div>
       <form action={action} className="space-y-4">
         <div className="grid gap-4 md:grid-cols-2">
-          <input
-            name="title"
-            required
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            placeholder="Titel"
-            className="w-full form-input px-3 py-2"
-          />
-          <div className="flex gap-2">
+          <div className="space-y-1.5">
+            <label htmlFor="report-title" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Titel
+            </label>
             <input
-              name="slug"
+              id="report-title"
+              name="title"
               required
-              value={slug}
-              onChange={(event) => setSlug(event.target.value)}
-              placeholder="slug"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              placeholder="z. B. Der längste Fischpass Europas"
               className="w-full form-input px-3 py-2"
             />
-            <button
-              type="button"
-              onClick={() => setSlug(slugify(title))}
-              className="rounded-lg border border-[var(--color-border)] px-3 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]"
-            >
-              Slug
-            </button>
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="report-slug" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              URL‑Slug
+            </label>
+            <div className="flex gap-2">
+              <input
+                id="report-slug"
+                name="slug"
+                required
+                value={slug}
+                onChange={(event) => setSlug(event.target.value)}
+                placeholder="z. B. fischpass-wettingen"
+                className="w-full form-input px-3 py-2"
+              />
+              <button
+                type="button"
+                onClick={() => setSlug(slugify(title))}
+                className="rounded-lg border border-[var(--color-border)] px-3 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]"
+              >
+                Slug
+              </button>
+            </div>
+            <p className="text-xs text-[var(--color-muted)]">Wird Teil der URL: /berichte/slug.</p>
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <input
-            name="location"
-            value={location}
-            onChange={(event) => setLocation(event.target.value)}
-            placeholder="Ort"
-            className="form-input px-3 py-2"
-          />
-          <input
-            name="year"
-            value={year}
-            onChange={(event) => setYear(event.target.value)}
-            placeholder="Jahr"
-            className="form-input px-3 py-2"
+          <div className="space-y-1.5">
+            <label htmlFor="report-location" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Region / Ort
+            </label>
+            <input
+              id="report-location"
+              name="location"
+              value={location}
+              onChange={(event) => setLocation(event.target.value)}
+              placeholder="z. B. Limmat"
+              className="form-input px-3 py-2"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="report-year" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Jahr
+            </label>
+            <input
+              id="report-year"
+              name="year"
+              value={year}
+              onChange={(event) => setYear(event.target.value)}
+              placeholder="z. B. 2014"
+              className="form-input px-3 py-2"
+            />
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <label htmlFor="report-summary" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            Kurzbeschreibung (für Karten)
+          </label>
+          <textarea
+            id="report-summary"
+            name="summary"
+            value={summary}
+            onChange={(event) => setSummary(event.target.value)}
+            placeholder="1–2 Sätze für die Berichte‑Übersicht."
+            className="w-full form-input px-3 py-2"
+            rows={3}
           />
         </div>
-        <textarea
-          name="summary"
-          value={summary}
-          onChange={(event) => setSummary(event.target.value)}
-          placeholder="Summary"
-          className="w-full form-input px-3 py-2"
-          rows={3}
-        />
 
         <div className="space-y-3 rounded-xl border border-[var(--color-border)] bg-white p-4">
           <div>
@@ -476,14 +507,20 @@ export function ReportEditor({
           </div>
         </div>
 
-        <textarea
-          name="highlights"
-          value={highlights}
-          onChange={(event) => setHighlights(event.target.value)}
-          placeholder="Highlights (eine Zeile pro Punkt)"
-          className="w-full form-input px-3 py-2"
-          rows={4}
-        />
+        <div className="space-y-1.5">
+          <label htmlFor="report-highlights" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+            Highlights (Liste)
+          </label>
+          <textarea
+            id="report-highlights"
+            name="highlights"
+            value={highlights}
+            onChange={(event) => setHighlights(event.target.value)}
+            placeholder="Eine Zeile pro Punkt."
+            className="w-full form-input px-3 py-2"
+            rows={4}
+          />
+        </div>
         <div className="flex flex-wrap gap-3">
           <button
             type="submit"

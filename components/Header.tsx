@@ -92,7 +92,7 @@ export function Header({
   };
 
   const logoWrapClass = isHome && !scrolled
-    ? "rounded-lg bg-white/85 px-3 py-2 shadow-sm backdrop-blur-sm"
+    ? "rounded-lg bg-transparent"
     : "rounded-lg bg-transparent";
 
   const activeNavClass = isHome
@@ -110,11 +110,11 @@ export function Header({
           <span className="sr-only">{siteName}</span>
           <div className={logoWrapClass}>
             <Image
-              src="/branding/logo.png"
+              src={scrolled ? "/branding/logo-mark.png" : "/branding/logo.png"}
               alt="Fliegenfischerschule Urs Müller"
-              width={180}
-              height={50}
-              className="h-10 w-auto"
+              width={scrolled ? 110 : 180}
+              height={scrolled ? 36 : 50}
+              className={scrolled ? "h-8 w-auto" : "h-10 w-auto"}
               priority
             />
           </div>

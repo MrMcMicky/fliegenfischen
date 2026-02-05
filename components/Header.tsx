@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -90,11 +91,9 @@ export function Header({
     return pathname === href;
   };
 
-  const nameParts = siteName.split("Urs Müller");
-  const primaryName = nameParts[0]?.trim() || siteName;
-  const secondaryName = siteName.includes("Urs Müller")
-    ? "Urs Müller"
-    : nameParts[1]?.trim() || null;
+  const logoWrapClass = isHome && !scrolled
+    ? "rounded-lg bg-white/85 px-3 py-2 shadow-sm backdrop-blur-sm"
+    : "rounded-lg bg-transparent";
 
   const activeNavClass = isHome
     ? scrolled
@@ -107,15 +106,18 @@ export function Header({
       className={`fixed top-0 z-50 w-full transition-colors duration-300 ${headerClass}`}
     >
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-4">
-        <Link href="/" className="flex flex-col">
-          <span className="font-display text-lg font-semibold leading-tight">
-            {primaryName}
-          </span>
-          {secondaryName ? (
-            <span className="font-display text-lg font-semibold leading-tight">
-              {secondaryName}
-            </span>
-          ) : null}
+        <Link href="/" className="flex items-center gap-3">
+          <span className="sr-only">{siteName}</span>
+          <div className={logoWrapClass}>
+            <Image
+              src="/branding/logo.png"
+              alt="Fliegenfischerschule Urs Müller"
+              width={180}
+              height={50}
+              className="h-10 w-auto"
+              priority
+            />
+          </div>
         </Link>
         <nav className="hidden items-center gap-2 text-sm lg:flex">
           {navLinks.map((item) => (

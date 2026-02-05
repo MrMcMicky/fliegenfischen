@@ -245,6 +245,16 @@ export default async function Home() {
                 </div>
               </div>
             </div>
+            <div className="mt-14">
+              <SectionHeader
+                eyebrow={homeSections.timeline?.eyebrow}
+                title={homeSections.timeline?.title}
+                description={homeSections.timeline?.description}
+              />
+              <div className="mt-8">
+                <TimelineSteps steps={coursePathSteps} />
+              </div>
+            </div>
           </div>
         </section>
       ) : null}
@@ -273,19 +283,6 @@ export default async function Home() {
             <Button href="/ueber-uns" variant="secondary" size="sm">
               Mehr über uns
             </Button>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[var(--color-sage)] py-12">
-        <div className="mx-auto w-full max-w-5xl px-4">
-          <SectionHeader
-            eyebrow={homeSections.timeline?.eyebrow}
-            title={homeSections.timeline?.title}
-            description={homeSections.timeline?.description}
-          />
-          <div className="mt-8">
-            <TimelineSteps steps={coursePathSteps} />
           </div>
         </div>
       </section>

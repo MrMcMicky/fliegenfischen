@@ -86,6 +86,7 @@ export default async function AdminLandingWysiwygPage() {
     links?: { eyebrow?: string; title?: string; description?: string };
     weather?: { eyebrow?: string; title?: string; description?: string };
     contact?: { eyebrow?: string; title?: string; description?: string };
+    privateFaqs?: { question?: string; answer?: string }[];
     media?: { privateLessonImage?: string; contactMapImage?: string };
     cta?: {
       title?: string;
@@ -220,29 +221,52 @@ export default async function AdminLandingWysiwygPage() {
     ...courseFormatFaqs,
     ...voucherFaqs,
   ];
+  const privateFaqOverrides = (homeSections.privateFaqs ?? []).filter(
+    (item) => item?.question || item?.answer
+  );
+  const basePrivateFaqs: FaqItem[] = [
+    {
+      question: "Wie läuft eine Privatlektion ab?",
+      answer:
+        "Wir stimmen Ziel, Ort und Termin individuell ab. Am Wasser gibt es direktes Feedback, Übungen und klare nächste Schritte.",
+      editable: true,
+      questionPath: "homeSections.privateFaqs.0.question",
+      answerPath: "homeSections.privateFaqs.0.answer",
+    },
+    {
+      question: "Wie lange dauert eine Privatlektion?",
+      answer: privateLesson
+        ? `Mindestens ${privateLesson.minHours} Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.`
+        : "Mindestens 2 Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.",
+      editable: true,
+      questionPath: "homeSections.privateFaqs.1.question",
+      answerPath: "homeSections.privateFaqs.1.answer",
+    },
+    {
+      question: "Brauche ich eigene Ausrüstung?",
+      answer:
+        "Ruten und Schnüre können auf Anfrage gestellt werden. Eigene Ausrüstung ist aber jederzeit willkommen.",
+      editable: true,
+      questionPath: "homeSections.privateFaqs.2.question",
+      answerPath: "homeSections.privateFaqs.2.answer",
+    },
+  ];
+  const privateFaqEditable = (privateFaqOverrides.length
+    ? privateFaqOverrides.map((faq, index) => ({
+        question: faq.question || "",
+        answer: faq.answer || "",
+        editable: true,
+        questionPath: `homeSections.privateFaqs.${index}.question`,
+        answerPath: `homeSections.privateFaqs.${index}.answer`,
+      }))
+    : basePrivateFaqs) as FaqItem[];
   const privateFaqs: FaqItem[] = privateLesson
     ? [
-        {
-          question: "Wie läuft eine Privatlektion ab?",
-          answer:
-            "Wir stimmen Ziel, Ort und Termin individuell ab. Am Wasser gibt es direktes Feedback, Übungen und klare nächste Schritte.",
-          editable: false,
-          hint: "Standardtext",
-        },
-        {
-          question: "Wie lange dauert eine Privatlektion?",
-          answer: `Mindestens ${privateLesson.minHours} Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.`,
-          editable: false,
-          hint: "Standardtext",
-        },
-        {
-          question: "Brauche ich eigene Ausrüstung?",
-          answer:
-            "Ruten und Schnüre können auf Anfrage gestellt werden. Eigene Ausrüstung ist aber jederzeit willkommen.",
-          editable: false,
-          hint: "Standardtext",
-        },
-        ...privateFormatFaqs,
+        ...privateFaqEditable,
+        ...privateFormatFaqs.map((item) => ({
+          ...item,
+          hint: item.hint || "aus Kursformaten",
+        })),
       ]
     : [];
   const nextSession = upcomingSessions[0] ?? null;
@@ -451,7 +475,9 @@ export default async function AdminLandingWysiwygPage() {
                   {courseFaqs.map((faq, index) => (
                     <details
                       key={`course-faq-${index}`}
-                      className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4"
+                      className={`group rounded-xl border border-[var(--color-border)] p-4 ${
+                        faq.editable ? "bg-white/90" : "bg-white/70"
+                      }`}
                     >
                       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-[var(--color-text)]">
                         <span>
@@ -480,11 +506,15 @@ export default async function AdminLandingWysiwygPage() {
                         ) : (
                           <p>{faq.answer}</p>
                         )}
-                        {!faq.editable && faq.hint ? (
+                        {!faq.editable ? (
                           <p className="mt-2 text-xs text-[var(--color-muted)]/70">
-                            Quelle: {faq.hint}
+                            Quelle: {faq.hint || "abgeleitet"}
                           </p>
-                        ) : null}
+                        ) : (
+                          <p className="mt-2 text-xs text-[var(--color-muted)]/70">
+                            Editierbar (Basis‑FAQ).
+                          </p>
+                        )}
                       </div>
                     </details>
                   ))}
@@ -718,27 +748,52 @@ export default async function AdminLandingWysiwygPage() {
                     Häufige Fragen zu Privatlektionen
                   </h3>
                   <div className="mt-5 space-y-3">
-                    {privateFaqs.map((faq, index) => (
-                      <details
-                        key={`private-faq-${index}`}
-                        className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4"
-                      >
-                        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-[var(--color-text)]">
-                          <span>{faq.question}</span>
-                          <span className="text-xl text-[var(--color-forest)] transition-transform duration-200 group-open:rotate-45">
-                            +
-                          </span>
-                        </summary>
-                        <div className="mt-3 text-sm text-[var(--color-muted)]">
+                  {privateFaqs.map((faq, index) => (
+                    <details
+                      key={`private-faq-${index}`}
+                      className={`group rounded-xl border border-[var(--color-border)] p-4 ${
+                        faq.editable ? "bg-white/90" : "bg-white/70"
+                      }`}
+                    >
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-[var(--color-text)]">
+                        <span>
+                          {faq.editable ? (
+                            <EditableText
+                              path={faq.questionPath || ""}
+                              value={faq.question}
+                              placeholder="Frage"
+                            />
+                          ) : (
+                            faq.question
+                          )}
+                        </span>
+                        <span className="text-xl text-[var(--color-forest)] transition-transform duration-200 group-open:rotate-45">
+                          +
+                        </span>
+                      </summary>
+                      <div className="mt-3 text-sm text-[var(--color-muted)]">
+                        {faq.editable ? (
+                          <EditableText
+                            path={faq.answerPath || ""}
+                            value={faq.answer}
+                            placeholder="Antwort"
+                            multiline
+                          />
+                        ) : (
                           <p>{faq.answer}</p>
-                          {faq.hint ? (
-                            <p className="mt-2 text-xs text-[var(--color-muted)]/70">
-                              Quelle: {faq.hint}
-                            </p>
-                          ) : null}
-                        </div>
-                      </details>
-                    ))}
+                        )}
+                        {!faq.editable ? (
+                          <p className="mt-2 text-xs text-[var(--color-muted)]/70">
+                            Quelle: {faq.hint || "abgeleitet"}
+                          </p>
+                        ) : (
+                          <p className="mt-2 text-xs text-[var(--color-muted)]/70">
+                            Editierbar (Privat‑FAQ).
+                          </p>
+                        )}
+                      </div>
+                    </details>
+                  ))}
                   </div>
                 </div>
               ) : null}

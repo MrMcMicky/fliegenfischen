@@ -91,6 +91,10 @@ export default async function Home({
     links?: { eyebrow: string; title: string; description: string };
     weather?: { eyebrow: string; title: string; description: string };
     contact?: { eyebrow: string; title: string; description: string };
+    privateFaqs?: {
+      question?: string;
+      answer?: string;
+    }[];
     cta: {
       title: string;
       description: string;
@@ -158,6 +162,27 @@ export default async function Home({
       mobile: "",
       email: "",
     };
+  const privateFaqOverrides = (homeSections.privateFaqs ?? []).filter(
+    (item) => item?.question || item?.answer
+  );
+  const basePrivateFaqs = [
+    {
+      question: "Wie läuft eine Privatlektion ab?",
+      answer:
+        "Wir stimmen Ziel, Ort und Termin individuell ab. Am Wasser gibt es direktes Feedback, Übungen und klare nächste Schritte.",
+    },
+    {
+      question: "Wie lange dauert eine Privatlektion?",
+      answer: privateLesson
+        ? `Mindestens ${privateLesson.minHours} Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.`
+        : "Mindestens 2 Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.",
+    },
+    {
+      question: "Brauche ich eigene Ausrüstung?",
+      answer:
+        "Ruten und Schnüre können auf Anfrage gestellt werden. Eigene Ausrüstung ist aber jederzeit willkommen.",
+    },
+  ];
   const privateSection = homeSections.private ?? {
     eyebrow: "Privatlektion",
     title: "Individuelles Coaching am Wasser",
@@ -210,20 +235,7 @@ export default async function Home({
   const courseFaqs = [...faqs, ...courseFormatFaqs, ...voucherFaqs];
   const privateFaqs = privateLesson
     ? [
-        {
-          question: "Wie läuft eine Privatlektion ab?",
-          answer:
-            "Wir stimmen Ziel, Ort und Termin individuell ab. Am Wasser gibt es direktes Feedback, Übungen und klare nächste Schritte.",
-        },
-        {
-          question: "Wie lange dauert eine Privatlektion?",
-          answer: `Mindestens ${privateLesson.minHours} Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.`,
-        },
-        {
-          question: "Brauche ich eigene Ausrüstung?",
-          answer:
-            "Ruten und Schnüre können auf Anfrage gestellt werden. Eigene Ausrüstung ist aber jederzeit willkommen.",
-        },
+        ...(privateFaqOverrides.length ? privateFaqOverrides : basePrivateFaqs),
         ...privateFormatFaqs,
       ]
     : [];

@@ -119,9 +119,20 @@ export function Header({
     };
   };
 
-  const logoWrapClass = isHome && !scrolled
-    ? "rounded-lg bg-transparent"
-    : "rounded-lg bg-transparent";
+  const logoWrapClass = "rounded-lg bg-transparent";
+  const showHeroLogo = isHome && !scrolled;
+  const logoSrc = showHeroLogo
+    ? "/branding/logo-hero.png"
+    : scrolled
+      ? "/branding/logo-mark.png"
+      : "/branding/logo-dark.png";
+  const logoWidth = showHeroLogo ? 260 : scrolled ? 110 : 260;
+  const logoHeight = showHeroLogo ? 66 : scrolled ? 36 : 66;
+  const logoClass = showHeroLogo
+    ? "h-12 w-auto drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)] sm:h-14"
+    : scrolled
+      ? "h-8 w-auto"
+      : "h-12 w-auto";
 
   const activeNavClass =
     "bg-[var(--color-forest)] text-white shadow-sm pointer-events-none";
@@ -135,17 +146,11 @@ export function Header({
           <span className="sr-only">{siteName}</span>
           <div className={logoWrapClass}>
             <Image
-              src={
-                scrolled ? "/branding/logo-mark.png" : "/branding/logo-hero.png"
-              }
+              src={logoSrc}
               alt="Fliegenfischerschule Urs Müller"
-              width={scrolled ? 110 : 260}
-              height={scrolled ? 36 : 66}
-              className={
-                scrolled
-                  ? "h-8 w-auto"
-                  : "h-12 w-auto drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)] sm:h-14"
-              }
+              width={logoWidth}
+              height={logoHeight}
+              className={logoClass}
               priority
             />
           </div>

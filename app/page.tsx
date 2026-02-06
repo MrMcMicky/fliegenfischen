@@ -37,9 +37,13 @@ export default async function Home({
 }: {
   searchParams?: { w?: string };
 }) {
+  const rawWeatherParam = Array.isArray(searchParams?.w)
+    ? searchParams?.w[0]
+    : searchParams?.w;
   const selectedWeatherId =
-    searchParams?.w && weatherLocations.some((loc) => loc.id === searchParams.w)
-      ? searchParams.w
+    rawWeatherParam &&
+    weatherLocations.some((loc) => loc.id === rawWeatherParam)
+      ? rawWeatherParam
       : weatherLocations[0]?.id;
   const [settings, upcomingSessions, reports, privateLesson, weather] =
     await Promise.all([
@@ -441,18 +445,18 @@ export default async function Home({
             {weatherLocations.map((location) => {
               const isActive = location.id === selectedWeatherId;
               return (
-                <Link
+                <a
                   key={location.id}
                   href={`/?w=${location.id}#wetter`}
                   className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
                     isActive
-                      ? "border-[var(--color-ember)]/60 bg-[var(--color-ember)]/10 text-[var(--color-forest)]"
-                      : "border-[var(--color-border)] bg-white text-[var(--color-forest)] hover:border-[var(--color-ember)]/40 hover:text-[var(--color-ember)]"
+                      ? "border-[var(--color-forest)] bg-[var(--color-forest)] text-white shadow-sm"
+                      : "border-[var(--color-border)] bg-white text-[var(--color-forest)] hover:border-[var(--color-forest)]/40 hover:text-[var(--color-forest)]"
                   }`}
                   aria-current={isActive ? "page" : undefined}
                 >
                   {location.label}
-                </Link>
+                </a>
               );
             })}
             <span className="text-xs text-[var(--color-muted)]">

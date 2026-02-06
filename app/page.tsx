@@ -8,6 +8,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { SectionHeader } from "@/components/SectionHeader";
 import { TestimonialSection } from "@/components/TestimonialSection";
 import { TimelineSteps } from "@/components/TimelineSteps";
+import { UspIcon } from "@/components/UspIcon";
 import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
 import { resourceLinks, sfvLinks } from "@/lib/links";
@@ -137,15 +138,16 @@ export default async function Home({
     <div className="pb-20">
       <HeroSection nextSession={nextSession} hero={homeHero} />
 
-      <section className="bg-white py-12">
+      <section className="-mt-20 bg-white pb-14 pt-0">
         <div className="mx-auto w-full max-w-5xl px-4">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="relative z-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {uspItems.map((item) => (
               <div
                 key={item.title}
-                className="rounded-xl border border-[var(--color-border)] bg-white p-6"
+                className="group rounded-2xl bg-white p-6 shadow-[0_14px_30px_rgba(15,50,49,0.12)] transition-transform duration-200 hover:-translate-y-1.5 hover:shadow-[0_18px_40px_rgba(15,50,49,0.18)]"
               >
-                <h3 className="font-display text-xl font-semibold text-[var(--color-text)]">
+                <UspIcon title={item.title} />
+                <h3 className="mt-4 font-display text-xl font-semibold text-[var(--color-text)]">
                   {item.title}
                 </h3>
                 <p className="mt-3 text-sm text-[var(--color-muted)]">

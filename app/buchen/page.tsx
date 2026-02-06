@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { BookingForm } from "@/components/BookingForm";
 import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
-import { formatDate, formatPrice } from "@/lib/format";
+import { formatDate } from "@/lib/format";
 
 export const metadata = {
   title: "Buchung",
@@ -47,15 +47,20 @@ export default async function BookingPage({
     if (!session) notFound();
 
     return (
-      <div className="mx-auto w-full max-w-4xl space-y-8 px-4 pb-20 pt-16">
+      <div className="mx-auto w-full max-w-5xl space-y-8 px-4 pb-20 pt-16">
         <SectionHeader
           eyebrow="Buchung"
           title={session.course?.title || "Kurs"}
           description={`${formatDate(session.date)} · ${session.startTime}-${session.endTime} · ${session.location}`}
         />
-        <p className="text-base font-semibold text-[var(--color-forest)]">
-          Preis pro Person: {formatPrice(session.priceCHF)}
-        </p>
+        <div className="flex flex-wrap gap-3 text-xs font-semibold text-[var(--color-forest)]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/80 px-3 py-1.5">
+            {formatDate(session.date)} · {session.startTime}-{session.endTime}
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/80 px-3 py-1.5">
+            {session.location}
+          </span>
+        </div>
         <BookingForm
           type="COURSE"
           session={{
@@ -83,7 +88,7 @@ export default async function BookingPage({
     if (!offering) notFound();
 
     return (
-      <div className="mx-auto w-full max-w-4xl space-y-8 px-4 pb-20 pt-16">
+      <div className="mx-auto w-full max-w-5xl space-y-8 px-4 pb-20 pt-16">
         <SectionHeader
           eyebrow="Buchung"
           title={offering.title}
@@ -115,7 +120,7 @@ export default async function BookingPage({
       : undefined;
 
     return (
-      <div className="mx-auto w-full max-w-4xl space-y-8 px-4 pb-20 pt-16">
+      <div className="mx-auto w-full max-w-5xl space-y-8 px-4 pb-20 pt-16">
         <SectionHeader
           eyebrow="Buchung"
           title={option.title}

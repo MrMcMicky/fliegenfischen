@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { CalendarDays, MapPin, Users, Clock, Gift } from "lucide-react";
 
 import { Button } from "@/components/Button";
 import { formatDate, formatPrice } from "@/lib/format";
@@ -105,6 +107,18 @@ export function BookingForm({
     if (type === "COURSE" && session) {
       return {
         title: session.course?.title ?? "Kurs",
+        image:
+          session.course?.title?.toLowerCase().includes("zweihand")
+            ? "/illustrations/course-zweihand-v3.png"
+            : "/illustrations/course-einhand-v2.png",
+        meta: [
+          {
+            icon: CalendarDays,
+            value: `${formatDate(session.date)} · ${session.startTime}-${session.endTime}`,
+          },
+          { icon: MapPin, value: session.location },
+          { icon: Users, value: `${quantity} Teilnehmende` },
+        ],
         rows: [
           {
             label: "Termin",
@@ -122,6 +136,11 @@ export function BookingForm({
     if ((type === "PRIVATE" || type === "TASTER") && lesson) {
       return {
         title: lesson.title,
+        image: "/illustrations/private-lessons.png",
+        meta: [
+          { icon: Clock, value: `${hours} Stunden` },
+          { icon: Users, value: `${1 + additionalPeople} Teilnehmende` },
+        ],
         rows: [
           { label: "Dauer", value: `${hours} Stunden` },
           { label: "Teilnehmende", value: String(1 + additionalPeople) },
@@ -132,6 +151,13 @@ export function BookingForm({
     if (type === "VOUCHER" && voucherOption) {
       return {
         title: voucherOption.title,
+        image: "/illustrations/icon-target.png",
+        meta: [
+          {
+            icon: Gift,
+            value: `Gutscheinwert ${formatPrice(normalizePrice(voucherAmount))}`,
+          },
+        ],
         rows: [
           {
             label: "Gutscheinwert",
@@ -230,253 +256,263 @@ export function BookingForm({
     }
   };
 
+  const inputClass =
+    "w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-900 shadow-sm transition focus:border-[var(--color-ember)] focus:outline-none focus:ring-4 focus:ring-[var(--color-ember)]/20";
+  const labelClass = "text-sm font-semibold text-slate-700";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {summary ? (
-        <div className="rounded-xl bg-[var(--color-mist)]/80 p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            Zusammenfassung
-          </p>
-          <div className="mt-3 text-sm">
-            <p className="font-semibold text-[var(--color-text)]">
-              {summary.title}
-            </p>
-            <div className="mt-3 space-y-2 text-[var(--color-muted)]">
-              {summary.rows.map((row) => (
-                <div
-                  key={`${row.label}-${row.value}`}
-                  className="flex flex-wrap items-center justify-between gap-2"
-                >
-                  <span>{row.label}</span>
-                  <span className="font-medium text-[var(--color-text)]">
-                    {row.value}
-                  </span>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <div className="space-y-6">
+          <div className="text-xs text-[var(--color-muted)]">
+            Pflichtfelder sind mit * markiert.
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className={labelClass}>Name*</label>
+              <input
+                required
+                value={customerName}
+                onChange={(event) => setCustomerName(event.target.value)}
+                disabled={loading}
+                className={inputClass}
+                placeholder="Vorname Nachname"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className={labelClass}>E-Mail*</label>
+              <input
+                required
+                type="email"
+                value={customerEmail}
+                onChange={(event) => setCustomerEmail(event.target.value)}
+                disabled={loading}
+                className={inputClass}
+                placeholder="name@email.ch"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className={labelClass}>Telefon</label>
+              <input
+                value={customerPhone}
+                onChange={(event) => setCustomerPhone(event.target.value)}
+                disabled={loading}
+                className={inputClass}
+                placeholder="Optional"
+              />
+            </div>
+          </div>
+
+          {type === "COURSE" && session ? (
+            <div className="rounded-xl border border-[var(--color-border)] bg-white p-4">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-slate-700">
+                    Teilnehmende
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Noch {session.availableSpots} Plätze verfügbar
+                  </p>
                 </div>
+                <input
+                  type="number"
+                  min={1}
+                  max={session.availableSpots}
+                  value={quantity}
+                  onChange={(event) => setQuantity(Number(event.target.value))}
+                  disabled={loading}
+                  className={`${inputClass} w-24 text-center`}
+                />
+              </div>
+            </div>
+          ) : null}
+
+          {(type === "PRIVATE" || type === "TASTER") && lesson ? (
+            <div className="rounded-xl border border-[var(--color-border)] bg-white p-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className={labelClass}>Stunden</label>
+                  <input
+                    type="number"
+                    min={lesson.minHours}
+                    value={hours}
+                    onChange={(event) => setHours(Number(event.target.value))}
+                    disabled={loading}
+                    className={`${inputClass} w-28`}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className={labelClass}>Zusatzpersonen</label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={additionalPeople}
+                    onChange={(event) =>
+                      setAdditionalPeople(Number(event.target.value))
+                    }
+                    disabled={loading}
+                    className={`${inputClass} w-28`}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {type === "VOUCHER" && voucherOption ? (
+            <div className="rounded-xl border border-[var(--color-border)] bg-white p-4 space-y-4">
+              <div>
+                <p className="font-semibold text-[var(--color-text)]">
+                  {voucherOption.title}
+                </p>
+                <p className="text-sm text-[var(--color-muted)]">
+                  {voucherOption.description}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {voucherOption.values.map((value) => (
+                  <label
+                    key={value}
+                    className="flex items-center gap-2 rounded-full border border-[var(--color-border)] px-4 py-2 text-xs font-semibold text-[var(--color-forest)]"
+                  >
+                    <input
+                      type="radio"
+                      name="voucherAmount"
+                      value={value}
+                      checked={voucherAmount === value}
+                      onChange={() => setVoucherAmount(value)}
+                      disabled={loading}
+                    />
+                    {formatPrice(value)}
+                  </label>
+                ))}
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className={labelClass}>Empfänger (optional)</label>
+                  <input
+                    value={voucherRecipient}
+                    onChange={(event) => setVoucherRecipient(event.target.value)}
+                    disabled={loading}
+                    className={inputClass}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className={labelClass}>Widmung (optional)</label>
+                  <input
+                    value={voucherMessage}
+                    onChange={(event) => setVoucherMessage(event.target.value)}
+                    disabled={loading}
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          <div className="rounded-xl border border-[var(--color-border)] bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+              Zahlungsart
+            </p>
+            <div className="mt-3 space-y-2 text-sm">
+              {paymentOptions.map((option) => (
+                <label key={option.value} className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="paymentMode"
+                    value={option.value}
+                    checked={paymentMode === option.value}
+                    onChange={() => setPaymentMode(option.value)}
+                    disabled={loading}
+                  />
+                  {option.label}
+                </label>
               ))}
             </div>
+            <p className="mt-3 text-xs text-[var(--color-muted)]">
+              Sofortzahlung via Stripe (TWINT, Visa, Mastercard). Bei Rechnung
+              schicken wir dir die Zahlungsdetails per E-Mail.
+            </p>
           </div>
-        </div>
-      ) : null}
 
-      <div className="text-xs text-[var(--color-muted)]">
-        Pflichtfelder sind mit * markiert.
+          <div className="space-y-2">
+            <label className={labelClass}>Notizen (optional)</label>
+            <textarea
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+              rows={4}
+              disabled={loading}
+              className={`${inputClass} min-h-[120px]`}
+              placeholder="Wunschdatum, Erfahrung, Ziel"
+            />
+          </div>
+
+          {error ? (
+            <div
+              role="alert"
+              className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            >
+              {error}
+            </div>
+          ) : null}
+        </div>
+        <aside>
+          {summary ? (
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 shadow-[0_10px_30px_rgba(0,0,0,0.08)] lg:sticky lg:top-28">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                Zusammenfassung
+              </p>
+              {summary.image ? (
+                <div className="mt-4 overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)]">
+                  <Image
+                    src={summary.image}
+                    alt={summary.title}
+                    width={640}
+                    height={360}
+                    className="h-40 w-full object-cover"
+                  />
+                </div>
+              ) : null}
+              <p className="mt-4 text-lg font-semibold text-[var(--color-forest)]">
+                {summary.title}
+              </p>
+              {summary.meta ? (
+                <div className="mt-3 space-y-2 text-sm text-[var(--color-muted)]">
+                  {summary.meta.map((row) => {
+                    const Icon = row.icon;
+                    return (
+                      <div key={row.value} className="flex items-start gap-2">
+                        <Icon className="mt-0.5 h-4 w-4 text-[var(--color-ember)]" />
+                        <span>{row.value}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : null}
+              <div className="mt-6 border-t border-dashed border-[var(--color-border)] pt-4">
+                <div className="flex items-end justify-between gap-3">
+                  <span className="text-sm text-[var(--color-muted)]">
+                    Total
+                  </span>
+                  <span className="text-3xl font-semibold text-[var(--color-forest)]">
+                    {formatPrice(total)}
+                  </span>
+                </div>
+                {type === "COURSE" && session ? (
+                  <p className="mt-2 text-xs text-[var(--color-muted)]">
+                    {formatPrice(session.priceCHF)} pro Person
+                  </p>
+                ) : null}
+              </div>
+              <div className="mt-6">
+                <Button type="submit" disabled={loading} className="w-full">
+                  {loading ? "Senden..." : "Weiter"}
+                </Button>
+              </div>
+            </div>
+          ) : null}
+        </aside>
       </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            Name*
-          </label>
-          <input
-            required
-            value={customerName}
-            onChange={(event) => setCustomerName(event.target.value)}
-            disabled={loading}
-            className="form-input w-full"
-            placeholder="Vorname Nachname"
-          />
-        </div>
-        <div className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            E-Mail*
-          </label>
-          <input
-            required
-            type="email"
-            value={customerEmail}
-            onChange={(event) => setCustomerEmail(event.target.value)}
-            disabled={loading}
-            className="form-input w-full"
-            placeholder="name@email.ch"
-          />
-        </div>
-        <div className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            Telefon
-          </label>
-          <input
-            value={customerPhone}
-            onChange={(event) => setCustomerPhone(event.target.value)}
-            disabled={loading}
-            className="form-input w-full"
-            placeholder="Optional"
-          />
-        </div>
-      </div>
-
-      {type === "COURSE" && session ? (
-        <div className="rounded-xl border border-[var(--color-border)] bg-white p-4 text-sm">
-          <p className="font-semibold text-[var(--color-text)]">
-            {session.course?.title}
-          </p>
-          <p className="text-[var(--color-muted)]">
-            {formatDate(session.date)} · {session.startTime}-{session.endTime} ·{" "}
-            {session.location}
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-4">
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-                Teilnehmende
-              </label>
-              <input
-                type="number"
-                min={1}
-                max={session.availableSpots}
-                value={quantity}
-                onChange={(event) => setQuantity(Number(event.target.value))}
-                disabled={loading}
-                className="form-input mt-2 w-24"
-              />
-            </div>
-            <div className="text-sm text-[var(--color-muted)]">
-              Noch {session.availableSpots} Plätze
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {(type === "PRIVATE" || type === "TASTER") && lesson ? (
-        <div className="rounded-xl border border-[var(--color-border)] bg-white p-4 text-sm">
-          <p className="font-semibold text-[var(--color-text)]">{lesson.title}</p>
-          <p className="text-[var(--color-muted)]">{lesson.description}</p>
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-                Stunden
-              </label>
-              <input
-                type="number"
-                min={lesson.minHours}
-                value={hours}
-                onChange={(event) => setHours(Number(event.target.value))}
-                disabled={loading}
-                className="form-input mt-2 w-24"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-                Zusatzpersonen
-              </label>
-              <input
-                type="number"
-                min={0}
-                value={additionalPeople}
-                onChange={(event) => setAdditionalPeople(Number(event.target.value))}
-                disabled={loading}
-                className="form-input mt-2 w-24"
-              />
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {type === "VOUCHER" && voucherOption ? (
-        <div className="rounded-xl border border-[var(--color-border)] bg-white p-4 text-sm space-y-4">
-          <div>
-            <p className="font-semibold text-[var(--color-text)]">{voucherOption.title}</p>
-            <p className="text-[var(--color-muted)]">{voucherOption.description}</p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {voucherOption.values.map((value) => (
-              <label
-                key={value}
-                className="flex items-center gap-2 rounded-full border border-[var(--color-border)] px-4 py-2 text-xs font-semibold text-[var(--color-forest)]"
-              >
-                <input
-                  type="radio"
-                  name="voucherAmount"
-                  value={value}
-                  checked={voucherAmount === value}
-                  onChange={() => setVoucherAmount(value)}
-                  disabled={loading}
-                />
-                {formatPrice(value)}
-              </label>
-            ))}
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-                Empfänger (optional)
-              </label>
-              <input
-                value={voucherRecipient}
-                onChange={(event) => setVoucherRecipient(event.target.value)}
-                disabled={loading}
-                className="form-input mt-2 w-full"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-                Widmung (optional)
-              </label>
-              <input
-                value={voucherMessage}
-                onChange={(event) => setVoucherMessage(event.target.value)}
-                disabled={loading}
-                className="form-input mt-2 w-full"
-              />
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      <div className="rounded-xl border border-[var(--color-border)] bg-white p-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-          Zahlungsart
-        </p>
-        <div className="mt-3 space-y-2 text-sm">
-          {paymentOptions.map((option) => (
-            <label key={option.value} className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="paymentMode"
-                value={option.value}
-                checked={paymentMode === option.value}
-                onChange={() => setPaymentMode(option.value)}
-                disabled={loading}
-              />
-              {option.label}
-            </label>
-          ))}
-        </div>
-        <p className="mt-3 text-xs text-[var(--color-muted)]">
-          Sofortzahlung via Stripe (TWINT, Visa, Mastercard). Bei Rechnung
-          schicken wir dir die Zahlungsdetails per E-Mail.
-        </p>
-      </div>
-
-      <div>
-        <label className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-          Notizen (optional)
-        </label>
-        <textarea
-          value={notes}
-          onChange={(event) => setNotes(event.target.value)}
-          rows={4}
-          disabled={loading}
-          className="form-input mt-2 w-full"
-          placeholder="Wunschdatum, Erfahrung, Ziel"
-        />
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <p className="text-lg font-semibold text-[var(--color-forest)]">
-          Total {formatPrice(total)}
-        </p>
-        <Button type="submit" disabled={loading}>
-          {loading ? "Senden..." : "Weiter"}
-        </Button>
-      </div>
-
-      {error ? (
-        <div
-          role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-        >
-          {error}
-        </div>
-      ) : null}
     </form>
   );
 }

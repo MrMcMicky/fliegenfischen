@@ -35,11 +35,19 @@ const formatMetric = (value: number | null | undefined, unit: string) => {
 export default async function Home({
   searchParams,
 }: {
-  searchParams?: { w?: string };
+  searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
 }) {
-  const rawWeatherParam = Array.isArray(searchParams?.w)
-    ? searchParams?.w[0]
-    : searchParams?.w;
+  const resolvedParams = await Promise.resolve(searchParams);
+  const params =
+    resolvedParams && typeof (resolvedParams as { get?: unknown }).get === "function"
+      ? Object.fromEntries(
+          (resolvedParams as URLSearchParams).entries()
+        )
+      : (resolvedParams ?? {});
+
+  const rawWeatherParam = Array.isArray((params as { w?: string }).w)
+    ? (params as { w?: string[] }).w?.[0]
+    : (params as { w?: string }).w;
   const selectedWeatherId =
     rawWeatherParam &&
     weatherLocations.some((loc) => loc.id === rawWeatherParam)
@@ -89,6 +97,10 @@ export default async function Home({
       secondary: { label: string; href: string };
       tertiary: { label: string; href: string };
     };
+    media?: {
+      privateLessonImage?: string;
+      contactMapImage?: string;
+    };
   };
   const uspItems = settings.uspItems as { title: string; description: string }[];
   const aboutSection = settings.aboutSection as {
@@ -112,6 +124,11 @@ export default async function Home({
     title: string;
     detail: string;
   }[];
+  const media = homeSections.media || {};
+  const privateLessonImage =
+    media.privateLessonImage || "/illustrations/private-lessons.png";
+  const contactMapImage =
+    media.contactMapImage || "/illustrations/contact-map.png";
   const contact =
     (settings.contact as {
       instructor: string;
@@ -219,7 +236,7 @@ export default async function Home({
               <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
                 <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
                   <Image
-                    src="/illustrations/private-lessons.png"
+                    src={privateLessonImage}
                     alt="Illustration Privatlektion"
                     width={720}
                     height={480}
@@ -582,7 +599,7 @@ export default async function Home({
             <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
               <div className="mb-6 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
                 <Image
-                  src="/illustrations/contact-map.png"
+                  src={contactMapImage}
                   alt="Illustration Treffpunkt und Limmat"
                   width={720}
                   height={480}

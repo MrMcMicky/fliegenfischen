@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
@@ -21,6 +21,7 @@ export function Header({
   const [currentHash, setCurrentHash] = useState<string | null>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const visibilityRef = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,10 +70,25 @@ export function Header({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(`#${entry.target.id}`);
+          const key = `#${entry.target.id}`;
+          visibilityRef.current.set(
+            key,
+            entry.isIntersecting ? entry.intersectionRatio : 0
+          );
+        });
+
+        let best: string | null = null;
+        let bestRatio = 0;
+        visibilityRef.current.forEach((ratio, key) => {
+          if (ratio > bestRatio) {
+            best = key;
+            bestRatio = ratio;
           }
         });
+
+        if (best) {
+          setActiveSection(best);
+        }
       },
       { rootMargin: "-20% 0px -65% 0px", threshold: 0.1 }
     );
@@ -84,7 +100,11 @@ export function Header({
   useEffect(() => {
     if (!isHome) return;
     const updateHash = () => {
-      setCurrentHash(window.location.hash || null);
+      const hash = window.location.hash || null;
+      setCurrentHash(hash);
+      if (hash) {
+        setActiveSection(hash);
+      }
     };
     updateHash();
     window.addEventListener("hashchange", updateHash);

@@ -62,26 +62,36 @@ export default async function AdminBuchungenPage() {
                 <p className="text-[var(--color-muted)]">
                   {bookingStatusLabels[booking.status] ?? booking.status}
                 </p>
+                {booking.paymentMode === "STRIPE" ? (
+                  <p className="text-[var(--color-muted)]">
+                    Stripe bestätigt: {booking.payment?.stripePaymentIntentId ? "Ja" : "Nein"}
+                  </p>
+                ) : null}
               </div>
-              <form action={updateStatus} className="flex items-center gap-2">
+              <form action={updateStatus} className="flex flex-col items-end gap-2">
                 <input type="hidden" name="id" value={booking.id} />
-                <select
-                  name="status"
-                  defaultValue={booking.status}
-                  className="form-input px-3 py-2"
-                >
-                  <option value="PENDING">Offen</option>
-                  <option value="PAYMENT_PENDING">Zahlung offen</option>
-                  <option value="PAID">Bezahlt</option>
-                  <option value="INVOICE_REQUESTED">Rechnung angefragt</option>
-                  <option value="CANCELLED">Storniert</option>
-                </select>
-                <button
-                  type="submit"
-                  className="rounded-full border border-[var(--color-border)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
-                >
-                  Update
-                </button>
+                <div className="flex items-center gap-2">
+                  <select
+                    name="status"
+                    defaultValue={booking.status}
+                    className="form-input px-3 py-2"
+                  >
+                    <option value="PENDING">Offen</option>
+                    <option value="PAYMENT_PENDING">Zahlung offen</option>
+                    <option value="PAID">Bezahlt (manuell)</option>
+                    <option value="INVOICE_REQUESTED">Rechnung angefragt</option>
+                    <option value="CANCELLED">Storniert</option>
+                  </select>
+                  <button
+                    type="submit"
+                    className="rounded-full border border-[var(--color-border)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                  >
+                    Update
+                  </button>
+                </div>
+                <p className="text-xs text-[var(--color-muted)]">
+                  Hinweis: Stripe-Zahlungen werden automatisch bestätigt.
+                </p>
               </form>
             </div>
           </div>

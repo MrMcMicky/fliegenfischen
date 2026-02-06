@@ -21,12 +21,25 @@ export default async function AdminZahlungenPage() {
       <div>
         <h2 className="font-display text-2xl font-semibold">Zahlungen</h2>
         <p className="text-sm text-[var(--color-muted)]">
-          Übersicht aller Zahlungen. Stripe-IDs erscheinen nur bei Online-Zahlungen.
+          Übersicht aller Zahlungen. Stripe-Zahlungen gelten erst als bezahlt,
+          wenn Stripe sie bestätigt hat.
         </p>
       </div>
       <div className="space-y-3">
         {payments.map((payment) => {
-          const isStripe = Boolean(payment.stripeCheckoutSessionId);
+          const isStripe = payment.booking.paymentMode === "STRIPE";
+          const stripeConfirmed = Boolean(payment.stripePaymentIntentId);
+          const statusLabel =
+            isStripe && !stripeConfirmed
+              ? "Zahlung offen (Stripe nicht bestätigt)"
+              : paymentStatusLabels[payment.status] ?? payment.status;
+          const confirmationLabel = isStripe
+            ? stripeConfirmed
+              ? "Stripe bestätigt"
+              : "Stripe nicht bestätigt"
+            : payment.status === "PAID"
+              ? "Manuell als bezahlt markiert"
+              : "Manuell / Rechnung";
           return (
             <div
               key={payment.id}
@@ -38,7 +51,7 @@ export default async function AdminZahlungenPage() {
                     {payment.booking.customerName}
                   </p>
                   <p className="text-[var(--color-muted)]">
-                    {paymentStatusLabels[payment.status] ?? payment.status}
+                    {statusLabel}
                   </p>
                   <p className="text-[var(--color-muted)]">
                     {formatPrice(payment.booking.amountCHF)} ·{" "}
@@ -46,9 +59,9 @@ export default async function AdminZahlungenPage() {
                       payment.booking.type}
                   </p>
                   <p className="text-[var(--color-muted)]">
-                    {isStripe
-                      ? "Online-Zahlung (Stripe)"
-                      : "Manuell / Rechnung"}
+                    {isStripe ? "Online-Zahlung (Stripe)" : "Manuell / Rechnung"}
+                    {" · "}
+                    {confirmationLabel}
                   </p>
                 </div>
                 <div className="text-xs text-[var(--color-muted)]">

@@ -138,7 +138,7 @@ export default async function Home({
     <div className="pb-20">
       <HeroSection nextSession={nextSession} hero={homeHero} />
 
-      <section className="bg-white pb-14 pt-12">
+      <section className="bg-white pb-14 pt-12 -mt-12 sm:-mt-16 lg:-mt-20">
         <div className="mx-auto w-full max-w-5xl px-4">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {uspItems.map((item) => (

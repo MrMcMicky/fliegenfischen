@@ -23,7 +23,11 @@ export function HeroSection({
 
   return (
     <section
-      className={`relative overflow-hidden pb-16 ${compact ? "pt-24" : "-mt-20 pt-28"}`}
+      className={`relative overflow-hidden ${
+        compact
+          ? "pt-24 pb-20"
+          : "-mt-20 pt-28 pb-28 sm:pb-32 lg:pb-36"
+      }`}
     >
       <div className="absolute inset-0 -z-10">
         <video

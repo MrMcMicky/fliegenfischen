@@ -66,7 +66,7 @@ export function Header({
     if (elements.length === 0) return;
 
     const updateActive = () => {
-      const offset = 120;
+      const offset = 240;
       const scrollPos = window.scrollY + offset;
       let current: string | null = null;
       elements.forEach((el) => {

@@ -12,11 +12,10 @@ export const defaultSiteSettings = {
   navLinks: [
     { label: "Kurse", href: "/#kurse" },
     { label: "Privatlektion", href: "/#privat" },
-    { label: "Über uns", href: "/#ueber" },
-    { label: "Berichte", href: "/#berichte" },
-    { label: "Links", href: "/#links" },
-    { label: "Wetter", href: "/#wetter" },
-    { label: "Kontakt", href: "/#kontakt" },
+      { label: "Über uns", href: "/#ueber" },
+      { label: "Links & Berichte", href: "/#links" },
+      { label: "Wetter", href: "/#wetter" },
+      { label: "Kontakt", href: "/#kontakt" },
   ],
   categorySummaries: [
     {
@@ -56,7 +55,7 @@ export const defaultSiteSettings = {
     resources: [
       { label: "Über uns", href: "/#ueber" },
       { label: "Berichte", href: "/berichte" },
-      { label: "FAQ", href: "/#faq" },
+        { label: "FAQ", href: "/#kurse" },
       { label: "Wetter", href: "/wetter" },
       { label: "Rechtliches", href: "/rechtliches" },
     ],

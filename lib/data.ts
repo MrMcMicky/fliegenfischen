@@ -6,8 +6,7 @@ export const navLinks = [
   { label: "Kurse", href: "/#kurse" },
   { label: "Privatlektion", href: "/#privat" },
   { label: "Über uns", href: "/#ueber" },
-  { label: "Berichte", href: "/#berichte" },
-  { label: "Links", href: "/#links" },
+  { label: "Links & Berichte", href: "/#links" },
   { label: "Wetter", href: "/#wetter" },
   { label: "Kontakt", href: "/#kontakt" },
 ];
@@ -23,7 +22,7 @@ export const footerLinks = {
   resources: [
     { label: "Über uns", href: "/#ueber" },
     { label: "Berichte", href: "/berichte" },
-    { label: "FAQ", href: "/#faq" },
+    { label: "FAQ", href: "/#kurse" },
     { label: "Wetter", href: "/wetter" },
     { label: "Rechtliches", href: "/rechtliches" },
   ],

@@ -23,6 +23,7 @@ const useAutosave = (path: string, value: string) => {
 
   useEffect(() => {
     if (value === savedRef.current) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatus("saving");
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(async () => {
@@ -30,7 +31,7 @@ const useAutosave = (path: string, value: string) => {
         await saveField(path, value);
         savedRef.current = value;
         setStatus("saved");
-      } catch (error) {
+      } catch {
         setStatus("error");
       }
     }, 800);
@@ -71,6 +72,7 @@ export function EditableText({
   const multilineClass = multiline ? "whitespace-pre-line" : "";
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setText(value || "");
   }, [value]);
 
@@ -117,6 +119,7 @@ export function EditableInput({
   const status = useAutosave(path, text);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setText(value || "");
   }, [value]);
 
@@ -129,5 +132,117 @@ export function EditableInput({
       data-status={status}
       className={`wysiwyg-input ${className}`}
     />
+  );
+}
+
+type EditableImageProps = {
+  path: string;
+  value: string;
+  label?: string;
+  placeholder?: string;
+};
+
+export function EditableImage({
+  path,
+  value,
+  label = "Bild",
+  placeholder,
+}: EditableImageProps) {
+  const [src, setSrc] = useState(value || "");
+  const status = useAutosave(path, src);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSrc(value || "");
+  }, [value]);
+
+  const handleUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      Array.from(files).forEach((file) => formData.append("files", file));
+      const response = await fetch("/api/admin/landing-images", {
+        method: "POST",
+        body: formData,
+      });
+      const payload = (await response.json()) as {
+        files?: string[];
+        error?: string;
+      };
+      if (!response.ok || !payload.files?.length) {
+        throw new Error(payload.error || "upload_failed");
+      }
+      setSrc(payload.files[0]);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Upload fehlgeschlagen.";
+      setError(message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+          {label}
+        </p>
+        <span className="text-[10px] text-[var(--color-muted)]">
+          {status === "saving"
+            ? "Speichert…"
+            : status === "saved"
+              ? "Gespeichert"
+              : status === "error"
+                ? "Fehler"
+                : "Bereit"}
+        </span>
+      </div>
+      <input
+        value={src}
+        onChange={(event) => setSrc(event.target.value)}
+        placeholder={placeholder}
+        data-status={status}
+        className="wysiwyg-input w-full"
+      />
+      {src ? (
+        <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
+          <img
+            src={src}
+            alt="Vorschau"
+            className="h-40 w-full rounded-lg object-cover"
+          />
+        </div>
+      ) : null}
+      <div
+        className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-stone)] px-4 py-3 text-xs"
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={(event) => {
+          event.preventDefault();
+          handleUpload(event.dataTransfer.files);
+        }}
+      >
+        <span className="text-[var(--color-muted)]">
+          Bild hierher ziehen oder Datei wählen.
+        </span>
+        <label className="rounded-full bg-[var(--color-forest)] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+          {uploading ? "Upload…" : "Datei wählen"}
+          <input
+            type="file"
+            accept="image/*"
+            disabled={uploading}
+            onChange={(event) => {
+              handleUpload(event.target.files);
+              event.currentTarget.value = "";
+            }}
+            className="hidden"
+          />
+        </label>
+      </div>
+      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+    </div>
   );
 }

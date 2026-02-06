@@ -31,7 +31,7 @@ const parsePath = (path: string) =>
 const isIndex = (segment: string) => /^\d+$/.test(segment);
 
 const setDeepValue = (target: unknown, segments: string[], value: string) => {
-  let current: any = target;
+  let current = target as Record<string, unknown> | unknown[];
 
   for (let i = 0; i < segments.length - 1; i += 1) {
     const segment = segments[i];
@@ -45,12 +45,15 @@ const setDeepValue = (target: unknown, segments: string[], value: string) => {
       if (current[key] == null) {
         current[key] = isIndex(nextSegment) ? [] : {};
       }
-      current = current[key];
+      current = current[key] as Record<string, unknown> | unknown[];
     } else {
+      if (Array.isArray(current)) {
+        throw new Error("invalid_path");
+      }
       if (current[key] == null) {
         current[key] = isIndex(nextSegment) ? [] : {};
       }
-      current = current[key];
+      current = current[key] as Record<string, unknown> | unknown[];
     }
   }
 
@@ -64,6 +67,9 @@ const setDeepValue = (target: unknown, segments: string[], value: string) => {
     }
     current[lastKey] = value;
   } else {
+    if (Array.isArray(current)) {
+      throw new Error("invalid_path");
+    }
     current[lastKey] = value;
   }
 };
@@ -88,6 +94,9 @@ export async function POST(request: Request) {
   if (!root || !allowedRoots.has(root)) {
     return NextResponse.json({ error: "invalid_path" }, { status: 400 });
   }
+  if (segments.includes("href") && admin.role !== "SUPER_ADMIN") {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
 
   const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
   if (!settings) {
@@ -100,7 +109,7 @@ export async function POST(request: Request) {
 
   try {
     setDeepValue(updatedRoot, segments, String(payload.value ?? ""));
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "invalid_path" }, { status: 400 });
   }
 

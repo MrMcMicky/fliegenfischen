@@ -8,7 +8,12 @@ import { HeroSection } from "@/components/HeroSection";
 import { SectionHeader } from "@/components/SectionHeader";
 import { TestimonialSection } from "@/components/TestimonialSection";
 import { TimelineSteps } from "@/components/TimelineSteps";
-import { EditableInput, EditableText } from "@/components/admin/WysiwygEditable";
+import {
+  EditableImage,
+  EditableInput,
+  EditableText,
+} from "@/components/admin/WysiwygEditable";
+import { getAdminFromSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
 import { resourceLinks, sfvLinks } from "@/lib/links";
@@ -47,6 +52,8 @@ export default async function AdminLandingWysiwygPage() {
       prisma.lessonOffering.findUnique({ where: { type: "PRIVATE" } }),
       selectedWeatherId ? getWeatherForecast(selectedWeatherId) : null,
     ]);
+  const admin = await getAdminFromSession();
+  const isSuperAdmin = admin?.role === "SUPER_ADMIN";
 
   if (!settings) {
     return (
@@ -68,6 +75,7 @@ export default async function AdminLandingWysiwygPage() {
     timeline?: { eyebrow?: string; title?: string; description?: string };
     reports?: { eyebrow?: string; title?: string; description?: string };
     faq?: { eyebrow?: string; title?: string; description?: string };
+    media?: { privateLessonImage?: string; contactMapImage?: string };
     cta?: {
       title?: string;
       description?: string;
@@ -77,6 +85,11 @@ export default async function AdminLandingWysiwygPage() {
       tertiary?: { label?: string; href?: string };
     };
   };
+  const media = homeSections.media || {};
+  const privateLessonImage =
+    media.privateLessonImage || "/illustrations/private-lessons.png";
+  const contactMapImage =
+    media.contactMapImage || "/illustrations/contact-map.png";
   const uspItems = (settings.uspItems ?? []) as {
     title?: string;
     description?: string;
@@ -127,6 +140,27 @@ export default async function AdminLandingWysiwygPage() {
     day: "2-digit",
     month: "2-digit",
   });
+  const renderLinkInput = (
+    path: string,
+    value: string,
+    placeholder: string
+  ) => {
+    if (isSuperAdmin) {
+      return (
+        <EditableInput
+          path={path}
+          value={value}
+          placeholder={placeholder}
+          className="w-full"
+        />
+      );
+    }
+    return (
+      <div className="wysiwyg-input w-full bg-[var(--color-stone)] text-[var(--color-muted)]">
+        {value || "—"}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -187,25 +221,51 @@ export default async function AdminLandingWysiwygPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
               Hero Button-Links
             </p>
+            {!isSuperAdmin ? (
+              <p className="mt-2 text-[11px] text-[var(--color-muted)]">
+                Links können nur vom Super Admin geändert werden.
+              </p>
+            ) : null}
             <div className="mt-3 grid gap-3 md:grid-cols-2">
               <div className="space-y-1">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em]">Primär</p>
-                <EditableInput
-                  path="homeHero.primaryCta.href"
-                  value={homeHero.primaryCta?.href || ""}
-                  placeholder="/kurse/termine"
-                  className="w-full"
-                />
+                {renderLinkInput(
+                  "homeHero.primaryCta.href",
+                  homeHero.primaryCta?.href || "",
+                  "/kurse/termine"
+                )}
               </div>
               <div className="space-y-1">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em]">Sekundär</p>
-                <EditableInput
-                  path="homeHero.secondaryCta.href"
-                  value={homeHero.secondaryCta?.href || ""}
-                  placeholder="/buchen?lesson=private"
-                  className="w-full"
-                />
+                {renderLinkInput(
+                  "homeHero.secondaryCta.href",
+                  homeHero.secondaryCta?.href || "",
+                  "/buchen?lesson=private"
+                )}
               </div>
+            </div>
+          </div>
+          <div className="mt-4 rounded-2xl border border-[var(--color-border)] bg-white p-4 text-xs text-[var(--color-muted)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+              Landing-Bilder
+            </p>
+            <p className="mt-2 text-[11px] text-[var(--color-muted)]">
+              Diese Illustrationen erscheinen auf der Startseite bei Privatlektion
+              und Kontakt.
+            </p>
+            <div className="mt-4 grid gap-6 md:grid-cols-2">
+              <EditableImage
+                path="homeSections.media.privateLessonImage"
+                value={privateLessonImage}
+                label="Privatlektion Illustration"
+                placeholder="/illustrations/private-lessons.png"
+              />
+              <EditableImage
+                path="homeSections.media.contactMapImage"
+                value={contactMapImage}
+                label="Kontakt Illustration"
+                placeholder="/illustrations/contact-map.png"
+              />
             </div>
           </div>
         </div>
@@ -319,12 +379,11 @@ export default async function AdminLandingWysiwygPage() {
                     />
                   </p>
                   <div className="mt-4 text-xs text-[var(--color-muted)]">
-                    <EditableInput
-                      path={`categorySummaries.${index}.href`}
-                      value={category.href || ""}
-                      placeholder="/kurse/termine"
-                      className="w-full"
-                    />
+                    {renderLinkInput(
+                      `categorySummaries.${index}.href`,
+                      category.href || "",
+                      "/kurse/termine"
+                    )}
                   </div>
                 </div>
               ))}
@@ -388,7 +447,7 @@ export default async function AdminLandingWysiwygPage() {
                 <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
                   <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
                     <Image
-                      src="/illustrations/private-lessons.png"
+                      src={privateLessonImage}
                       alt="Illustration Privatlektion"
                       width={720}
                       height={480}
@@ -864,7 +923,7 @@ export default async function AdminLandingWysiwygPage() {
               <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
                 <div className="mb-6 rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
                   <Image
-                    src="/illustrations/contact-map.png"
+                    src={contactMapImage}
                     alt="Illustration Treffpunkt und Limmat"
                     width={720}
                     height={480}
@@ -977,12 +1036,11 @@ export default async function AdminLandingWysiwygPage() {
                       placeholder="Button 1"
                     />
                   </Button>
-                  <EditableInput
-                    path="homeSections.cta.primary.href"
-                    value={homeSections.cta?.primary?.href || ""}
-                    placeholder="/kontakt"
-                    className="w-full"
-                  />
+                  {renderLinkInput(
+                    "homeSections.cta.primary.href",
+                    homeSections.cta?.primary?.href || "",
+                    "/kontakt"
+                  )}
                 </div>
                 <div className="flex flex-col gap-2">
                   <Button
@@ -996,12 +1054,11 @@ export default async function AdminLandingWysiwygPage() {
                       placeholder="Button 2"
                     />
                   </Button>
-                  <EditableInput
-                    path="homeSections.cta.secondary.href"
-                    value={homeSections.cta?.secondary?.href || ""}
-                    placeholder="/schnupperstunden"
-                    className="w-full"
-                  />
+                  {renderLinkInput(
+                    "homeSections.cta.secondary.href",
+                    homeSections.cta?.secondary?.href || "",
+                    "/schnupperstunden"
+                  )}
                 </div>
                 <div className="flex flex-col gap-2">
                   <Button
@@ -1015,12 +1072,11 @@ export default async function AdminLandingWysiwygPage() {
                       placeholder="Button 3"
                     />
                   </Button>
-                  <EditableInput
-                    path="homeSections.cta.tertiary.href"
-                    value={homeSections.cta?.tertiary?.href || ""}
-                    placeholder="/gutscheine"
-                    className="w-full"
-                  />
+                  {renderLinkInput(
+                    "homeSections.cta.tertiary.href",
+                    homeSections.cta?.tertiary?.href || "",
+                    "/gutscheine"
+                  )}
                 </div>
               </div>
             </div>

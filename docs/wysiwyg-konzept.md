@@ -5,16 +5,17 @@ Einen **WYSIWYG‑Editor** im Admin bereitstellen, der die **Landing Page** (Sta
 
 ## Umfang (Scope)
 Bearbeitbar (inline, mit Autosave):
-- **Hero**: Titel, Beschreibung, Button‑Texte und Links.
+- **Hero**: Titel, Beschreibung, Button‑Texte. Links nur durch Super Admin.
 - **USP‑Kacheln**: Titel + Beschreibung.
 - **Startseiten‑Sektionen** (SectionHeader): Eyebrow, Titel, Beschreibung.
-- **Kursformate‑Karten** (categorySummaries): Titel, Beschreibung, Link.
+- **Kursformate‑Karten** (categorySummaries): Titel, Beschreibung. Links nur durch Super Admin.
 - **Lernpfad** (coursePathSteps): Stufe, Titel, Detail.
 - **Über‑uns Teaser**: Titel, Beschreibung, Highlights, Notiz.
 - **FAQ**: Frage + Antwort.
 - **Testimonials**: Zitat + Autor.
-- **CTA‑Block**: Titel, Beschreibung, Notiz, Button‑Texte + Links.
+- **CTA‑Block**: Titel, Beschreibung, Notiz, Button‑Texte. Links nur durch Super Admin.
 - **Kontakt‑Daten** (contact): Name, Adresse, Telefon, Mobile, E‑Mail.
+- **Landing‑Bilder**: Privatlektion‑Illustration und Kontakt‑Illustration.
 
 Nicht editierbar (nur Anzeige):
 - **Dynamische Daten**: Kurse/Termine, Buchungen, Wetter, Berichte‑Liste.
@@ -41,7 +42,7 @@ Nicht editierbar (nur Anzeige):
    - `EditableInput` für Links/URLs.
    - Debounce + Autosave via `/api/admin/landing-wysiwyg`.
 4) **API**: Patch‑Updates auf `siteSettings` (pro Feld).
-5) **Sicherheit**: Admin‑Session erforderlich.
+5) **Sicherheit**: Admin‑Session erforderlich. Link‑Änderungen sind auf Super Admin beschränkt.
 
 ## Risiken / Grenzen
 - Änderungen wirken **direkt live** (keine „Draft/Preview“). Optional später ergänzen.

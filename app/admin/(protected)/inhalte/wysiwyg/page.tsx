@@ -37,6 +37,15 @@ const formatMetric = (value: number | null | undefined, unit: string) => {
   return `${Math.round(value)}${unit}`;
 };
 
+type FaqItem = {
+  question: string;
+  answer: string;
+  editable: boolean;
+  questionPath?: string;
+  answerPath?: string;
+  hint?: string;
+};
+
 export default async function AdminLandingWysiwygPage() {
   const selectedWeatherId = weatherLocations[0]?.id;
   const [settings, upcomingSessions, reports, privateLesson, weather] =
@@ -71,10 +80,12 @@ export default async function AdminLandingWysiwygPage() {
   };
   const homeSections = (settings.homeSections ?? {}) as {
     upcoming?: { eyebrow?: string; title?: string; description?: string };
-    formats?: { eyebrow?: string; title?: string; description?: string };
     timeline?: { eyebrow?: string; title?: string; description?: string };
     reports?: { eyebrow?: string; title?: string; description?: string };
-    faq?: { eyebrow?: string; title?: string; description?: string };
+    private?: { eyebrow?: string; title?: string; description?: string };
+    links?: { eyebrow?: string; title?: string; description?: string };
+    weather?: { eyebrow?: string; title?: string; description?: string };
+    contact?: { eyebrow?: string; title?: string; description?: string };
     media?: { privateLessonImage?: string; contactMapImage?: string };
     cta?: {
       title?: string;
@@ -100,6 +111,19 @@ export default async function AdminLandingWysiwygPage() {
     highlights?: string[];
     note?: string;
   };
+  const aboutPage = (settings.aboutPage ?? null) as {
+    title?: string;
+    intro?: string;
+    bio?: string;
+    highlights?: string[];
+    values?: string[];
+    cta?: {
+      title?: string;
+      description?: string;
+      primary?: { label?: string; href?: string };
+      secondary?: { label?: string; href?: string };
+    };
+  } | null;
   const faqs = (settings.faqs ?? []) as { question?: string; answer?: string }[];
   const testimonials = (settings.testimonials ?? []) as {
     quote?: string;
@@ -134,6 +158,93 @@ export default async function AdminLandingWysiwygPage() {
     description?: string;
     href?: string;
   }[];
+  const privateSection = homeSections.private ?? {
+    eyebrow: "Privatlektion",
+    title: "Individuelles Coaching am Wasser",
+    description:
+      "Wir richten uns nach deinem Niveau: Technik verfeinern, Gewässer lesen lernen oder gezielt Fehler korrigieren.",
+  };
+  const linksSection = homeSections.links ?? {
+    eyebrow: "Links",
+    title: "Links & Berichte",
+    description:
+      "Empfehlungen zu Vereinen, Gewässern und Ausrüstung sowie Hinweise zu SFV und Instruktorenkursen.",
+  };
+  const weatherSection = homeSections.weather ?? {
+    eyebrow: "Wetter",
+    title: `Vorhersage für ${weather?.location || "Geroldswil"}`,
+    description:
+      "Wind, Niederschlag und Luftdruck – die wichtigsten Faktoren fürs Fliegenfischen.",
+  };
+  const contactSection = homeSections.contact ?? {
+    eyebrow: "Kontakt",
+    title: "Lass uns deinen Termin planen",
+    description:
+      "Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausrüstung und Terminen.",
+  };
+  const courseFormatFaqs = categorySummaries
+    .filter((item) =>
+      ["/kurse", "/schnupperstunden"].some((path) => item.href?.startsWith(path))
+    )
+    .map((item) => ({
+      question: `Was beinhaltet ${item.title}?`,
+      answer: item.description || "",
+      editable: false,
+      hint: "aus Kursformaten",
+    }));
+  const privateFormatFaqs = categorySummaries
+    .filter((item) => item.href?.startsWith("/privatunterricht"))
+    .map((item) => ({
+      question: `Was beinhaltet ${item.title}?`,
+      answer: item.description || "",
+      editable: false,
+      hint: "aus Kursformaten",
+    }));
+  const voucherFaqs = categorySummaries
+    .filter((item) => item.href?.startsWith("/gutscheine"))
+    .map((item) => ({
+      question: "Gibt es Gutscheine?",
+      answer: item.description || "",
+      editable: false,
+      hint: "aus Gutschein-Texten",
+    }));
+  const baseFaqs = faqs.map((faq, index) => ({
+    question: faq.question || "",
+    answer: faq.answer || "",
+    editable: true,
+    questionPath: `faqs.${index}.question`,
+    answerPath: `faqs.${index}.answer`,
+  }));
+  const courseFaqs: FaqItem[] = [
+    ...baseFaqs,
+    ...courseFormatFaqs,
+    ...voucherFaqs,
+  ];
+  const privateFaqs: FaqItem[] = privateLesson
+    ? [
+        {
+          question: "Wie läuft eine Privatlektion ab?",
+          answer:
+            "Wir stimmen Ziel, Ort und Termin individuell ab. Am Wasser gibt es direktes Feedback, Übungen und klare nächste Schritte.",
+          editable: false,
+          hint: "Standardtext",
+        },
+        {
+          question: "Wie lange dauert eine Privatlektion?",
+          answer: `Mindestens ${privateLesson.minHours} Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.`,
+          editable: false,
+          hint: "Standardtext",
+        },
+        {
+          question: "Brauche ich eigene Ausrüstung?",
+          answer:
+            "Ruten und Schnüre können auf Anfrage gestellt werden. Eigene Ausrüstung ist aber jederzeit willkommen.",
+          editable: false,
+          hint: "Standardtext",
+        },
+        ...privateFormatFaqs,
+      ]
+    : [];
   const nextSession = upcomingSessions[0] ?? null;
   const dayFormatter = new Intl.DateTimeFormat("de-CH", {
     weekday: "short",
@@ -328,65 +439,97 @@ export default async function AdminLandingWysiwygPage() {
             <div className="mt-8">
               <CourseGrid sessions={upcomingSessions} />
             </div>
-          </div>
-        </section>
-
-        <section className="bg-white py-12">
-          <div className="mx-auto w-full max-w-5xl px-4">
-            <SectionHeader
-              eyebrow={
-                <EditableText
-                  path="homeSections.formats.eyebrow"
-                  value={homeSections.formats?.eyebrow || ""}
-                  placeholder="Eyebrow"
-                />
-              }
-              title={
-                <EditableText
-                  path="homeSections.formats.title"
-                  value={homeSections.formats?.title || ""}
-                  placeholder="Titel"
-                />
-              }
-              description={
-                <EditableText
-                  path="homeSections.formats.description"
-                  value={homeSections.formats?.description || ""}
-                  placeholder="Beschreibung"
-                  multiline
-                />
-              }
-            />
-            <div className="mt-8 grid gap-6 md:grid-cols-3">
-              {categorySummaries.map((category, index) => (
-                <div
-                  key={`category-${index}`}
-                  className="rounded-xl border border-[var(--color-border)] bg-white p-6"
-                >
-                  <h3 className="font-display text-xl font-semibold text-[var(--color-text)]">
-                    <EditableText
-                      path={`categorySummaries.${index}.title`}
-                      value={category.title || ""}
-                      placeholder="Titel"
-                    />
-                  </h3>
-                  <p className="mt-3 text-sm text-[var(--color-muted)]">
-                    <EditableText
-                      path={`categorySummaries.${index}.description`}
-                      value={category.description || ""}
-                      placeholder="Beschreibung"
-                      multiline
-                    />
-                  </p>
-                  <div className="mt-4 text-xs text-[var(--color-muted)]">
-                    {renderLinkInput(
-                      `categorySummaries.${index}.href`,
-                      category.href || "",
-                      "/kurse/termine"
-                    )}
-                  </div>
+            {courseFaqs.length ? (
+              <div className="mt-12">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                  FAQ
+                </p>
+                <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
+                  Häufige Fragen zu Kursen
+                </h3>
+                <div className="mt-5 space-y-3">
+                  {courseFaqs.map((faq, index) => (
+                    <details
+                      key={`course-faq-${index}`}
+                      className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4"
+                    >
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-[var(--color-text)]">
+                        <span>
+                          {faq.editable ? (
+                            <EditableText
+                              path={faq.questionPath || ""}
+                              value={faq.question}
+                              placeholder="Frage"
+                            />
+                          ) : (
+                            faq.question
+                          )}
+                        </span>
+                        <span className="text-xl text-[var(--color-forest)] transition-transform duration-200 group-open:rotate-45">
+                          +
+                        </span>
+                      </summary>
+                      <div className="mt-3 text-sm text-[var(--color-muted)]">
+                        {faq.editable ? (
+                          <EditableText
+                            path={faq.answerPath || ""}
+                            value={faq.answer}
+                            placeholder="Antwort"
+                            multiline
+                          />
+                        ) : (
+                          <p>{faq.answer}</p>
+                        )}
+                        {!faq.editable && faq.hint ? (
+                          <p className="mt-2 text-xs text-[var(--color-muted)]/70">
+                            Quelle: {faq.hint}
+                          </p>
+                        ) : null}
+                      </div>
+                    </details>
+                  ))}
                 </div>
-              ))}
+              </div>
+            ) : null}
+            <div className="mt-10 rounded-2xl border border-[var(--color-border)] bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                FAQ-Quellen (Kursformate)
+              </p>
+              <p className="mt-2 text-xs text-[var(--color-muted)]">
+                Diese Inhalte fliessen in die FAQ-Bereiche bei Kursen,
+                Privatlektionen und Gutscheinen ein.
+              </p>
+              <div className="mt-4 grid gap-6 md:grid-cols-3">
+                {categorySummaries.map((category, index) => (
+                  <div
+                    key={`category-${index}`}
+                    className="rounded-xl border border-[var(--color-border)] bg-white p-4"
+                  >
+                    <h3 className="font-display text-lg font-semibold text-[var(--color-text)]">
+                      <EditableText
+                        path={`categorySummaries.${index}.title`}
+                        value={category.title || ""}
+                        placeholder="Titel"
+                      />
+                    </h3>
+                    <p className="mt-2 text-sm text-[var(--color-muted)]">
+                      <EditableText
+                        path={`categorySummaries.${index}.description`}
+                        value={category.description || ""}
+                        placeholder="Beschreibung"
+                        multiline
+                      />
+                    </p>
+                    <div className="mt-3 text-xs text-[var(--color-muted)]">
+                      {renderLinkInput(
+                        `categorySummaries.${index}.href`,
+                        category.href || "",
+                        "/kurse/termine"
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -439,9 +582,28 @@ export default async function AdminLandingWysiwygPage() {
           <section id="privat" className="bg-[var(--color-sage)] py-12">
             <div className="mx-auto w-full max-w-5xl px-4">
               <SectionHeader
-                eyebrow="Privatlektion"
-                title="Individuelles Coaching am Wasser"
-                description="Wir richten uns nach deinem Niveau: Technik verfeinern, Gewässer lesen lernen oder gezielt Fehler korrigieren."
+                eyebrow={
+                  <EditableText
+                    path="homeSections.private.eyebrow"
+                    value={privateSection.eyebrow || ""}
+                    placeholder="Eyebrow"
+                  />
+                }
+                title={
+                  <EditableText
+                    path="homeSections.private.title"
+                    value={privateSection.title || ""}
+                    placeholder="Titel"
+                  />
+                }
+                description={
+                  <EditableText
+                    path="homeSections.private.description"
+                    value={privateSection.description || ""}
+                    placeholder="Beschreibung"
+                    multiline
+                  />
+                }
               />
               <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
                 <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
@@ -547,6 +709,39 @@ export default async function AdminLandingWysiwygPage() {
                   />
                 </div>
               </div>
+              {privateFaqs.length ? (
+                <div className="mt-12">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                    FAQ
+                  </p>
+                  <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
+                    Häufige Fragen zu Privatlektionen
+                  </h3>
+                  <div className="mt-5 space-y-3">
+                    {privateFaqs.map((faq, index) => (
+                      <details
+                        key={`private-faq-${index}`}
+                        className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4"
+                      >
+                        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-[var(--color-text)]">
+                          <span>{faq.question}</span>
+                          <span className="text-xl text-[var(--color-forest)] transition-transform duration-200 group-open:rotate-45">
+                            +
+                          </span>
+                        </summary>
+                        <div className="mt-3 text-sm text-[var(--color-muted)]">
+                          <p>{faq.answer}</p>
+                          {faq.hint ? (
+                            <p className="mt-2 text-xs text-[var(--color-muted)]/70">
+                              Quelle: {faq.hint}
+                            </p>
+                          ) : null}
+                        </div>
+                      </details>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
             </div>
           </section>
         ) : null}
@@ -557,157 +752,156 @@ export default async function AdminLandingWysiwygPage() {
               eyebrow="Über uns"
               title={
                 <EditableText
-                  path="aboutSection.title"
-                  value={aboutSection.title || ""}
+                  path={aboutPage ? "aboutPage.title" : "aboutSection.title"}
+                  value={aboutPage?.title || aboutSection.title || ""}
                   placeholder="Titel"
                 />
               }
               description={
                 <EditableText
-                  path="aboutSection.description"
-                  value={aboutSection.description || ""}
+                  path={aboutPage ? "aboutPage.intro" : "aboutSection.description"}
+                  value={aboutPage?.intro || aboutSection.description || ""}
                   placeholder="Beschreibung"
                   multiline
                 />
               }
             />
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              {(aboutSection.highlights || []).map((item, index) => (
-                <div
-                  key={`about-${index}`}
-                  className="rounded-xl border border-[var(--color-border)] bg-white p-5 text-sm text-[var(--color-muted)]"
-                >
+            {aboutPage ? (
+              <>
+                <div className="mt-8 grid items-stretch gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+                  <div className="h-full rounded-xl border border-[var(--color-border)] bg-white p-3">
+                    <div className="relative h-full min-h-[320px]">
+                      <Image
+                        src="/illustrations/urs-mueller.png"
+                        alt="Urs Müller am Wasser"
+                        fill
+                        sizes="(min-width: 1024px) 40vw, 100vw"
+                        className="rounded-lg object-cover"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex h-full flex-col gap-4">
+                    <div className="flex-1 space-y-4 rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
+                      <p>
+                        <EditableText
+                          path="aboutPage.bio"
+                          value={aboutPage.bio || ""}
+                          placeholder="Bio"
+                          multiline
+                        />
+                      </p>
+                      <ul className="space-y-2">
+                        {(aboutPage.values || []).map((value, index) => (
+                          <li key={`about-value-${index}`}>
+                            •{" "}
+                            <EditableText
+                              path={`aboutPage.values.${index}`}
+                              value={value}
+                              placeholder="Wert"
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="flex-1 rounded-2xl bg-[var(--color-forest)] p-6 text-white">
+                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+                        Qualifikation
+                      </p>
+                      <ul className="mt-4 space-y-2 text-sm text-white/80">
+                        {(aboutPage.highlights || []).map((item, index) => (
+                          <li key={`about-highlight-${index}`}>
+                            •{" "}
+                            <EditableText
+                              path={`aboutPage.highlights.${index}`}
+                              value={item}
+                              placeholder="Highlight"
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-8 grid gap-8 rounded-2xl border border-[var(--color-border)] bg-white p-10 lg:grid-cols-[1.2fr_0.8fr]">
+                  <div>
+                    <h2 className="font-display text-3xl font-semibold text-[var(--color-text)]">
+                      <EditableText
+                        path="aboutPage.cta.title"
+                        value={aboutPage.cta?.title || ""}
+                        placeholder="CTA Titel"
+                      />
+                    </h2>
+                    <p className="mt-3 text-sm text-[var(--color-muted)]">
+                      <EditableText
+                        path="aboutPage.cta.description"
+                        value={aboutPage.cta?.description || ""}
+                        placeholder="CTA Beschreibung"
+                        multiline
+                      />
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex flex-col gap-2">
+                      <Button href={aboutPage.cta?.primary?.href || "#"} size="lg">
+                        <EditableText
+                          path="aboutPage.cta.primary.label"
+                          value={aboutPage.cta?.primary?.label || ""}
+                          placeholder="Button 1"
+                        />
+                      </Button>
+                      {renderLinkInput(
+                        "aboutPage.cta.primary.href",
+                        aboutPage.cta?.primary?.href || "",
+                        "/kontakt"
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Button
+                        href={aboutPage.cta?.secondary?.href || "#"}
+                        variant="secondary"
+                        size="lg"
+                      >
+                        <EditableText
+                          path="aboutPage.cta.secondary.label"
+                          value={aboutPage.cta?.secondary?.label || ""}
+                          placeholder="Button 2"
+                        />
+                      </Button>
+                      {renderLinkInput(
+                        "aboutPage.cta.secondary.href",
+                        aboutPage.cta?.secondary?.href || "",
+                        "/privatunterricht"
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
+                {(aboutSection.highlights || []).map((item, index) => (
+                  <div
+                    key={`about-${index}`}
+                    className="rounded-xl border border-[var(--color-border)] bg-white p-5 text-sm text-[var(--color-muted)]"
+                  >
+                    <EditableText
+                      path={`aboutSection.highlights.${index}`}
+                      value={item}
+                      placeholder="Highlight"
+                      multiline
+                    />
+                  </div>
+                ))}
+                <div className="rounded-xl border border-[var(--color-border)] bg-white p-5 text-sm text-[var(--color-muted)]">
                   <EditableText
-                    path={`aboutSection.highlights.${index}`}
-                    value={item}
-                    placeholder="Highlight"
+                    path="aboutSection.note"
+                    value={aboutSection.note || ""}
+                    placeholder="Notiz"
                     multiline
                   />
                 </div>
-              ))}
-              <div className="rounded-xl border border-[var(--color-border)] bg-white p-5 text-sm text-[var(--color-muted)]">
-                <EditableText
-                  path="aboutSection.note"
-                  value={aboutSection.note || ""}
-                  placeholder="Notiz"
-                  multiline
-                />
               </div>
-            </div>
+            )}
 
-          </div>
-        </section>
-
-        <section id="berichte" className="bg-white py-12">
-          <div className="mx-auto w-full max-w-5xl px-4">
-            <SectionHeader
-              eyebrow={
-                <EditableText
-                  path="homeSections.reports.eyebrow"
-                  value={homeSections.reports?.eyebrow || ""}
-                  placeholder="Eyebrow"
-                />
-              }
-              title={
-                <EditableText
-                  path="homeSections.reports.title"
-                  value={homeSections.reports?.title || ""}
-                  placeholder="Titel"
-                />
-              }
-              description={
-                <EditableText
-                  path="homeSections.reports.description"
-                  value={homeSections.reports?.description || ""}
-                  placeholder="Beschreibung"
-                  multiline
-                />
-              }
-            />
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {reports.map((report) => {
-                const heroImage =
-                  report.coverImage || extractFirstImage(report.body || "");
-                return (
-                  <Link
-                    key={report.slug}
-                    href={`/berichte/${report.slug}`}
-                    className="group relative overflow-hidden rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
-                  >
-                    {heroImage ? (
-                      <div
-                        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40"
-                        style={{ backgroundImage: `url(${heroImage})` }}
-                      />
-                    ) : null}
-                    <div className="relative z-10">
-                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-                        {report.location} · {report.year}
-                      </p>
-                      <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
-                        {report.title}
-                      </h3>
-                      <p className="mt-2 text-sm text-[var(--color-muted)]">
-                        {report.summary}
-                      </p>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section id="faq" className="bg-[var(--color-pebble)] py-12">
-          <div className="mx-auto w-full max-w-5xl px-4">
-            <SectionHeader
-              eyebrow={
-                <EditableText
-                  path="homeSections.faq.eyebrow"
-                  value={homeSections.faq?.eyebrow || ""}
-                  placeholder="Eyebrow"
-                />
-              }
-              title={
-                <EditableText
-                  path="homeSections.faq.title"
-                  value={homeSections.faq?.title || ""}
-                  placeholder="Titel"
-                />
-              }
-              description={
-                <EditableText
-                  path="homeSections.faq.description"
-                  value={homeSections.faq?.description || ""}
-                  placeholder="Beschreibung"
-                  multiline
-                />
-              }
-            />
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              {faqs.map((faq, index) => (
-                <div
-                  key={`faq-${index}`}
-                  className="rounded-xl border border-[var(--color-border)] bg-white p-5"
-                >
-                  <p className="font-semibold text-[var(--color-text)]">
-                    <EditableText
-                      path={`faqs.${index}.question`}
-                      value={faq.question || ""}
-                      placeholder="Frage"
-                    />
-                  </p>
-                  <p className="mt-2 text-sm text-[var(--color-muted)]">
-                    <EditableText
-                      path={`faqs.${index}.answer`}
-                      value={faq.answer || ""}
-                      placeholder="Antwort"
-                      multiline
-                    />
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -717,9 +911,28 @@ export default async function AdminLandingWysiwygPage() {
         >
           <div className="mx-auto w-full max-w-5xl px-4">
             <SectionHeader
-              eyebrow="Links"
-              title="Wissenswertes & Partner"
-              description="Empfehlungen zu Vereinen, Gewässern und Ausrüstung sowie Hinweise zu SFV und Instruktorenkursen."
+              eyebrow={
+                <EditableText
+                  path="homeSections.links.eyebrow"
+                  value={linksSection.eyebrow || ""}
+                  placeholder="Eyebrow"
+                />
+              }
+              title={
+                <EditableText
+                  path="homeSections.links.title"
+                  value={linksSection.title || ""}
+                  placeholder="Titel"
+                />
+              }
+              description={
+                <EditableText
+                  path="homeSections.links.description"
+                  value={linksSection.description || ""}
+                  placeholder="Beschreibung"
+                  multiline
+                />
+              }
             />
             <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {resourceLinks.map((group) => (
@@ -769,15 +982,91 @@ export default async function AdminLandingWysiwygPage() {
                 </ul>
               </div>
             </div>
+            <div className="mt-12">
+              <SectionHeader
+                eyebrow={
+                  <EditableText
+                    path="homeSections.reports.eyebrow"
+                    value={homeSections.reports?.eyebrow || ""}
+                    placeholder="Eyebrow"
+                  />
+                }
+                title={
+                  <EditableText
+                    path="homeSections.reports.title"
+                    value={homeSections.reports?.title || ""}
+                    placeholder="Titel"
+                  />
+                }
+                description={
+                  <EditableText
+                    path="homeSections.reports.description"
+                    value={homeSections.reports?.description || ""}
+                    placeholder="Beschreibung"
+                    multiline
+                  />
+                }
+              />
+              <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {reports.map((report) => {
+                  const heroImage =
+                    report.coverImage || extractFirstImage(report.body || "");
+                  return (
+                    <Link
+                      key={report.slug}
+                      href={`/berichte/${report.slug}`}
+                      className="group relative overflow-hidden rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
+                    >
+                      {heroImage ? (
+                        <div
+                          className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40"
+                          style={{ backgroundImage: `url(${heroImage})` }}
+                        />
+                      ) : null}
+                      <div className="relative z-10">
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                          {report.location} · {report.year}
+                        </p>
+                        <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
+                          {report.title}
+                        </h3>
+                        <p className="mt-2 text-sm text-[var(--color-muted)]">
+                          {report.summary}
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </section>
 
         <section id="wetter" className="bg-white py-12">
           <div className="mx-auto w-full max-w-5xl px-4">
             <SectionHeader
-              eyebrow="Wetter"
-              title={`Vorhersage für ${weather?.location || "Geroldswil"}`}
-              description="Wind, Niederschlag und Luftdruck – die wichtigsten Faktoren fürs Fliegenfischen."
+              eyebrow={
+                <EditableText
+                  path="homeSections.weather.eyebrow"
+                  value={weatherSection.eyebrow || ""}
+                  placeholder="Eyebrow"
+                />
+              }
+              title={
+                <EditableText
+                  path="homeSections.weather.title"
+                  value={weatherSection.title || ""}
+                  placeholder="Titel"
+                />
+              }
+              description={
+                <EditableText
+                  path="homeSections.weather.description"
+                  value={weatherSection.description || ""}
+                  placeholder="Beschreibung"
+                  multiline
+                />
+              }
             />
             <div className="mt-6 flex flex-wrap items-center gap-3">
               {weatherLocations.map((location) => {
@@ -911,9 +1200,28 @@ export default async function AdminLandingWysiwygPage() {
         <section id="kontakt" className="bg-[var(--color-pebble)] py-12">
           <div className="mx-auto w-full max-w-5xl px-4">
             <SectionHeader
-              eyebrow="Kontakt"
-              title="Lass uns deinen Termin planen"
-              description="Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausrüstung und Terminen."
+              eyebrow={
+                <EditableText
+                  path="homeSections.contact.eyebrow"
+                  value={contactSection.eyebrow || ""}
+                  placeholder="Eyebrow"
+                />
+              }
+              title={
+                <EditableText
+                  path="homeSections.contact.title"
+                  value={contactSection.title || ""}
+                  placeholder="Titel"
+                />
+              }
+              description={
+                <EditableText
+                  path="homeSections.contact.description"
+                  value={contactSection.description || ""}
+                  placeholder="Beschreibung"
+                  multiline
+                />
+              }
             />
             <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
               <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">

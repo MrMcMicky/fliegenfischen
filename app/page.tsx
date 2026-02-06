@@ -85,10 +85,12 @@ export default async function Home({
   };
   const homeSections = settings.homeSections as {
     upcoming: { eyebrow: string; title: string; description: string };
-    formats: { eyebrow: string; title: string; description: string };
     timeline: { eyebrow: string; title: string; description: string };
     reports: { eyebrow: string; title: string; description: string };
-    faq: { eyebrow: string; title: string; description: string };
+    private?: { eyebrow: string; title: string; description: string };
+    links?: { eyebrow: string; title: string; description: string };
+    weather?: { eyebrow: string; title: string; description: string };
+    contact?: { eyebrow: string; title: string; description: string };
     cta: {
       title: string;
       description: string;
@@ -156,6 +158,30 @@ export default async function Home({
       mobile: "",
       email: "",
     };
+  const privateSection = homeSections.private ?? {
+    eyebrow: "Privatlektion",
+    title: "Individuelles Coaching am Wasser",
+    description:
+      "Wir richten uns nach deinem Niveau: Technik verfeinern, Gewässer lesen lernen oder gezielt Fehler korrigieren.",
+  };
+  const linksSection = homeSections.links ?? {
+    eyebrow: "Links",
+    title: "Links & Berichte",
+    description:
+      "Empfehlungen zu Vereinen, Gewässern und Ausrüstung sowie Hinweise zu SFV und Instruktorenkursen.",
+  };
+  const weatherSection = homeSections.weather ?? {
+    eyebrow: "Wetter",
+    title: `Vorhersage für ${weather?.location || "Geroldswil"}`,
+    description:
+      "Wind, Niederschlag und Luftdruck – die wichtigsten Faktoren fürs Fliegenfischen.",
+  };
+  const contactSection = homeSections.contact ?? {
+    eyebrow: "Kontakt",
+    title: "Lass uns deinen Termin planen",
+    description:
+      "Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausrüstung und Terminen.",
+  };
   const categorySummaries = (settings.categorySummaries as {
     title: string;
     description: string;
@@ -289,9 +315,9 @@ export default async function Home({
         >
           <div className="mx-auto w-full max-w-5xl px-4">
             <SectionHeader
-              eyebrow="Privatlektion"
-              title="Individuelles Coaching am Wasser"
-              description="Wir richten uns nach deinem Niveau: Technik verfeinern, Gewässer lesen lernen oder gezielt Fehler korrigieren."
+              eyebrow={privateSection.eyebrow}
+              title={privateSection.title}
+              description={privateSection.description}
             />
             <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
               <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
@@ -474,9 +500,9 @@ export default async function Home({
       >
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
-            eyebrow="Links"
-            title="Links & Berichte"
-            description="Empfehlungen zu Vereinen, Gewässern und Ausrüstung sowie Hinweise zu SFV und Instruktorenkursen."
+            eyebrow={linksSection.eyebrow}
+            title={linksSection.title}
+            description={linksSection.description}
           />
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {resourceLinks.map((group) => (
@@ -570,9 +596,9 @@ export default async function Home({
       <section id="wetter" className="scroll-mt-28 bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
-            eyebrow="Wetter"
-            title={`Vorhersage für ${weather?.location || "Geroldswil"}`}
-            description="Wind, Niederschlag und Luftdruck – die wichtigsten Faktoren fürs Fliegenfischen."
+            eyebrow={weatherSection.eyebrow}
+            title={weatherSection.title}
+            description={weatherSection.description}
           />
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {weatherLocations.map((location) => {
@@ -707,9 +733,9 @@ export default async function Home({
       <section id="kontakt" className="scroll-mt-28 bg-[var(--color-pebble)] py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
-            eyebrow="Kontakt"
-            title="Lass uns deinen Termin planen"
-            description="Melde dich per Telefon oder Mail. Wir beantworten Fragen zu Kursen, Ausrüstung und Terminen."
+            eyebrow={contactSection.eyebrow}
+            title={contactSection.title}
+            description={contactSection.description}
           />
           <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">

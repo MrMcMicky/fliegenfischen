@@ -7,11 +7,11 @@ Einen **WYSIWYG‑Editor** im Admin bereitstellen, der die **Landing Page** (Sta
 Bearbeitbar (inline, mit Autosave):
 - **Hero**: Titel, Beschreibung, Button‑Texte. Links nur durch Super Admin.
 - **USP‑Kacheln**: Titel + Beschreibung.
-- **Startseiten‑Sektionen** (SectionHeader): Eyebrow, Titel, Beschreibung.
-- **Kursformate‑Karten** (categorySummaries): Titel, Beschreibung. Links nur durch Super Admin.
+- **Startseiten‑Sektionen** (SectionHeader): Eyebrow, Titel, Beschreibung (Kurse, Privatlektion, Links, Wetter, Kontakt).
+- **FAQ‑Quellen (Kursformate)**: Titel, Beschreibung. Links nur durch Super Admin.
 - **Lernpfad** (coursePathSteps): Stufe, Titel, Detail.
-- **Über‑uns Teaser**: Titel, Beschreibung, Highlights, Notiz.
-- **FAQ**: Frage + Antwort.
+- **Über‑uns Bereich**: Titel/Intro, Bio, Werte, Highlights sowie CTA‑Texte (Links nur durch Super Admin).
+- **FAQ (Kurse)**: Fragen + Antworten (Basis‑FAQs).
 - **Testimonials**: Zitat + Autor.
 - **CTA‑Block**: Titel, Beschreibung, Notiz, Button‑Texte. Links nur durch Super Admin.
 - **Kontakt‑Daten** (contact): Name, Adresse, Telefon, Mobile, E‑Mail.

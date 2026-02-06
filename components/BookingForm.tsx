@@ -259,6 +259,7 @@ export function BookingForm({
   const inputClass =
     "w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-900 shadow-sm transition focus:border-[var(--color-ember)] focus:outline-none focus:ring-4 focus:ring-[var(--color-ember)]/20";
   const labelClass = "text-sm font-semibold text-slate-700";
+  const fieldClass = "space-y-1";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -269,7 +270,7 @@ export function BookingForm({
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
+            <div className={fieldClass}>
               <label className={labelClass}>Name*</label>
               <input
                 required
@@ -280,7 +281,7 @@ export function BookingForm({
                 placeholder="Vorname Nachname"
               />
             </div>
-            <div className="space-y-2">
+            <div className={fieldClass}>
               <label className={labelClass}>E-Mail*</label>
               <input
                 required
@@ -292,7 +293,7 @@ export function BookingForm({
                 placeholder="name@email.ch"
               />
             </div>
-            <div className="space-y-2">
+            <div className={fieldClass}>
               <label className={labelClass}>Telefon</label>
               <input
                 value={customerPhone}
@@ -305,33 +306,27 @@ export function BookingForm({
           </div>
 
           {type === "COURSE" && session ? (
-            <div className="rounded-xl border border-[var(--color-border)] bg-white p-4">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold text-slate-700">
-                    Teilnehmende
-                  </p>
-                  <p className="text-xs text-slate-500">
-                    Noch {session.availableSpots} Plätze verfügbar
-                  </p>
-                </div>
-                <input
-                  type="number"
-                  min={1}
-                  max={session.availableSpots}
-                  value={quantity}
-                  onChange={(event) => setQuantity(Number(event.target.value))}
-                  disabled={loading}
-                  className={`${inputClass} w-24 text-center`}
-                />
-              </div>
+            <div className={fieldClass}>
+              <label className={labelClass}>Anzahl Teilnehmende</label>
+              <input
+                type="number"
+                min={1}
+                max={session.availableSpots}
+                value={quantity}
+                onChange={(event) => setQuantity(Number(event.target.value))}
+                disabled={loading}
+                className={`${inputClass} w-32 text-center`}
+              />
+              <p className="text-xs text-slate-500">
+                Noch {session.availableSpots} Plätze verfügbar
+              </p>
             </div>
           ) : null}
 
           {(type === "PRIVATE" || type === "TASTER") && lesson ? (
             <div className="rounded-xl border border-[var(--color-border)] bg-white p-4">
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
+                <div className={fieldClass}>
                   <label className={labelClass}>Stunden</label>
                   <input
                     type="number"
@@ -342,7 +337,7 @@ export function BookingForm({
                     className={`${inputClass} w-28`}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className={fieldClass}>
                   <label className={labelClass}>Zusatzpersonen</label>
                   <input
                     type="number"
@@ -388,7 +383,7 @@ export function BookingForm({
                 ))}
               </div>
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
+                <div className={fieldClass}>
                   <label className={labelClass}>Empfänger (optional)</label>
                   <input
                     value={voucherRecipient}
@@ -397,7 +392,7 @@ export function BookingForm({
                     className={inputClass}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className={fieldClass}>
                   <label className={labelClass}>Widmung (optional)</label>
                   <input
                     value={voucherMessage}
@@ -435,7 +430,7 @@ export function BookingForm({
             </p>
           </div>
 
-          <div className="space-y-2">
+          <div className={fieldClass}>
             <label className={labelClass}>Notizen (optional)</label>
             <textarea
               value={notes}

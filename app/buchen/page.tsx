@@ -51,7 +51,7 @@ export default async function BookingPage({
         <SectionHeader
           eyebrow="Buchung"
           title={session.course?.title || "Kurs"}
-          description={`${formatDate(session.date)} · ${session.startTime}-${session.endTime} · ${session.location}`}
+          description=""
         />
         <div className="flex flex-wrap gap-3 text-xs font-semibold text-[var(--color-forest)]">
           <span className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/80 px-3 py-1.5">

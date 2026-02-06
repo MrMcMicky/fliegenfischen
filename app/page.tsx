@@ -129,6 +129,25 @@ export default async function Home({
     media.privateLessonImage || "/illustrations/private-lessons.png";
   const contactMapImage =
     media.contactMapImage || "/illustrations/contact-map.png";
+  const courseFaqs = faqs;
+  const privateFaqs = privateLesson
+    ? [
+        {
+          question: "Wie läuft eine Privatlektion ab?",
+          answer:
+            "Wir stimmen Ziel, Ort und Termin individuell ab. Am Wasser gibt es direktes Feedback, Übungen und klare nächste Schritte.",
+        },
+        {
+          question: "Wie lange dauert eine Privatlektion?",
+          answer: `Mindestens ${privateLesson.minHours} Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.`,
+        },
+        {
+          question: "Brauche ich eigene Ausrüstung?",
+          answer:
+            "Ruten und Schnüre können auf Anfrage gestellt werden. Eigene Ausrüstung ist aber jederzeit willkommen.",
+        },
+      ]
+    : [];
   const contact =
     (settings.contact as {
       instructor: string;
@@ -190,6 +209,34 @@ export default async function Home({
           <div className="mt-8">
             <CourseGrid sessions={upcomingSessions} />
           </div>
+          {courseFaqs.length ? (
+            <div className="mt-12">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                FAQ
+              </p>
+              <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
+                Häufige Fragen zu Kursen
+              </h3>
+              <div className="mt-5 space-y-3">
+                {courseFaqs.map((faq) => (
+                  <details
+                    key={faq.question}
+                    className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4"
+                  >
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-[var(--color-text)]">
+                      <span>{faq.question}</span>
+                      <span className="text-xl text-[var(--color-forest)] transition-transform duration-200 group-open:rotate-45">
+                        +
+                      </span>
+                    </summary>
+                    <p className="mt-3 text-sm text-[var(--color-muted)]">
+                      {faq.answer}
+                    </p>
+                  </details>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -292,6 +339,34 @@ export default async function Home({
                 <TimelineSteps steps={coursePathSteps} />
               </div>
             </div>
+            {privateFaqs.length ? (
+              <div className="mt-12">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                  FAQ
+                </p>
+                <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
+                  Häufige Fragen zu Privatlektionen
+                </h3>
+                <div className="mt-5 space-y-3">
+                  {privateFaqs.map((faq) => (
+                    <details
+                      key={faq.question}
+                      className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4"
+                    >
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-[var(--color-text)]">
+                        <span>{faq.question}</span>
+                        <span className="text-xl text-[var(--color-forest)] transition-transform duration-200 group-open:rotate-45">
+                          +
+                        </span>
+                      </summary>
+                      <p className="mt-3 text-sm text-[var(--color-muted)]">
+                        {faq.answer}
+                      </p>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
         </section>
       ) : null}
@@ -324,7 +399,7 @@ export default async function Home({
         </div>
       </section>
 
-      <section id="berichte" className="bg-white py-12">
+      <section id="berichte" className="bg-[var(--color-river-mist)] py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow={homeSections.reports?.eyebrow}
@@ -365,34 +440,9 @@ export default async function Home({
         </div>
       </section>
 
-      <section id="faq" className="bg-[var(--color-pebble)] py-12">
-        <div className="mx-auto w-full max-w-5xl px-4">
-          <SectionHeader
-            eyebrow={homeSections.faq?.eyebrow}
-            title={homeSections.faq?.title}
-            description={homeSections.faq?.description}
-          />
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {faqs.map((faq) => (
-              <div
-                key={faq.question}
-                className="rounded-xl border border-[var(--color-border)] bg-white p-5"
-              >
-                <p className="font-semibold text-[var(--color-text)]">
-                  {faq.question}
-                </p>
-                <p className="mt-2 text-sm text-[var(--color-muted)]">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section
         id="links"
-        className="section-pattern bg-[var(--color-river-mist)] py-12"
+        className="section-pattern bg-[var(--color-pebble)] py-12"
       >
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader

@@ -138,13 +138,13 @@ export default async function Home({
     <div className="pb-20">
       <HeroSection nextSession={nextSession} hero={homeHero} />
 
-      <section className="-mt-20 bg-white pb-14 pt-0">
+      <section className="bg-white pb-14 pt-12">
         <div className="mx-auto w-full max-w-5xl px-4">
-          <div className="relative z-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {uspItems.map((item) => (
               <div
                 key={item.title}
-                className="group rounded-2xl bg-white p-6 shadow-[0_14px_30px_rgba(15,50,49,0.12)] transition-transform duration-200 hover:-translate-y-1.5 hover:shadow-[0_18px_40px_rgba(15,50,49,0.18)]"
+                className="group rounded-2xl bg-white p-6 text-center shadow-[0_14px_30px_rgba(15,50,49,0.12)] transition-transform duration-200 hover:-translate-y-1.5 hover:shadow-[0_18px_40px_rgba(15,50,49,0.18)]"
               >
                 <UspIcon title={item.title} />
                 <h3 className="mt-4 font-display text-xl font-semibold text-[var(--color-text)]">

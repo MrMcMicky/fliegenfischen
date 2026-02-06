@@ -594,11 +594,7 @@ export default async function AdminLandingWysiwygPage() {
                 />
               </div>
             </div>
-            <div className="mt-6">
-              <Button href="/ueber-uns" variant="secondary" size="sm">
-                Mehr über uns
-              </Button>
-            </div>
+
           </div>
         </section>
 

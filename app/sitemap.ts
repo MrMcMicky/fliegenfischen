@@ -16,7 +16,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/privatunterricht",
     "/schnupperstunden",
     "/gutscheine",
-    "/ueber-uns",
     "/berichte",
     "/kontakt",
     "/rechtliches",

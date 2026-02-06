@@ -21,7 +21,7 @@ export const footerLinks = {
     { label: "Gutscheine", href: "/gutscheine" },
   ],
   resources: [
-    { label: "Über uns", href: "/ueber-uns" },
+    { label: "Über uns", href: "/#ueber" },
     { label: "Berichte", href: "/berichte" },
     { label: "FAQ", href: "/#faq" },
     { label: "Wetter", href: "/wetter" },

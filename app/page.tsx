@@ -165,7 +165,7 @@ export default async function Home({
             {uspItems.map((item) => (
               <div
                 key={item.title}
-                className="group rounded-2xl bg-white p-6 text-center shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] transition-transform duration-200 hover:-translate-y-1.5 hover:shadow-[0_25px_35px_-10px_rgba(0,0,0,0.16),0_12px_15px_-10px_rgba(0,0,0,0.06)]"
+                className="rounded-2xl bg-white p-6 text-center shadow-[0_18px_24px_-8px_rgba(15,50,49,0.08),0_8px_12px_-6px_rgba(15,50,49,0.06)]"
               >
                 <UspIcon title={item.title} />
                 <h3 className="mt-4 font-display text-xl font-semibold text-[var(--color-text)]">

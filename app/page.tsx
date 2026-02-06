@@ -129,25 +129,6 @@ export default async function Home({
     media.privateLessonImage || "/illustrations/private-lessons.png";
   const contactMapImage =
     media.contactMapImage || "/illustrations/contact-map.png";
-  const courseFaqs = faqs;
-  const privateFaqs = privateLesson
-    ? [
-        {
-          question: "Wie läuft eine Privatlektion ab?",
-          answer:
-            "Wir stimmen Ziel, Ort und Termin individuell ab. Am Wasser gibt es direktes Feedback, Übungen und klare nächste Schritte.",
-        },
-        {
-          question: "Wie lange dauert eine Privatlektion?",
-          answer: `Mindestens ${privateLesson.minHours} Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.`,
-        },
-        {
-          question: "Brauche ich eigene Ausrüstung?",
-          answer:
-            "Ruten und Schnüre können auf Anfrage gestellt werden. Eigene Ausrüstung ist aber jederzeit willkommen.",
-        },
-      ]
-    : [];
   const contact =
     (settings.contact as {
       instructor: string;
@@ -167,6 +148,46 @@ export default async function Home({
     description: string;
     href: string;
   }[]) || [];
+  const courseFormatFaqs = categorySummaries
+    .filter((item) =>
+      ["/kurse", "/schnupperstunden"].some((path) => item.href.startsWith(path))
+    )
+    .map((item) => ({
+      question: `Was beinhaltet ${item.title}?`,
+      answer: item.description,
+    }));
+  const privateFormatFaqs = categorySummaries
+    .filter((item) => item.href.startsWith("/privatunterricht"))
+    .map((item) => ({
+      question: `Was beinhaltet ${item.title}?`,
+      answer: item.description,
+    }));
+  const voucherFaqs = categorySummaries
+    .filter((item) => item.href.startsWith("/gutscheine"))
+    .map((item) => ({
+      question: "Gibt es Gutscheine?",
+      answer: item.description,
+    }));
+  const courseFaqs = [...faqs, ...courseFormatFaqs, ...voucherFaqs];
+  const privateFaqs = privateLesson
+    ? [
+        {
+          question: "Wie läuft eine Privatlektion ab?",
+          answer:
+            "Wir stimmen Ziel, Ort und Termin individuell ab. Am Wasser gibt es direktes Feedback, Übungen und klare nächste Schritte.",
+        },
+        {
+          question: "Wie lange dauert eine Privatlektion?",
+          answer: `Mindestens ${privateLesson.minHours} Stunden. Danach entscheiden wir gemeinsam, wie lange es sinnvoll ist.`,
+        },
+        {
+          question: "Brauche ich eigene Ausrüstung?",
+          answer:
+            "Ruten und Schnüre können auf Anfrage gestellt werden. Eigene Ausrüstung ist aber jederzeit willkommen.",
+        },
+        ...privateFormatFaqs,
+      ]
+    : [];
   const nextSession = upcomingSessions[0] ?? null;
   const dayFormatter = new Intl.DateTimeFormat("de-CH", {
     weekday: "short",
@@ -237,32 +258,6 @@ export default async function Home({
               </div>
             </div>
           ) : null}
-        </div>
-      </section>
-
-      <section className="bg-white py-12">
-        <div className="mx-auto w-full max-w-5xl px-4">
-          <SectionHeader
-            eyebrow={homeSections.formats?.eyebrow}
-            title={homeSections.formats?.title}
-            description={homeSections.formats?.description}
-          />
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-            {categorySummaries.map((category) => (
-              <Link
-                key={category.title}
-                href={category.href}
-                className="rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
-              >
-                <h3 className="font-display text-xl font-semibold text-[var(--color-text)]">
-                  {category.title}
-                </h3>
-                <p className="mt-3 text-sm text-[var(--color-muted)]">
-                  {category.description}
-                </p>
-              </Link>
-            ))}
-          </div>
         </div>
       </section>
 

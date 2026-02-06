@@ -18,6 +18,7 @@ export function Header({
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [currentHash, setCurrentHash] = useState<string | null>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
 
@@ -80,6 +81,16 @@ export function Header({
     return () => observer.disconnect();
   }, [isHome, sections]);
 
+  useEffect(() => {
+    if (!isHome) return;
+    const updateHash = () => {
+      setCurrentHash(window.location.hash || null);
+    };
+    updateHash();
+    window.addEventListener("hashchange", updateHash);
+    return () => window.removeEventListener("hashchange", updateHash);
+  }, [isHome]);
+
   const getHash = (href: string) => {
     const index = href.indexOf("#");
     return index === -1 ? null : href.slice(index);
@@ -87,7 +98,10 @@ export function Header({
 
   const isActive = (href: string) => {
     const hash = getHash(href);
-    if (hash && activeSection) return hash === activeSection;
+    if (hash) {
+      if (activeSection) return hash === activeSection;
+      return hash === currentHash;
+    }
     return pathname === href;
   };
 

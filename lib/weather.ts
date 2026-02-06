@@ -225,30 +225,43 @@ export const getWeatherForecast = async (
       );
     }
 
-    let codeFallback: {
-      current_weather?: { weathercode?: number | null };
-      daily?: { weather_code?: Array<number | null> };
-    } | null = null;
-
     const currentWeather = forecast?.current_weather ?? null;
     const daily = forecast?.daily ?? null;
     const needsCodeFallback =
       currentWeather?.weathercode == null ||
       !daily?.weather_code ||
       daily.weather_code.some((value: number | null) => value == null);
+    const needsDailyFallback =
+      !daily?.temperature_2m_max ||
+      daily.temperature_2m_max.some((value: number | null) => value == null) ||
+      !daily?.temperature_2m_min ||
+      daily.temperature_2m_min.some((value: number | null) => value == null);
 
-    if (needsCodeFallback) {
+    let fallbackForecast: {
+      current_weather?: { weathercode?: number | null };
+      daily?: {
+        time?: string[];
+        weather_code?: Array<number | null>;
+        temperature_2m_max?: Array<number | null>;
+        temperature_2m_min?: Array<number | null>;
+        precipitation_sum?: Array<number | null>;
+        precipitation_probability_max?: Array<number | null>;
+        wind_speed_10m_max?: Array<number | null>;
+        wind_gusts_10m_max?: Array<number | null>;
+      };
+    } | null = null;
+
+    if (needsCodeFallback || needsDailyFallback) {
       try {
-        codeFallback = await fetchJson(
+        fallbackForecast = await fetchJson(
           buildForecastUrl({
             latitude,
             longitude,
-            codesOnly: true,
           }).toString(),
           900
         );
       } catch (error) {
-        codeFallback = null;
+        fallbackForecast = null;
       }
     }
 
@@ -264,14 +277,17 @@ export const getWeatherForecast = async (
     }
 
     const currentWeatherCode =
-      currentWeather?.weathercode ?? codeFallback?.current_weather?.weathercode ?? null;
+      currentWeather?.weathercode ??
+      fallbackForecast?.current_weather?.weathercode ??
+      null;
 
-    const current: WeatherNow | null = currentWeather
+    const effectiveCurrent = currentWeather ?? fallbackForecast?.current_weather ?? null;
+    const current: WeatherNow | null = effectiveCurrent
       ? {
-          time: currentWeather.time,
-          temperature: currentWeather.temperature,
-          windSpeed: currentWeather.windspeed,
-          windDirection: currentWeather.winddirection,
+          time: effectiveCurrent.time,
+          temperature: effectiveCurrent.temperature,
+          windSpeed: effectiveCurrent.windspeed,
+          windDirection: effectiveCurrent.winddirection,
           pressure,
           precipitation,
           weatherCode: currentWeatherCode,
@@ -279,19 +295,44 @@ export const getWeatherForecast = async (
       : null;
 
     const dailyData = forecast?.daily ?? {};
-    const fallbackCodes = codeFallback?.daily?.weather_code ?? [];
-    const days: WeatherDay[] = Array.isArray(dailyData?.time)
-      ? dailyData.time.slice(0, 3).map((date: string, index: number) => ({
+    const fallbackDaily = fallbackForecast?.daily ?? {};
+    const dailyTime = Array.isArray(dailyData?.time)
+      ? dailyData.time
+      : Array.isArray(fallbackDaily?.time)
+      ? fallbackDaily.time
+      : [];
+
+    const days: WeatherDay[] = Array.isArray(dailyTime)
+      ? dailyTime.slice(0, 3).map((date: string, index: number) => ({
           date,
-          tempMax: dailyData.temperature_2m_max?.[index] ?? null,
-          tempMin: dailyData.temperature_2m_min?.[index] ?? null,
-          precipitationSum: dailyData.precipitation_sum?.[index] ?? 0,
+          tempMax:
+            dailyData.temperature_2m_max?.[index] ??
+            fallbackDaily.temperature_2m_max?.[index] ??
+            null,
+          tempMin:
+            dailyData.temperature_2m_min?.[index] ??
+            fallbackDaily.temperature_2m_min?.[index] ??
+            null,
+          precipitationSum:
+            dailyData.precipitation_sum?.[index] ??
+            fallbackDaily.precipitation_sum?.[index] ??
+            0,
           precipitationProb:
-            dailyData.precipitation_probability_max?.[index] ?? null,
-          windMax: dailyData.wind_speed_10m_max?.[index] ?? null,
-          windGusts: dailyData.wind_gusts_10m_max?.[index] ?? null,
+            dailyData.precipitation_probability_max?.[index] ??
+            fallbackDaily.precipitation_probability_max?.[index] ??
+            null,
+          windMax:
+            dailyData.wind_speed_10m_max?.[index] ??
+            fallbackDaily.wind_speed_10m_max?.[index] ??
+            null,
+          windGusts:
+            dailyData.wind_gusts_10m_max?.[index] ??
+            fallbackDaily.wind_gusts_10m_max?.[index] ??
+            null,
           weatherCode:
-            dailyData.weather_code?.[index] ?? fallbackCodes?.[index] ?? null,
+            dailyData.weather_code?.[index] ??
+            fallbackDaily.weather_code?.[index] ??
+            null,
         }))
       : [];
 

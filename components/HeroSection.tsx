@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { Button } from "@/components/Button";
 import { formatDate } from "@/lib/format";
@@ -6,20 +7,24 @@ import { formatDate } from "@/lib/format";
 export function HeroSection({
   nextSession,
   hero,
+  compact = false,
 }: {
   nextSession?: { date: Date } | null;
   hero: {
-    title: string;
-    description: string;
-    primaryCta: { label: string; href: string };
-    secondaryCta: { label: string; href: string };
+    title: ReactNode;
+    description: ReactNode;
+    primaryCta: { label: ReactNode; href: string };
+    secondaryCta: { label: ReactNode; href: string };
   };
+  compact?: boolean;
 }) {
   const pillClass =
     "inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/20 px-4 py-1 text-xs font-semibold tracking-[0.25em] text-white backdrop-blur-sm";
 
   return (
-    <section className="relative -mt-20 overflow-hidden pb-16 pt-28">
+    <section
+      className={`relative overflow-hidden pb-16 ${compact ? "pt-24" : "-mt-20 pt-28"}`}
+    >
       <div className="absolute inset-0 -z-10">
         <video
           className="absolute inset-0 h-full w-full object-cover"

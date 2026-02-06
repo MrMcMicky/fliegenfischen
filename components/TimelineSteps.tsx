@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { ReactNode } from "react";
 import { Compass, Fish, Leaf, Sparkles, Waves } from "lucide-react";
 
 const icons = [Leaf, Fish, Sparkles, Compass, Waves];
@@ -8,7 +9,7 @@ const icons = [Leaf, Fish, Sparkles, Compass, Waves];
 export function TimelineSteps({
   steps,
 }: {
-  steps: { step: string; title: string; detail: string }[];
+  steps: { step: ReactNode; title: ReactNode; detail: ReactNode }[];
 }) {
   return (
     <div className="relative">
@@ -17,7 +18,7 @@ export function TimelineSteps({
         const Icon = icons[index % icons.length];
         return (
           <motion.div
-            key={step.step}
+            key={index}
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}

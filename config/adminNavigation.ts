@@ -33,6 +33,7 @@ export const adminNavItems: AdminNavItem[] = [
     href: "/admin/inhalte/texte",
     children: [
       { label: "Texte Frontpage", href: "/admin/inhalte/texte" },
+      { label: "WYSIWYG", href: "/admin/inhalte/wysiwyg" },
       { label: "Berichte", href: "/admin/berichte" },
       { label: "Gutscheine", href: "/admin/gutscheine" },
     ],

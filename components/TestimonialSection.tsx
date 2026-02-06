@@ -1,9 +1,11 @@
+import type { ReactNode } from "react";
+
 export function TestimonialSection({
   section,
   testimonials,
 }: {
-  section: { eyebrow: string; title: string; description: string };
-  testimonials: { quote: string; author: string }[];
+  section: { eyebrow: ReactNode; title: ReactNode; description: ReactNode };
+  testimonials: { quote: ReactNode; author: ReactNode }[];
 }) {
   return (
     <section className="bg-[var(--color-forest)] py-16 text-white">
@@ -18,9 +20,9 @@ export function TestimonialSection({
           <p className="mt-4 text-sm text-white/70">{section.description}</p>
         </div>
         <div className="space-y-4">
-          {testimonials.map((item) => (
+          {testimonials.map((item, index) => (
             <div
-              key={item.quote}
+              key={index}
               className="rounded-2xl border border-white/10 bg-white/5 p-5"
             >
               <p className="text-sm">&ldquo;{item.quote}&rdquo;</p>

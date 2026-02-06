@@ -279,3 +279,67 @@ main section[id] {
   border: 1px solid var(--color-border);
   display: block;
 }
+
+.wysiwyg-editable {
+  position: relative;
+  display: inline-block;
+  min-width: 0.5rem;
+  border-radius: 6px;
+  outline: 1px dashed transparent;
+  padding: 0.1rem 0.2rem;
+  transition: outline-color 0.2s ease, background 0.2s ease;
+}
+
+.wysiwyg-editable:hover {
+  outline-color: rgba(232, 134, 72, 0.45);
+}
+
+.wysiwyg-editable:focus {
+  outline-color: var(--color-ember);
+  background: rgba(232, 134, 72, 0.08);
+}
+
+.wysiwyg-editable[data-status="saving"] {
+  outline-color: rgba(245, 158, 11, 0.8);
+}
+
+.wysiwyg-editable[data-status="saved"] {
+  outline-color: rgba(16, 185, 129, 0.8);
+}
+
+.wysiwyg-editable[data-status="error"] {
+  outline-color: rgba(239, 68, 68, 0.8);
+}
+
+.wysiwyg-editable[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+}
+
+.wysiwyg-input {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--color-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wysiwyg-input:focus {
+  outline: none;
+  border-color: var(--color-ember);
+  box-shadow: 0 0 0 2px rgba(232, 134, 72, 0.18);
+}
+
+.wysiwyg-input[data-status="saving"] {
+  border-color: rgba(245, 158, 11, 0.8);
+}
+
+.wysiwyg-input[data-status="saved"] {
+  border-color: rgba(16, 185, 129, 0.8);
+}
+
+.wysiwyg-input[data-status="error"] {
+  border-color: rgba(239, 68, 68, 0.8);
+}

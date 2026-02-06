@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
@@ -20,6 +20,7 @@ export function Header({
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const manualActiveRef = useRef<{ hash: string; until: number } | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,6 +68,15 @@ export function Header({
 
     const updateActive = () => {
       const offset = 240;
+      const now = Date.now();
+      const manual = manualActiveRef.current;
+      if (manual && now < manual.until && window.location.hash === manual.hash) {
+        setActiveSection(manual.hash);
+        return;
+      }
+      if (manual && now >= manual.until) {
+        manualActiveRef.current = null;
+      }
       const scrollPos = window.scrollY + offset;
       let current: string | null = null;
       elements.forEach((el) => {
@@ -97,6 +107,16 @@ export function Header({
       return hash === activeSection;
     }
     return pathname === href;
+  };
+
+  const handleNavClick = (href: string) => {
+    const hash = getHash(href);
+    if (!hash) return;
+    setActiveSection(hash);
+    manualActiveRef.current = {
+      hash,
+      until: Date.now() + 900,
+    };
   };
 
   const logoWrapClass = isHome && !scrolled
@@ -135,6 +155,7 @@ export function Header({
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => handleNavClick(item.href)}
               className={`transition-colors ${navPillClass} ${
                 isActive(item.href) ? activeNavClass : ""
               }`}
@@ -168,7 +189,10 @@ export function Header({
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  handleNavClick(item.href);
+                  setOpen(false);
+                }}
                 className={`rounded-lg px-3 py-2 text-sm font-semibold ${
                   isActive(item.href)
                     ? "bg-[var(--color-forest)] text-white"

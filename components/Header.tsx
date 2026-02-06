@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
@@ -18,10 +18,8 @@ export function Header({
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [currentHash, setCurrentHash] = useState<string | null>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const visibilityRef = useRef<Map<string, number>>(new Map());
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,49 +65,26 @@ export function Header({
       .filter(Boolean) as HTMLElement[];
     if (elements.length === 0) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const key = `#${entry.target.id}`;
-          visibilityRef.current.set(
-            key,
-            entry.isIntersecting ? entry.intersectionRatio : 0
-          );
-        });
-
-        let best: string | null = null;
-        let bestRatio = 0;
-        visibilityRef.current.forEach((ratio, key) => {
-          if (ratio > bestRatio) {
-            best = key;
-            bestRatio = ratio;
-          }
-        });
-
-        if (best) {
-          setActiveSection(best);
+    const updateActive = () => {
+      const offset = 120;
+      const scrollPos = window.scrollY + offset;
+      let current: string | null = null;
+      elements.forEach((el) => {
+        if (el.offsetTop <= scrollPos) {
+          current = `#${el.id}`;
         }
-      },
-      { rootMargin: "-20% 0px -65% 0px", threshold: 0.1 }
-    );
-
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [isHome, sections]);
-
-  useEffect(() => {
-    if (!isHome) return;
-    const updateHash = () => {
-      const hash = window.location.hash || null;
-      setCurrentHash(hash);
-      if (hash) {
-        setActiveSection(hash);
-      }
+      });
+      setActiveSection(current);
     };
-    updateHash();
-    window.addEventListener("hashchange", updateHash);
-    return () => window.removeEventListener("hashchange", updateHash);
-  }, [isHome]);
+
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    window.addEventListener("resize", updateActive);
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
+    };
+  }, [isHome, sections]);
 
   const getHash = (href: string) => {
     const index = href.indexOf("#");
@@ -119,8 +94,7 @@ export function Header({
   const isActive = (href: string) => {
     const hash = getHash(href);
     if (hash) {
-      if (activeSection) return hash === activeSection;
-      return hash === currentHash;
+      return hash === activeSection;
     }
     return pathname === href;
   };

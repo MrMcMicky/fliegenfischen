@@ -233,7 +233,10 @@ export default async function Home({
         </div>
       </section>
 
-      <section id="kurse" className="bg-[var(--color-river-mist)] py-12">
+      <section
+        id="kurse"
+        className="scroll-mt-28 bg-[var(--color-river-mist)] py-12"
+      >
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow={homeSections.upcoming?.eyebrow}
@@ -280,7 +283,10 @@ export default async function Home({
       />
 
       {privateLesson ? (
-        <section id="privat" className="bg-[var(--color-sage)] py-12">
+        <section
+          id="privat"
+          className="scroll-mt-28 bg-[var(--color-sage)] py-12"
+        >
           <div className="mx-auto w-full max-w-5xl px-4">
             <SectionHeader
               eyebrow="Privatlektion"
@@ -379,7 +385,7 @@ export default async function Home({
         </section>
       ) : null}
 
-      <section id="ueber" className="bg-white py-12">
+      <section id="ueber" className="scroll-mt-28 bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow="Über uns"
@@ -464,7 +470,7 @@ export default async function Home({
 
       <section
         id="links"
-        className="section-pattern bg-[var(--color-pebble)] py-12"
+        className="scroll-mt-28 section-pattern bg-[var(--color-pebble)] py-12"
       >
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
@@ -561,7 +567,7 @@ export default async function Home({
         </div>
       </section>
 
-      <section id="wetter" className="bg-white py-12">
+      <section id="wetter" className="scroll-mt-28 bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow="Wetter"
@@ -698,7 +704,7 @@ export default async function Home({
         </div>
       </section>
 
-      <section id="kontakt" className="bg-[var(--color-pebble)] py-12">
+      <section id="kontakt" className="scroll-mt-28 bg-[var(--color-pebble)] py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow="Kontakt"

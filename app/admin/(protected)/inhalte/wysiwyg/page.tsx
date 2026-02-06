@@ -471,6 +471,14 @@ export default async function AdminLandingWysiwygPage() {
                 <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
                   Häufige Fragen zu Kursen
                 </h3>
+                <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-semibold">
+                  <span className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-[var(--color-text)]">
+                    Editierbar
+                  </span>
+                  <span className="rounded-full border border-[var(--color-border)] bg-white/70 px-3 py-1 text-[var(--color-muted)]">
+                    Abgeleitet (read-only)
+                  </span>
+                </div>
                 <div className="mt-5 space-y-3">
                   {courseFaqs.map((faq, index) => (
                     <details
@@ -744,10 +752,18 @@ export default async function AdminLandingWysiwygPage() {
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
                     FAQ
                   </p>
-                  <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
-                    Häufige Fragen zu Privatlektionen
-                  </h3>
-                  <div className="mt-5 space-y-3">
+                <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
+                  Häufige Fragen zu Privatlektionen
+                </h3>
+                <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-semibold">
+                  <span className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-[var(--color-text)]">
+                    Editierbar
+                  </span>
+                  <span className="rounded-full border border-[var(--color-border)] bg-white/70 px-3 py-1 text-[var(--color-muted)]">
+                    Abgeleitet (read-only)
+                  </span>
+                </div>
+                <div className="mt-5 space-y-3">
                   {privateFaqs.map((faq, index) => (
                     <details
                       key={`private-faq-${index}`}

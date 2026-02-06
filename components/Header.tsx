@@ -130,7 +130,7 @@ export function Header({
     : "rounded-lg bg-transparent";
 
   const activeNavClass =
-    "bg-[var(--color-forest)] text-white shadow-sm";
+    "bg-[var(--color-forest)] text-white shadow-sm pointer-events-none";
 
   return (
     <header

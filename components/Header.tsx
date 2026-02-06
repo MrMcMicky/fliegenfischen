@@ -37,9 +37,9 @@ export function Header({
     : "bg-white/90 backdrop-blur-md border-b border-[var(--color-border)] text-[var(--color-text)]";
   const navPillClass = isHome
     ? scrolled
-      ? "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold hover:bg-[var(--color-forest)]/15"
-      : "rounded-full bg-black/35 px-3 py-1.5 text-white/95 font-semibold backdrop-blur-sm hover:bg-black/45"
-    : "rounded-full bg-[var(--color-forest)]/10 px-3 py-1.5 text-[var(--color-forest)] font-semibold hover:bg-[var(--color-forest)]/15";
+      ? "rounded-full px-3 py-1.5 text-[var(--color-forest)] font-semibold transition-colors hover:bg-[var(--color-forest)]/10"
+      : "rounded-full px-3 py-1.5 text-white/85 font-semibold transition-colors hover:bg-black/35 hover:text-white"
+    : "rounded-full px-3 py-1.5 text-[var(--color-forest)] font-semibold transition-colors hover:bg-[var(--color-forest)]/10";
   const menuButtonClass = isHome
     ? scrolled
       ? "border-[var(--color-border)] bg-white/90 text-[var(--color-text)]"
@@ -95,11 +95,8 @@ export function Header({
     ? "rounded-lg bg-transparent"
     : "rounded-lg bg-transparent";
 
-  const activeNavClass = isHome
-    ? scrolled
-      ? "ring-1 ring-[var(--color-ember)]/45 bg-[var(--color-ember)]/20 text-[var(--color-forest)] shadow-sm"
-      : "ring-1 ring-white/45 bg-white/20 text-white shadow-sm"
-    : "ring-1 ring-[var(--color-ember)]/45 bg-[var(--color-ember)]/20 text-[var(--color-forest)] shadow-sm";
+  const activeNavClass =
+    "bg-[var(--color-forest)] text-white shadow-sm";
 
   return (
     <header
@@ -166,7 +163,7 @@ export function Header({
                 onClick={() => setOpen(false)}
                 className={`rounded-lg px-3 py-2 text-sm font-semibold ${
                   isActive(item.href)
-                    ? "bg-[var(--color-ember)]/15 text-[var(--color-ember)]"
+                    ? "bg-[var(--color-forest)] text-white"
                     : "bg-[var(--color-forest)]/10 text-[var(--color-forest)]"
                 }`}
               >

@@ -273,7 +273,7 @@ export default async function Home({
 
       <section
         id="kurse"
-        className="scroll-mt-20 section-pattern bg-[var(--color-pebble)] py-12"
+        className="scroll-mt-20 bg-[var(--color-pebble)] py-12"
       >
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader

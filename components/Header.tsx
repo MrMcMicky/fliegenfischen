@@ -70,6 +70,31 @@ export function Header({
     return null;
   }, [isHome, pathname]);
 
+  const subTitle = useMemo(() => {
+    if (isHome) return null;
+    const segments = pathname.split("/").filter(Boolean);
+    if (segments.length === 0) return null;
+    const humanize = (slug: string) =>
+      slug
+        .split("-")
+        .filter(Boolean)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    if (segments[0] === "berichte") {
+      if (segments[1]) return `Bericht: ${humanize(segments[1])}`;
+      return "Berichte";
+    }
+    if (segments[0] === "kurse") {
+      if (segments[1]) return `Kurs: ${humanize(segments[1])}`;
+      return "Kurse";
+    }
+    if (segments[0] === "privatunterricht") return "Privatlektion";
+    if (segments[0] === "gutscheine") return "Gutschein";
+    if (segments[0] === "buchen") return "Buchung";
+    if (segments[0] === "kontakt") return "Kontakt";
+    return null;
+  }, [isHome, pathname]);
+
   useEffect(() => {
     if (!isHome || sections.length === 0) return;
 
@@ -231,6 +256,13 @@ export function Header({
             <Button href="/gutscheine" size="sm" className="w-fit">
               Gutschein
             </Button>
+          </div>
+        </div>
+      ) : null}
+      {!isHome && subTitle ? (
+        <div className="border-t border-[var(--color-border)] bg-white/90">
+          <div className="mx-auto w-full max-w-5xl px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+            {subTitle}
           </div>
         </div>
       ) : null}

@@ -32,7 +32,7 @@ export default async function AdminLayout({
         adminName={admin.name}
         isSuperAdmin={admin.role === "SUPER_ADMIN"}
         badges={{
-          "/admin/kurse": openBookingCount,
+          "/admin/buchungen": openBookingCount,
           "/admin/anfragen": openContactCount,
         }}
       >

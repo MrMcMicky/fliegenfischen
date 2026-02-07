@@ -91,11 +91,12 @@ export default function AdminNavigation({
             {filteredItems.map((item) => {
               const isActive = isTopActive(item.href, item.children);
               const badgeValue = badges?.[item.href] ?? 0;
+              const showTopBadge = badgeValue > 0 && !(item.children && item.children.length);
               return (
                 <li key={item.href} className={isActive ? styles.activeTop : ""}>
                   <Link href={item.href}>
                     <span className={styles.linkLabel}>{item.label}</span>
-                    {badgeValue > 0 ? (
+                    {showTopBadge ? (
                       <span className={styles.navBadge} aria-label={`${badgeValue}`}>
                         {badgeValue}
                       </span>
@@ -121,6 +122,7 @@ export default function AdminNavigation({
               {activeTop.children.map((subItem) => {
                 const isSubActive = isPathActive(pathname, subItem.href);
                 const Icon = sideNavIcons[subItem.href];
+                const badgeValue = badges?.[subItem.href] ?? 0;
                 return (
                   <li key={subItem.href}>
                     <Link
@@ -129,6 +131,11 @@ export default function AdminNavigation({
                     >
                       {Icon ? <Icon className={styles.sideIcon} aria-hidden="true" /> : null}
                       <span>{subItem.label}</span>
+                      {badgeValue > 0 ? (
+                        <span className={styles.sideBadge} aria-label={`${badgeValue}`}>
+                          {badgeValue}
+                        </span>
+                      ) : null}
                     </Link>
                   </li>
                 );

@@ -365,6 +365,49 @@ export async function sendInvoiceMail(payload: InvoiceEmailPayload) {
     .filter(Boolean)
     .join("\n");
 
+  const html = `
+    <div style="font-family: Arial, Helvetica, sans-serif; color: #1f2937; line-height: 1.5;">
+      <h2 style="margin: 0 0 8px; color: #0f3231;">Rechnung ${payload.invoiceNumber}</h2>
+      <p style="margin: 0 0 16px;">Hallo ${payload.customerName},</p>
+      <p style="margin: 0 0 16px;">vielen Dank für deine Anfrage. Anbei findest du die Rechnung als PDF.</p>
+      <table style="border-collapse: collapse; margin: 0 0 16px;">
+        <tr>
+          <td style="padding: 4px 16px 4px 0; color: #475569;">Rechnung</td>
+          <td style="padding: 4px 0; font-weight: 600;">${payload.invoiceNumber}</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 16px 4px 0; color: #475569;">Betrag</td>
+          <td style="padding: 4px 0; font-weight: 600;">CHF ${payload.amountCHF}</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 16px 4px 0; color: #475569;">Fällig bis</td>
+          <td style="padding: 4px 0; font-weight: 600;">${dueDate}</td>
+        </tr>
+      </table>
+      <p style="margin: 0 0 20px; color: #475569;">
+        Anmeldung und Platzreservation sind erst nach Zahlungseingang gültig.
+      </p>
+      ${
+        payload.invoiceUrl
+          ? `<p style="margin: 0 0 24px;">
+              <a href="${payload.invoiceUrl}" style="display: inline-block; background: #E88648; color: #ffffff; text-decoration: none; padding: 10px 16px; border-radius: 999px; font-weight: 600;">
+                Rechnung online ansehen
+              </a>
+            </p>`
+          : ""
+      }
+      <p style="margin: 0 0 16px; color: #475569;">Bei Fragen antworte bitte auf diese E-Mail.</p>
+      <p style="margin: 16px 0 0;">
+        Petri Heil<br />
+        Urs Müller<br />
+        Fliegenfischerschule Urs Müller<br />
+        Geroldswil / Limmat / Zürich<br />
+        fliegenfischer-schule.shop<br />
+        info@fliegenfischer-schule.shop
+      </p>
+    </div>
+  `;
+
   await transporter.sendMail({
     to: payload.to,
     bcc: bcc || undefined,
@@ -372,6 +415,7 @@ export async function sendInvoiceMail(payload: InvoiceEmailPayload) {
     replyTo: getReplyTo(),
     subject: `Rechnung ${payload.invoiceNumber} – Fliegenfischerschule Urs Müller`,
     text: lines,
+    html,
     attachments: [
       {
         filename: `Rechnung-${payload.invoiceNumber}.pdf`,

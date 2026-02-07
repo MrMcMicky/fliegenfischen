@@ -33,7 +33,11 @@ const formatInvoiceNumber = (bookingId: string) =>
 
 const getEnvLines = (key: string) => {
   const raw = process.env[key] || "";
-  return raw
+  const normalized = raw
+    .replace(/\\r\\n/g, "\n")
+    .replace(/\\n/g, "\n")
+    .replace(/\\r/g, "\n");
+  return normalized
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);

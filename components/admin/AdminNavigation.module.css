@@ -133,7 +133,7 @@
   grid-template-columns: 220px minmax(0, 1fr);
   gap: 2rem;
   width: 100%;
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
   align-items: start;

@@ -21,6 +21,8 @@ type BookingRow = {
 };
 
 type SortKey = "newest" | "oldest" | "status" | "amount" | "name";
+type SortField = "date" | "customer" | "type" | "amount" | "status";
+type SortDirection = "asc" | "desc";
 
 const statusOptions: { value: BookingStatus; label: string }[] = [
   { value: "PENDING", label: "Offen" },
@@ -41,6 +43,8 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
   const [rows, setRows] = useState<BookingRow[]>(initialRows);
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("newest");
+  const [sortField, setSortField] = useState<SortField>("date");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [invoicePendingId, setInvoicePendingId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -56,24 +60,64 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
         )
       : rows;
 
+    const direction = sortDirection === "asc" ? 1 : -1;
     return [...list].sort((a, b) => {
-      if (sortKey === "newest") {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (sortField === "date") {
+        return (
+          (new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()) *
+          direction
+        );
       }
-      if (sortKey === "oldest") {
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      if (sortField === "amount") {
+        return (a.amountCHF - b.amountCHF) * direction;
       }
-      if (sortKey === "amount") {
-        return b.amountCHF - a.amountCHF;
+      if (sortField === "customer") {
+        return a.customerName.localeCompare(b.customerName) * direction;
       }
-      if (sortKey === "name") {
-        return a.customerName.localeCompare(b.customerName);
+      if (sortField === "type") {
+        const labelA = bookingTypeLabels[a.type] || a.type;
+        const labelB = bookingTypeLabels[b.type] || b.type;
+        return labelA.localeCompare(labelB) * direction;
       }
       const labelA = bookingStatusLabels[a.status] || a.status;
       const labelB = bookingStatusLabels[b.status] || b.status;
-      return labelA.localeCompare(labelB);
+      return labelA.localeCompare(labelB) * direction;
     });
-  }, [rows, query, sortKey]);
+  }, [rows, query, sortField, sortDirection]);
+
+  const applySortPreset = (value: SortKey) => {
+    setSortKey(value);
+    if (value === "newest") {
+      setSortField("date");
+      setSortDirection("desc");
+    } else if (value === "oldest") {
+      setSortField("date");
+      setSortDirection("asc");
+    } else if (value === "amount") {
+      setSortField("amount");
+      setSortDirection("desc");
+    } else if (value === "name") {
+      setSortField("customer");
+      setSortDirection("asc");
+    } else {
+      setSortField("status");
+      setSortDirection("asc");
+    }
+  };
+
+  const handleHeaderSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+      return;
+    }
+    setSortField(field);
+    setSortDirection(field === "date" || field === "amount" ? "desc" : "asc");
+  };
+
+  const getSortIndicator = (field: SortField) => {
+    if (sortField !== field) return "↕";
+    return sortDirection === "asc" ? "↑" : "↓";
+  };
 
   const handleStatusChange = (id: string, status: BookingStatus) => {
     const previousStatus = rows.find((row) => row.id === id)?.status;
@@ -114,7 +158,7 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
           />
           <select
             value={sortKey}
-            onChange={(event) => setSortKey(event.target.value as SortKey)}
+            onChange={(event) => applySortPreset(event.target.value as SortKey)}
             className="form-input px-3 py-2 text-sm"
           >
             <option value="newest">Neueste zuerst</option>
@@ -133,11 +177,51 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
         <table className="min-w-full text-sm">
           <thead className="bg-[var(--color-stone)] text-xs uppercase tracking-[0.2em] text-[var(--color-muted)]">
             <tr>
-              <th className="px-4 py-3 text-left">Datum</th>
-              <th className="px-4 py-3 text-left">Kunde</th>
-              <th className="px-4 py-3 text-left">Typ</th>
-              <th className="px-4 py-3 text-left">Betrag</th>
-              <th className="px-4 py-3 text-left">Status</th>
+              <th className="px-4 py-3 text-left">
+                <button
+                  type="button"
+                  onClick={() => handleHeaderSort("date")}
+                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                >
+                  Datum <span className="text-[10px]">{getSortIndicator("date")}</span>
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left">
+                <button
+                  type="button"
+                  onClick={() => handleHeaderSort("customer")}
+                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                >
+                  Kunde <span className="text-[10px]">{getSortIndicator("customer")}</span>
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left">
+                <button
+                  type="button"
+                  onClick={() => handleHeaderSort("type")}
+                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                >
+                  Typ <span className="text-[10px]">{getSortIndicator("type")}</span>
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left">
+                <button
+                  type="button"
+                  onClick={() => handleHeaderSort("amount")}
+                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                >
+                  Betrag <span className="text-[10px]">{getSortIndicator("amount")}</span>
+                </button>
+              </th>
+              <th className="px-4 py-3 text-left">
+                <button
+                  type="button"
+                  onClick={() => handleHeaderSort("status")}
+                  className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                >
+                  Status <span className="text-[10px]">{getSortIndicator("status")}</span>
+                </button>
+              </th>
               <th className="px-4 py-3 text-left">Aktionen</th>
             </tr>
           </thead>
@@ -145,6 +229,17 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
             {filteredRows.map((row) => {
               const isInvoice = row.paymentMode === "INVOICE";
               const isPendingRow = pendingId === row.id;
+              const statusLabel = bookingStatusLabels[row.status] ?? row.status;
+              const statusClass =
+                row.status === "PAID"
+                  ? "bg-emerald-100 text-emerald-800"
+                  : row.status === "INVOICE_REQUESTED"
+                    ? "bg-amber-100 text-amber-800"
+                    : row.status === "PAYMENT_PENDING"
+                      ? "bg-blue-100 text-blue-800"
+                      : row.status === "CANCELLED"
+                        ? "bg-rose-100 text-rose-800"
+                        : "bg-gray-100 text-gray-700";
               return (
                 <tr key={row.id} className="border-t border-[var(--color-border)]">
                   <td className="px-4 py-4 align-top text-[var(--color-muted)]">
@@ -184,11 +279,16 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
                         </option>
                       ))}
                     </select>
-                    <p className="mt-1 text-xs text-[var(--color-muted)]">
-                      {row.paymentMode === "STRIPE"
-                        ? `Stripe bestätigt: ${row.stripeConfirmed ? "Ja" : "Nein"}`
-                        : "Rechnung / manuell"}
-                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                      <span className={`rounded-full px-2 py-1 text-[11px] font-semibold ${statusClass}`}>
+                        {statusLabel}
+                      </span>
+                      <span className="text-[var(--color-muted)]">
+                        {row.paymentMode === "STRIPE"
+                          ? `Stripe bestätigt: ${row.stripeConfirmed ? "Ja" : "Nein"}`
+                          : "Rechnung / manuell"}
+                      </span>
+                    </div>
                     {isPendingRow ? (
                       <p className="mt-1 text-[11px] text-[var(--color-ember)]">
                         Speichert...

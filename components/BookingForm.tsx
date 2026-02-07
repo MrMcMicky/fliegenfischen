@@ -426,7 +426,8 @@ export function BookingForm({
             </div>
             <p className="mt-3 text-xs text-[var(--color-muted)]">
               Sofortzahlung via Stripe (TWINT, Visa, Mastercard). Bei Rechnung
-              schicken wir dir die Zahlungsdetails per E-Mail.
+              schicken wir dir die Zahlungsdetails per E-Mail. Die
+              Platzreservation ist erst nach Zahlungseingang gültig.
             </p>
           </div>
 

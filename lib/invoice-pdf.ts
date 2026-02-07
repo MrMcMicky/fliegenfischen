@@ -106,15 +106,33 @@ export async function renderInvoicePdf(input: InvoiceData) {
     size: 16,
     color: rgb(1, 1, 1),
   });
+  let headerInfoY = card.y + card.height - 68;
   if (input.seller.addressLines.length) {
     page.drawText(input.seller.addressLines.join(" · "), {
       x: margin,
-      y: card.y + card.height - 68,
+      y: headerInfoY,
       font: fontRegular,
       size: 10,
       color: rgb(1, 1, 1),
     });
+    headerInfoY -= 12;
   }
+  const sellerContact = [
+    input.seller.email,
+    input.seller.phone,
+    input.seller.mobile,
+  ].filter(Boolean) as string[];
+  sellerContact.forEach((line) => {
+    if (headerInfoY < card.y + card.height - headerHeight + 8) return;
+    page.drawText(line, {
+      x: margin,
+      y: headerInfoY,
+      font: fontRegular,
+      size: 9,
+      color: rgb(1, 1, 1),
+    });
+    headerInfoY -= 11;
+  });
 
   let cursorY = card.y + card.height - headerHeight - 24;
 

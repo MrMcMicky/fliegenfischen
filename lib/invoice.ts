@@ -12,6 +12,7 @@ export type InvoiceParty = {
   addressLines: string[];
   email?: string | null;
   phone?: string | null;
+  mobile?: string | null;
 };
 
 export type InvoiceData = {
@@ -30,13 +31,32 @@ export type InvoiceData = {
 const formatInvoiceNumber = (bookingId: string) =>
   `INV-${bookingId.slice(-6).toUpperCase()}`;
 
-const getPaymentDetails = () => {
-  const raw = process.env.INVOICE_PAYMENT_DETAILS || "";
-  const lines = raw
+const getEnvLines = (key: string) => {
+  const raw = process.env[key] || "";
+  return raw
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);
-  return lines;
+};
+
+const getPaymentDetails = () => getEnvLines("INVOICE_PAYMENT_DETAILS");
+
+const getSellerOverride = () => {
+  const name = process.env.INVOICE_SELLER_NAME?.trim();
+  const addressLines = getEnvLines("INVOICE_SELLER_ADDRESS");
+  const email = process.env.INVOICE_SELLER_EMAIL?.trim();
+  const phone = process.env.INVOICE_SELLER_PHONE?.trim();
+  const mobile = process.env.INVOICE_SELLER_MOBILE?.trim();
+  if (!name && addressLines.length === 0 && !email && !phone && !mobile) {
+    return null;
+  }
+  return {
+    name,
+    addressLines,
+    email,
+    phone,
+    mobile,
+  };
 };
 
 const getDueDays = () => {
@@ -73,11 +93,26 @@ export async function buildInvoiceData(bookingId: string): Promise<InvoiceData |
     email: "info@fliegenfischer-schule.shop",
   };
 
+  const sellerOverride = getSellerOverride();
+  const fallbackName =
+    contact.instructor || settings?.name || "Fliegenfischerschule Urs Müller";
   const seller: InvoiceParty = {
-    name: contact.instructor || settings?.name || "Fliegenfischerschule Urs Müller",
-    addressLines: contact.address || [],
-    email: contact.email || "info@fliegenfischer-schule.shop",
-    phone: contact.phone || contact.mobile || null,
+    name: sellerOverride?.name || fallbackName,
+    addressLines:
+      sellerOverride?.addressLines?.length
+        ? sellerOverride.addressLines
+        : contact.address || [],
+    email:
+      sellerOverride?.email ||
+      contact.email ||
+      "info@fliegenfischer-schule.shop",
+    phone:
+      sellerOverride?.phone ||
+      contact.phone ||
+      sellerOverride?.mobile ||
+      contact.mobile ||
+      null,
+    mobile: sellerOverride?.mobile || contact.mobile || null,
   };
 
   const customer: InvoiceParty = {

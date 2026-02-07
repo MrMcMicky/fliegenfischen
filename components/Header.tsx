@@ -58,6 +58,11 @@ export function Header({
     return Array.from(new Set(hashes));
   }, [navLinks]);
 
+  const getHash = (href: string) => {
+    const index = href.indexOf("#");
+    return index === -1 ? null : href.slice(index);
+  };
+
   const routeHighlight = useMemo(() => {
     if (isHome) return null;
     if (pathname.startsWith("/berichte")) return "#links";
@@ -70,7 +75,7 @@ export function Header({
     return null;
   }, [isHome, pathname]);
 
-  const subTitle = useMemo(() => {
+  const breadcrumbItems = useMemo(() => {
     if (isHome) return null;
     const segments = pathname.split("/").filter(Boolean);
     if (segments.length === 0) return null;
@@ -80,20 +85,33 @@ export function Header({
         .filter(Boolean)
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
-    if (segments[0] === "berichte") {
-      if (segments[1]) return `Bericht: ${humanize(segments[1])}`;
-      return "Berichte";
+    const items: { label: string; href?: string }[] = [
+      { label: "Startseite", href: "/" },
+    ];
+    if (routeHighlight) {
+      const navItem = navLinks.find(
+        (item) => getHash(item.href) === routeHighlight
+      );
+      if (navItem) {
+        items.push({ label: navItem.label, href: navItem.href });
+      }
     }
-    if (segments[0] === "kurse") {
-      if (segments[1]) return `Kurs: ${humanize(segments[1])}`;
-      return "Kurse";
+    const [root, slug] = segments;
+    let currentLabel: string | null = null;
+    if (root === "berichte" && slug) {
+      currentLabel = `Bericht: ${humanize(slug)}`;
+    } else if (root === "kurse" && slug) {
+      currentLabel = `Kurs: ${humanize(slug)}`;
+    } else if (root === "buchen") {
+      currentLabel = "Buchung";
+    } else if (root === "gutscheine") {
+      currentLabel = "Gutschein";
     }
-    if (segments[0] === "privatunterricht") return "Privatlektion";
-    if (segments[0] === "gutscheine") return "Gutschein";
-    if (segments[0] === "buchen") return "Buchung";
-    if (segments[0] === "kontakt") return "Kontakt";
-    return null;
-  }, [isHome, pathname]);
+    if (currentLabel) {
+      items.push({ label: currentLabel });
+    }
+    return items;
+  }, [getHash, isHome, navLinks, pathname, routeHighlight]);
 
   useEffect(() => {
     if (!isHome || sections.length === 0) return;
@@ -138,11 +156,6 @@ export function Header({
       setActiveSection(null);
     }
   }, [isHome, pathname]);
-
-  const getHash = (href: string) => {
-    const index = href.indexOf("#");
-    return index === -1 ? null : href.slice(index);
-  };
 
   const isActive = (href: string) => {
     const hash = getHash(href);
@@ -259,11 +272,32 @@ export function Header({
           </div>
         </div>
       ) : null}
-      {!isHome && subTitle ? (
+      {!isHome && breadcrumbItems?.length ? (
         <div className="border-t border-[var(--color-border)] bg-white/90">
-          <div className="mx-auto w-full max-w-5xl px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-            {subTitle}
-          </div>
+          <nav
+            className="mx-auto w-full max-w-5xl px-4 py-2"
+            aria-label="Breadcrumb"
+          >
+            <ol className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)]/60">
+              {breadcrumbItems.map((item, index) => (
+                <li key={`${item.label}-${index}`} className="flex items-center gap-2">
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      className="transition hover:text-[var(--color-forest)]"
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <span className="text-[var(--color-text)]">{item.label}</span>
+                  )}
+                  {index < breadcrumbItems.length - 1 ? (
+                    <span className="text-[var(--color-muted)]">/</span>
+                  ) : null}
+                </li>
+              ))}
+            </ol>
+          </nav>
         </div>
       ) : null}
     </header>

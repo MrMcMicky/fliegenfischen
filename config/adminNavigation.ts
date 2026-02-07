@@ -30,10 +30,9 @@ export const adminNavItems: AdminNavItem[] = [
   },
   {
     label: "Inhalte",
-    href: "/admin/inhalte/texte",
+    href: "/admin/inhalte/wysiwyg",
     children: [
-      { label: "Texte Frontpage", href: "/admin/inhalte/texte" },
-      { label: "WYSIWYG", href: "/admin/inhalte/wysiwyg" },
+      { label: "Webpage", href: "/admin/inhalte/wysiwyg" },
       { label: "Berichte", href: "/admin/berichte" },
       { label: "Gutscheine", href: "/admin/gutscheine" },
     ],

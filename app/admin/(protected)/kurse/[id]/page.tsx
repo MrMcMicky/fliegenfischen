@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { CourseImagePicker } from "@/components/admin/CourseImagePicker";
 import { prisma } from "@/lib/db";
 import { getCourseImageOptions } from "@/lib/course-images";
-import { parseLines } from "@/lib/admin-utils";
+import { parseLines, slugify } from "@/lib/admin-utils";
+import { getAdminFromSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -20,13 +21,16 @@ export default async function AdminCourseEditPage({
   if (!course) {
     redirect("/admin/kurse");
   }
+  const existingSlug = course.slug;
+  const admin = await getAdminFromSession();
+  const isSuperAdmin = admin?.role === "SUPER_ADMIN";
   const courseImages = await getCourseImageOptions();
 
   async function updateCourse(formData: FormData) {
     "use server";
 
     const title = String(formData.get("title") || "").trim();
-    const slug = String(formData.get("slug") || "").trim();
+    const slugInput = String(formData.get("slug") || "").trim();
     const levelValue = String(formData.get("level") || "EINSTEIGER");
     const categoryValue = String(formData.get("category") || "EINHAND");
     const level =
@@ -51,6 +55,10 @@ export default async function AdminCourseEditPage({
     const priceCHF = Number(formData.get("priceCHF") || 0);
     const maxParticipants = Number(formData.get("maxParticipants") || 0);
     const location = String(formData.get("location") || "").trim();
+    const isSuperAdminAction = (await getAdminFromSession())?.role === "SUPER_ADMIN";
+    const slug = isSuperAdminAction
+      ? slugInput || slugify(title)
+      : existingSlug || slugify(title);
 
     await prisma.course.update({
       where: { id },
@@ -112,20 +120,36 @@ export default async function AdminCourseEditPage({
               />
               <p className="text-xs text-[var(--color-muted)]">Erscheint in Karten & Kursdetail.</p>
             </div>
-            <div className="space-y-1.5">
-              <label htmlFor="course-slug" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
-                URL‑Slug
-              </label>
-              <input
-                id="course-slug"
-                name="slug"
-                required
-                defaultValue={course.slug}
-                placeholder="z. B. einhand-einsteiger"
-                className="form-input px-3 py-2"
-              />
-              <p className="text-xs text-[var(--color-muted)]">Wird Teil der URL: /kurse/slug.</p>
-            </div>
+            {isSuperAdmin ? (
+              <div className="space-y-1.5">
+                <label htmlFor="course-slug" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  URL‑Slug
+                </label>
+                <input
+                  id="course-slug"
+                  name="slug"
+                  required
+                  defaultValue={course.slug}
+                  placeholder="z. B. einhand-einsteiger"
+                  className="form-input px-3 py-2"
+                />
+                <p className="text-xs text-[var(--color-muted)]">
+                  Wird Teil der URL: /kurse/slug. (nur Super Admin)
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  URL‑Slug
+                </p>
+                <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-stone)] px-3 py-2 text-sm text-[var(--color-muted)]">
+                  {course.slug}
+                </div>
+                <p className="text-xs text-[var(--color-muted)]">
+                  Technisch, wird automatisch aus dem Titel abgeleitet. (nur Super Admin änderbar)
+                </p>
+              </div>
+            )}
             <div className="space-y-1.5">
               <label htmlFor="course-level" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
                 Niveau

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { Button } from "@/components/Button";
 import { ContactForm } from "@/components/ContactForm";
@@ -8,12 +9,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { SectionHeader } from "@/components/SectionHeader";
 import { TestimonialSection } from "@/components/TestimonialSection";
 import { TimelineSteps } from "@/components/TimelineSteps";
-import {
-  EditableImage,
-  EditableInput,
-  EditableText,
-} from "@/components/admin/WysiwygEditable";
-import { getAdminFromSession } from "@/lib/auth";
+import { EditableImage, EditableText } from "@/components/admin/WysiwygEditable";
 import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
 import { resourceLinks, sfvLinks } from "@/lib/links";
@@ -61,9 +57,6 @@ export default async function AdminLandingWysiwygPage() {
       prisma.lessonOffering.findUnique({ where: { type: "PRIVATE" } }),
       selectedWeatherId ? getWeatherForecast(selectedWeatherId) : null,
     ]);
-  const admin = await getAdminFromSession();
-  const isSuperAdmin = admin?.role === "SUPER_ADMIN";
-
   if (!settings) {
     return (
       <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm">
@@ -276,33 +269,35 @@ export default async function AdminLandingWysiwygPage() {
     month: "2-digit",
   });
   const renderLinkInput = (
-    path: string,
+    _path: string,
     value: string,
-    placeholder: string
-  ) => {
-    if (isSuperAdmin) {
-      return (
-        <EditableInput
-          path={path}
-          value={value}
-          placeholder={placeholder}
-          className="w-full"
-        />
-      );
-    }
-    return (
-      <div className="wysiwyg-input w-full bg-[var(--color-stone)] text-[var(--color-muted)]">
-        {value || "—"}
+    _placeholder: string
+  ) => (
+    <div className="wysiwyg-input w-full bg-[var(--color-stone)] text-[var(--color-muted)]">
+      {value || "—"}
+    </div>
+  );
+  const renderDynamicPreview = (label: string, children: ReactNode) => (
+    <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-border)] bg-white/60 p-4">
+      <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-muted)]">
+        <span>{label}</span>
+        <span className="rounded-full bg-white/70 px-2 py-0.5 text-[10px] text-[var(--color-muted)]">
+          Dynamisch
+        </span>
       </div>
-    );
-  };
+      <div className="mt-3 pointer-events-none opacity-60">{children}</div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-display text-2xl font-semibold">Landing Page WYSIWYG</h2>
+        <h2 className="font-display text-2xl font-semibold">Webpage Editor</h2>
         <p className="text-sm text-[var(--color-muted)]">
           Texte direkt anklicken und bearbeiten. Änderungen werden automatisch gespeichert.
+        </p>
+        <p className="mt-1 text-xs text-[var(--color-muted)]">
+          Link-Ziele werden hier nur angezeigt (nicht editierbar).
         </p>
       </div>
 
@@ -354,13 +349,11 @@ export default async function AdminLandingWysiwygPage() {
         <div className="mx-auto w-full max-w-5xl px-4 pb-8">
           <div className="rounded-2xl border border-[var(--color-border)] bg-white p-4 text-xs text-[var(--color-muted)]">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-              Hero Button-Links
+              Button-Ziele (nur Anzeige)
             </p>
-            {!isSuperAdmin ? (
-              <p className="mt-2 text-[11px] text-[var(--color-muted)]">
-                Links können nur vom Super Admin geändert werden.
-              </p>
-            ) : null}
+            <p className="mt-2 text-[11px] text-[var(--color-muted)]">
+              Link-Ziele werden zentral verwaltet.
+            </p>
             <div className="mt-3 grid gap-3 md:grid-cols-2">
               <div className="space-y-1">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em]">Primär</p>
@@ -460,9 +453,10 @@ export default async function AdminLandingWysiwygPage() {
                 />
               }
             />
-            <div className="mt-8">
+            {renderDynamicPreview(
+              "Kurs-Termine (automatisch)",
               <CourseGrid sessions={upcomingSessions} />
-            </div>
+            )}
             {courseFaqs.length ? (
               <div className="mt-12">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
@@ -1078,37 +1072,40 @@ export default async function AdminLandingWysiwygPage() {
                   />
                 }
               />
-              <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {reports.map((report) => {
-                  const heroImage =
-                    report.coverImage || extractFirstImage(report.body || "");
-                  return (
-                    <Link
-                      key={report.slug}
-                      href={`/berichte/${report.slug}`}
-                      className="group relative overflow-hidden rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
-                    >
-                      {heroImage ? (
-                        <div
-                          className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40"
-                          style={{ backgroundImage: `url(${heroImage})` }}
-                        />
-                      ) : null}
-                      <div className="relative z-10">
-                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-                          {report.location} · {report.year}
-                        </p>
-                        <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
-                          {report.title}
-                        </h3>
-                        <p className="mt-2 text-sm text-[var(--color-muted)]">
-                          {report.summary}
-                        </p>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
+              {renderDynamicPreview(
+                "Berichte (automatisch)",
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {reports.map((report) => {
+                    const heroImage =
+                      report.coverImage || extractFirstImage(report.body || "");
+                    return (
+                      <Link
+                        key={report.slug}
+                        href={`/berichte/${report.slug}`}
+                        className="group relative overflow-hidden rounded-xl border border-[var(--color-border)] bg-white p-6 transition hover:shadow-lg"
+                      >
+                        {heroImage ? (
+                          <div
+                            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40"
+                            style={{ backgroundImage: `url(${heroImage})` }}
+                          />
+                        ) : null}
+                        <div className="relative z-10">
+                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+                            {report.location} · {report.year}
+                          </p>
+                          <h3 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
+                            {report.title}
+                          </h3>
+                          <p className="mt-2 text-sm text-[var(--color-muted)]">
+                            {report.summary}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -1139,30 +1136,33 @@ export default async function AdminLandingWysiwygPage() {
                 />
               }
             />
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              {weatherLocations.map((location) => {
-                const isActive = location.id === selectedWeatherId;
-                return (
-                  <Link
-                    key={location.id}
-                    href={`/?w=${location.id}#wetter`}
-                    className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
-                      isActive
-                        ? "border-[var(--color-ember)]/60 bg-[var(--color-ember)]/10 text-[var(--color-forest)]"
-                        : "border-[var(--color-border)] bg-white text-[var(--color-forest)] hover:border-[var(--color-ember)]/40 hover:text-[var(--color-ember)]"
-                    }`}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    {location.label}
-                  </Link>
-                );
-              })}
-              <span className="text-xs text-[var(--color-muted)]">
-                Standard: Schulstandort Geroldswil.
-              </span>
-            </div>
-            {weather ? (
-              <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            {renderDynamicPreview(
+              "Wetterdaten (automatisch)",
+              <div className="space-y-6">
+                <div className="flex flex-wrap items-center gap-3">
+                  {weatherLocations.map((location) => {
+                    const isActive = location.id === selectedWeatherId;
+                    return (
+                      <Link
+                        key={location.id}
+                        href={`/?w=${location.id}#wetter`}
+                        className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                          isActive
+                            ? "border-[var(--color-ember)]/60 bg-[var(--color-ember)]/10 text-[var(--color-forest)]"
+                            : "border-[var(--color-border)] bg-white text-[var(--color-forest)] hover:border-[var(--color-ember)]/40 hover:text-[var(--color-ember)]"
+                        }`}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        {location.label}
+                      </Link>
+                    );
+                  })}
+                  <span className="text-xs text-[var(--color-muted)]">
+                    Standard: Schulstandort Geroldswil.
+                  </span>
+                </div>
+                {weather ? (
+                  <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
                 <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
                   <div className="flex items-start justify-between">
                     <div>
@@ -1258,12 +1258,14 @@ export default async function AdminLandingWysiwygPage() {
                       </div>
                     </div>
                   ))}
+                  </div>
                 </div>
+                ) : (
+                  <p className="text-sm text-[var(--color-muted)]">
+                    Wetterdaten sind aktuell nicht verfügbar.
+                  </p>
+                )}
               </div>
-            ) : (
-              <p className="mt-6 text-sm text-[var(--color-muted)]">
-                Wetterdaten sind aktuell nicht verfügbar.
-              </p>
             )}
           </div>
         </section>
@@ -1367,8 +1369,16 @@ export default async function AdminLandingWysiwygPage() {
                   Teile uns kurz dein Ziel und mögliche Termine mit. Wir melden uns
                   innert 48 Stunden.
                 </p>
-                <div className="mt-6 pointer-events-none opacity-70">
-                  <ContactForm />
+                <div className="mt-6 rounded-xl border border-white/15 bg-white/5 p-4">
+                  <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-white/70">
+                    <span>Formular Vorschau</span>
+                    <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] text-white/70">
+                      Dynamisch
+                    </span>
+                  </div>
+                  <div className="mt-3 pointer-events-none opacity-70">
+                    <ContactForm />
+                  </div>
                 </div>
               </div>
             </div>

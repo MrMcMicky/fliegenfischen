@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function AdminContentIndexPage() {
-  redirect("/admin/inhalte/texte");
+  redirect("/admin/inhalte/wysiwyg");
 }

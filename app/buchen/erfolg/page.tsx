@@ -34,6 +34,7 @@ export default async function BookingSuccessPage({
       </h1>
       <p className="text-sm text-[var(--color-muted)]">
         Wir senden dir in Kürze die Rechnung und alle Details per E-Mail.
+        Die Platzreservation ist erst nach Zahlungseingang gültig.
       </p>
       {booking ? (
         <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
@@ -41,6 +42,18 @@ export default async function BookingSuccessPage({
             Buchung #{booking.id}
           </p>
           <p>Status: {booking.status}</p>
+          {booking.paymentMode === "INVOICE" ? (
+            <div className="mt-4">
+              <a
+                href={`/api/invoice/pdf?bookingId=${booking.id}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-[var(--color-forest)]/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)]"
+              >
+                Rechnung öffnen (PDF)
+              </a>
+            </div>
+          ) : null}
         </div>
       ) : null}
       <Link

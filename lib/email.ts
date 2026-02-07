@@ -24,6 +24,16 @@ export type BookingEmailPayload = {
   lines: string[];
 };
 
+export type InvoiceEmailPayload = {
+  to: string;
+  customerName: string;
+  invoiceNumber: string;
+  amountCHF: number;
+  dueDate: Date;
+  invoiceUrl?: string | null;
+  pdfBytes: Uint8Array;
+};
+
 const getEnv = (key: string) => process.env[key];
 
 const createTransporter = () => {
@@ -316,5 +326,57 @@ export async function sendBookingMail(payload: BookingEmailPayload) {
     replyTo: getReplyTo(),
     subject: payload.subject,
     text: payload.lines.join("\n"),
+  });
+}
+
+export async function sendInvoiceMail(payload: InvoiceEmailPayload) {
+  const from = getEnv("BOOKING_EMAIL_FROM") || getDefaultFrom();
+  const bcc = getEnv("BOOKING_EMAIL_BCC") || "";
+  const transporter = createTransporter();
+
+  const dueDate = new Intl.DateTimeFormat("de-CH", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(payload.dueDate);
+
+  const lines = [
+    `Hallo ${payload.customerName},`,
+    "",
+    "Vielen Dank für deine Anfrage.",
+    "Anbei findest du die Rechnung als PDF.",
+    "",
+    `Rechnung: ${payload.invoiceNumber}`,
+    `Betrag: CHF ${payload.amountCHF}`,
+    `Fällig bis: ${dueDate}`,
+    "",
+    "Anmeldung und Platzreservation sind erst nach Zahlungseingang gültig.",
+    payload.invoiceUrl ? `Online-Link: ${payload.invoiceUrl}` : null,
+    "",
+    "Bei Fragen antworte bitte auf diese E-Mail.",
+    "",
+    "Petri Heil",
+    "Urs Müller",
+    "Fliegenfischerschule Urs Müller",
+    "Geroldswil / Limmat / Zürich",
+    "fliegenfischer-schule.shop",
+    "info@fliegenfischer-schule.shop",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  await transporter.sendMail({
+    to: payload.to,
+    bcc: bcc || undefined,
+    from,
+    replyTo: getReplyTo(),
+    subject: `Rechnung ${payload.invoiceNumber} – Fliegenfischerschule Urs Müller`,
+    text: lines,
+    attachments: [
+      {
+        filename: `Rechnung-${payload.invoiceNumber}.pdf`,
+        content: Buffer.from(payload.pdfBytes),
+      },
+    ],
   });
 }

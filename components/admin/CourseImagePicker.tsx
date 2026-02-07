@@ -96,7 +96,13 @@ export function CourseImagePicker({
             Ziehe ein Bild hierher oder wähle eine Datei aus.
           </p>
         </div>
-        <label className="rounded-full bg-[var(--color-forest)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white">
+        <label
+          className={`rounded-full bg-[var(--color-forest)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition ${
+            uploading
+              ? "cursor-not-allowed opacity-60"
+              : "cursor-pointer hover:bg-[var(--color-forest)]/90 hover:shadow-sm"
+          }`}
+        >
           {uploading ? "Upload..." : "Datei wählen"}
           <input
             type="file"

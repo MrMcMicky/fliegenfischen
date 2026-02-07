@@ -228,7 +228,13 @@ export function EditableImage({
         <span className="text-[var(--color-muted)]">
           Bild hierher ziehen oder Datei wählen.
         </span>
-        <label className="rounded-full bg-[var(--color-forest)] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white">
+        <label
+          className={`rounded-full bg-[var(--color-forest)] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white transition ${
+            uploading
+              ? "cursor-not-allowed opacity-60"
+              : "cursor-pointer hover:bg-[var(--color-forest)]/90 hover:shadow-sm"
+          }`}
+        >
           {uploading ? "Upload…" : "Datei wählen"}
           <input
             type="file"

@@ -539,46 +539,47 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
             </div>
 
             <div className="mt-6 space-y-6">
-              <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
-                  Status & Aktionen
-                </p>
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  <div className="relative" data-status-menu="drawer-status">
-                    <label className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
-                      Status
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setOpenMenuId((current) =>
-                          current === "drawer-status" ? null : "drawer-status"
-                        )
-                      }
-                      className="mt-2 flex w-full items-center justify-between rounded-xl border border-[var(--color-border)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
-                    >
-                      {bookingStatusLabels[activeRow.status] ?? activeRow.status}
-                      <span className="text-[10px]">▾</span>
-                    </button>
-                    {openMenuId === "drawer-status" ? (
-                      <div className="absolute left-0 z-10 mt-2 w-full rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-lg">
-                        {statusOptions.map((option) => (
-                          <button
-                            key={option.value}
-                            type="button"
-                            onClick={() => handleStatusChange(activeRow.id, option.value)}
-                            className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
-                          >
-                            {option.label}
-                          </button>
-                        ))}
-                      </div>
-                    ) : null}
+              <section className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
+                <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    Status
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {statusOptions.map((option) => {
+                      const isActive = activeRow.status === option.value;
+                      const chipClass =
+                        option.value === "PAID"
+                          ? "bg-emerald-100 text-emerald-800"
+                          : option.value === "INVOICE_REQUESTED"
+                            ? "bg-amber-100 text-amber-800"
+                            : option.value === "PAYMENT_PENDING"
+                              ? "bg-blue-100 text-blue-800"
+                              : option.value === "CANCELLED"
+                                ? "bg-rose-100 text-rose-800"
+                                : "bg-gray-100 text-gray-700";
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => handleStatusChange(activeRow.id, option.value)}
+                          disabled={isPending}
+                          className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
+                            isActive
+                              ? chipClass
+                              : "border border-[var(--color-border)] bg-white text-[var(--color-muted)] hover:border-[var(--color-forest)]"
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
                   </div>
-                  <div className="relative" data-action-menu="drawer-actions">
-                    <label className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
-                      Aktionen
-                    </label>
+                </div>
+                <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    Aktionen
+                  </p>
+                  <div className="relative mt-3" data-action-menu="drawer-actions">
                     <button
                       type="button"
                       onClick={() =>
@@ -586,7 +587,7 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
                           current === "drawer-actions" ? null : "drawer-actions"
                         )
                       }
-                      className="mt-2 flex w-full items-center justify-between rounded-xl border border-[var(--color-border)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                      className="flex w-full items-center justify-between rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
                     >
                       Auswahl
                       <span className="text-[10px]">▾</span>

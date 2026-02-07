@@ -5,7 +5,13 @@ import type { BookingStatus, BookingType, PaymentMode } from "@prisma/client";
 
 import { bookingStatusLabels, bookingTypeLabels } from "@/lib/constants";
 import { formatPrice } from "@/lib/format";
-import { resendInvoiceEmail, updateBookingDetails, updateBookingStatus } from "./actions";
+import {
+  deleteBooking,
+  resendBookingConfirmation,
+  resendInvoiceEmail,
+  updateBookingDetails,
+  updateBookingStatus,
+} from "./actions";
 
 type BookingRow = {
   id: string;
@@ -73,6 +79,8 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
   const [activeRowId, setActiveRowId] = useState<string | null>(null);
   const [draft, setDraft] = useState<BookingDraft | null>(null);
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [confirmPendingId, setConfirmPendingId] = useState<string | null>(null);
+  const [deletePendingId, setDeletePendingId] = useState<string | null>(null);
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastSavedRef = useRef<string>("");
   const [isPending, startTransition] = useTransition();
@@ -271,6 +279,33 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
     });
   };
 
+  const handleResendConfirmation = (id: string) => {
+    setConfirmPendingId(id);
+    startTransition(async () => {
+      await resendBookingConfirmation(id);
+      setConfirmPendingId((current) => (current === id ? null : current));
+      setOpenActionMenuId((current) => (current === id ? null : current));
+    });
+  };
+
+  const handleDeleteBooking = (id: string) => {
+    if (!window.confirm("Buchung wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.")) {
+      return;
+    }
+    setDeletePendingId(id);
+    startTransition(async () => {
+      const result = await deleteBooking(id);
+      if (result.ok) {
+        setRows((prev) => prev.filter((row) => row.id !== id));
+        if (activeRowId === id) {
+          closeDrawer();
+        }
+      }
+      setDeletePendingId((current) => (current === id ? null : current));
+      setOpenActionMenuId((current) => (current === id ? null : current));
+    });
+  };
+
   const updateDraftField = <K extends keyof BookingDraft>(
     field: K,
     value: BookingDraft[K]
@@ -452,49 +487,30 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
                     Aktionen ▾
                   </button>
                   {openActionMenuId === row.id ? (
-                    <div className="absolute right-0 top-12 z-20 w-52 rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-xl">
+                    <div className="absolute right-0 top-12 z-20 w-56 rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-xl">
                       <button
                         type="button"
-                        onClick={() => openDrawer(row)}
+                        onClick={() => handleResendConfirmation(row.id)}
                         className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
                       >
-                        Details öffnen
+                        {confirmPendingId === row.id ? "Sendet..." : "Bestätigung mailen"}
                       </button>
-                      {row.status !== "PAID" ? (
-                        <button
-                          type="button"
-                          onClick={() => handleStatusChange(row.id, "PAID")}
-                          className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
-                        >
-                          Als bezahlt markieren
-                        </button>
-                      ) : null}
-                      {row.status === "CANCELLED" ? (
-                        <button
-                          type="button"
-                          onClick={() => handleStatusChange(row.id, "PENDING")}
-                          className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
-                        >
-                          Reaktivieren
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => handleStatusChange(row.id, "CANCELLED")}
-                          className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
-                        >
-                          Stornieren
-                        </button>
-                      )}
                       {isInvoice ? (
                         <button
                           type="button"
                           onClick={() => handleResendInvoice(row.id)}
                           className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
                         >
-                          Rechnung mailen
+                          {invoicePendingId === row.id ? "Sendet..." : "Rechnung mailen"}
                         </button>
                       ) : null}
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteBooking(row.id)}
+                        className="w-full rounded-lg px-3 py-2 text-left text-red-600 transition hover:bg-red-50"
+                      >
+                        {deletePendingId === row.id ? "Löscht..." : "Eintrag löschen"}
+                      </button>
                     </div>
                   ) : null}
                 </div>
@@ -544,35 +560,55 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
                     Status
                   </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {statusOptions.map((option) => {
-                      const isActive = activeRow.status === option.value;
-                      const chipClass =
-                        option.value === "PAID"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : option.value === "INVOICE_REQUESTED"
-                            ? "bg-amber-100 text-amber-800"
-                            : option.value === "PAYMENT_PENDING"
-                              ? "bg-blue-100 text-blue-800"
-                              : option.value === "CANCELLED"
-                                ? "bg-rose-100 text-rose-800"
-                                : "bg-gray-100 text-gray-700";
-                      return (
-                        <button
-                          key={option.value}
-                          type="button"
-                          onClick={() => handleStatusChange(activeRow.id, option.value)}
-                          disabled={isPending}
-                          className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
-                            isActive
-                              ? chipClass
-                              : "border border-[var(--color-border)] bg-white text-[var(--color-muted)] hover:border-[var(--color-forest)]"
-                          }`}
-                        >
-                          {option.label}
-                        </button>
-                      );
-                    })}
+                  <div className="mt-3 space-y-3">
+                    {[
+                      {
+                        label: "Offen",
+                        values: ["PENDING", "PAYMENT_PENDING", "INVOICE_REQUESTED"] as BookingStatus[],
+                      },
+                      {
+                        label: "Abgeschlossen",
+                        values: ["PAID", "CANCELLED"] as BookingStatus[],
+                      },
+                    ].map((group) => (
+                      <div key={group.label}>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                          {group.label}
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {group.values.map((value) => {
+                            const option = statusOptions.find((item) => item.value === value);
+                            if (!option) return null;
+                            const isActive = activeRow.status === option.value;
+                            const chipClass =
+                              option.value === "PAID"
+                                ? "bg-emerald-100 text-emerald-800"
+                                : option.value === "INVOICE_REQUESTED"
+                                  ? "bg-amber-100 text-amber-800"
+                                  : option.value === "PAYMENT_PENDING"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : option.value === "CANCELLED"
+                                      ? "bg-rose-100 text-rose-800"
+                                      : "bg-gray-100 text-gray-700";
+                            return (
+                              <button
+                                key={option.value}
+                                type="button"
+                                onClick={() => handleStatusChange(activeRow.id, option.value)}
+                                disabled={isPending}
+                                className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
+                                  isActive
+                                    ? chipClass
+                                    : "border border-[var(--color-border)] bg-white text-[var(--color-muted)] hover:border-[var(--color-forest)]"
+                                }`}
+                              >
+                                {option.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
@@ -594,41 +630,29 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
                     </button>
                     {openActionMenuId === "drawer-actions" ? (
                       <div className="absolute left-0 z-10 mt-2 w-full rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-lg">
-                        {activeRow.status !== "PAID" ? (
-                          <button
-                            type="button"
-                            onClick={() => handleStatusChange(activeRow.id, "PAID")}
-                            className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
-                          >
-                            Als bezahlt markieren
-                          </button>
-                        ) : null}
-                        {activeRow.status === "CANCELLED" ? (
-                          <button
-                            type="button"
-                            onClick={() => handleStatusChange(activeRow.id, "PENDING")}
-                            className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
-                          >
-                            Reaktivieren
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => handleStatusChange(activeRow.id, "CANCELLED")}
-                            className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
-                          >
-                            Stornieren
-                          </button>
-                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleResendConfirmation(activeRow.id)}
+                          className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
+                        >
+                          {confirmPendingId === activeRow.id ? "Sendet..." : "Bestätigung mailen"}
+                        </button>
                         {activeRow.paymentMode === "INVOICE" ? (
                           <button
                             type="button"
                             onClick={() => handleResendInvoice(activeRow.id)}
                             className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
                           >
-                            Rechnung mailen
+                            {invoicePendingId === activeRow.id ? "Sendet..." : "Rechnung mailen"}
                           </button>
                         ) : null}
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteBooking(activeRow.id)}
+                          className="w-full rounded-lg px-3 py-2 text-left text-red-600 transition hover:bg-red-50"
+                        >
+                          {deletePendingId === activeRow.id ? "Löscht..." : "Eintrag löschen"}
+                        </button>
                       </div>
                     ) : null}
                   </div>

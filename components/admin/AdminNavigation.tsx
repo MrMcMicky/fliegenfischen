@@ -24,6 +24,7 @@ import styles from "./AdminNavigation.module.css";
 type AdminNavigationProps = {
   adminName: string;
   isSuperAdmin: boolean;
+  badges?: Record<string, number>;
   children: React.ReactNode;
 };
 
@@ -51,6 +52,7 @@ const sideNavIcons: Record<string, LucideIcon> = {
 export default function AdminNavigation({
   adminName,
   isSuperAdmin,
+  badges,
   children,
 }: AdminNavigationProps) {
   const pathname = usePathname();
@@ -88,9 +90,17 @@ export default function AdminNavigation({
           <ul className={styles.topLinks}>
             {filteredItems.map((item) => {
               const isActive = isTopActive(item.href, item.children);
+              const badgeValue = badges?.[item.href] ?? 0;
               return (
                 <li key={item.href} className={isActive ? styles.activeTop : ""}>
-                  <Link href={item.href}>{item.label}</Link>
+                  <Link href={item.href}>
+                    <span className={styles.linkLabel}>{item.label}</span>
+                    {badgeValue > 0 ? (
+                      <span className={styles.navBadge} aria-label={`${badgeValue}`}>
+                        {badgeValue}
+                      </span>
+                    ) : null}
+                  </Link>
                 </li>
               );
             })}

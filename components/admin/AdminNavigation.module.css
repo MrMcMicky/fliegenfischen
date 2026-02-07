@@ -63,6 +63,7 @@
   align-items: center;
   border-bottom: 2px solid transparent;
   transition: all 0.2s;
+  gap: 0.45rem;
 }
 
 .topLinks a:hover {
@@ -76,6 +77,25 @@
   border-bottom-color: var(--color-ember);
   background-color: transparent;
   font-weight: 600;
+}
+
+.linkLabel {
+  display: inline-flex;
+  align-items: center;
+}
+
+.navBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--color-ember);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
 }
 
 .userProfile {

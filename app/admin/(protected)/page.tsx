@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { BookingStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
-import { bookingStatusLabels } from "@/lib/constants";
+import { bookingStatusLabels, paymentStatusLabels } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +15,7 @@ export default async function AdminDashboard() {
   const [
     upcomingSessions,
     bookings,
+    payments,
     vouchers,
     openBookingCount,
     openContactCount,
@@ -27,6 +28,11 @@ export default async function AdminDashboard() {
       take: 5,
     }),
     prisma.booking.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
+    prisma.payment.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { booking: true },
+      take: 5,
+    }),
     prisma.voucher.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
     prisma.booking.count({
       where: {
@@ -107,7 +113,7 @@ export default async function AdminDashboard() {
         </Link>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-3">
+      <section className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
             Nächste Termine
@@ -125,6 +131,27 @@ export default async function AdminDashboard() {
             ))}
             {!upcomingSessions.length ? (
               <p className="text-[var(--color-muted)]">Keine Termine.</p>
+            ) : null}
+          </div>
+        </div>
+        <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+            Letzte Zahlungen
+          </p>
+          <div className="mt-4 space-y-3 text-sm">
+            {payments.map((payment) => (
+              <div key={payment.id} className="flex flex-col">
+                <span className="font-semibold text-[var(--color-text)]">
+                  {payment.booking.customerName}
+                </span>
+                <span className="text-[var(--color-muted)]">
+                  CHF {payment.booking.amountCHF} ·{" "}
+                  {paymentStatusLabels[payment.status] ?? payment.status}
+                </span>
+              </div>
+            ))}
+            {!payments.length ? (
+              <p className="text-[var(--color-muted)]">Keine Zahlungen.</p>
             ) : null}
           </div>
         </div>

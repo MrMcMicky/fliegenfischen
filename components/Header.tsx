@@ -58,6 +58,18 @@ export function Header({
     return Array.from(new Set(hashes));
   }, [navLinks]);
 
+  const routeHighlight = useMemo(() => {
+    if (isHome) return null;
+    if (pathname.startsWith("/berichte")) return "#links";
+    if (pathname.startsWith("/kontakt")) return "#kontakt";
+    if (pathname.startsWith("/wetter")) return "#wetter";
+    if (pathname.startsWith("/kurse") || pathname.startsWith("/buchen")) return "#kurse";
+    if (pathname.startsWith("/privatunterricht") || pathname.startsWith("/schnupperstunden")) {
+      return "#privat";
+    }
+    return null;
+  }, [isHome, pathname]);
+
   useEffect(() => {
     if (!isHome || sections.length === 0) return;
 
@@ -96,6 +108,12 @@ export function Header({
     };
   }, [isHome, sections]);
 
+  useEffect(() => {
+    if (!isHome) {
+      setActiveSection(null);
+    }
+  }, [isHome, pathname]);
+
   const getHash = (href: string) => {
     const index = href.indexOf("#");
     return index === -1 ? null : href.slice(index);
@@ -104,6 +122,9 @@ export function Header({
   const isActive = (href: string) => {
     const hash = getHash(href);
     if (hash) {
+      if (!isHome) {
+        return routeHighlight === hash;
+      }
       return hash === activeSection;
     }
     return pathname === href;

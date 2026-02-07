@@ -304,7 +304,10 @@ export function Header({
                     <Link
                       href={item.href}
                       onClick={() => {
-                        if (item.href === "/" || item.href.startsWith("/#")) {
+                        if (
+                          item.href &&
+                          (item.href === "/" || item.href.startsWith("/#"))
+                        ) {
                           setShowBreadcrumb(false);
                         }
                       }}

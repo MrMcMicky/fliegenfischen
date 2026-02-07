@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { BookingStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 import { bookingStatusLabels } from "@/lib/constants";
@@ -6,8 +7,19 @@ import { bookingStatusLabels } from "@/lib/constants";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [upcomingSessions, bookings, vouchers, openBookingCount, openContactCount] =
-    await Promise.all([
+  const openBookingStatuses: BookingStatus[] = [
+    "PENDING",
+    "PAYMENT_PENDING",
+    "INVOICE_REQUESTED",
+  ];
+  const [
+    upcomingSessions,
+    bookings,
+    vouchers,
+    openBookingCount,
+    openContactCount,
+    bookingStatusCounts,
+  ] = await Promise.all([
     prisma.courseSession.findMany({
       where: { date: { gte: new Date() } },
       include: { course: true },
@@ -19,12 +31,24 @@ export default async function AdminDashboard() {
     prisma.booking.count({
       where: {
         status: {
-          in: ["PENDING", "PAYMENT_PENDING", "INVOICE_REQUESTED"],
+          in: openBookingStatuses,
         },
       },
     }),
     prisma.contactRequest.count({ where: { status: "OPEN" } }),
+    prisma.booking.groupBy({
+      by: ["status"],
+      where: { status: { in: openBookingStatuses } },
+      _count: { _all: true },
+    }),
   ]);
+  const bookingStatusMap = bookingStatusCounts.reduce<Record<string, number>>(
+    (acc, entry) => {
+      acc[entry.status] = entry._count._all;
+      return acc;
+    },
+    {}
+  );
 
   return (
     <div className="space-y-10">
@@ -48,6 +72,18 @@ export default async function AdminDashboard() {
               {openBookingCount === 1 ? "Buchung wartet" : "Buchungen warten"}
             </span>
           </div>
+          {openBookingCount ? (
+            <div className="mt-4 space-y-1 text-xs text-[var(--color-muted)]">
+              {openBookingStatuses.map((status) => (
+                <div key={status} className="flex items-center justify-between">
+                  <span>{bookingStatusLabels[status] ?? status}</span>
+                  <span className="font-semibold text-[var(--color-text)]">
+                    {bookingStatusMap[status] ?? 0}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </Link>
         <Link
           href="/admin/anfragen"

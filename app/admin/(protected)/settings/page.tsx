@@ -9,6 +9,14 @@ import { getAdminFromSession } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 const stringify = (value: unknown) => JSON.stringify(value, null, 2);
+const formatBytes = (value: number | bigint | null) => {
+  if (!value) return "—";
+  const bytes = typeof value === "bigint" ? Number(value) : value;
+  if (!Number.isFinite(bytes)) return "—";
+  const mb = bytes / 1024 / 1024;
+  if (mb < 1024) return `${mb.toFixed(2)} MB`;
+  return `${(mb / 1024).toFixed(2)} GB`;
+};
 
 export default async function AdminSettingsPage() {
   const admin = await getAdminFromSession();
@@ -19,6 +27,12 @@ export default async function AdminSettingsPage() {
   const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
   const backupRoot = "/home/michael/backups/fliegenfischen";
   let backups: { name: string; size: number; updatedAt: Date }[] = [];
+  let databaseSize: number | bigint | null = null;
+  const recentLogins = await prisma.adminUser.findMany({
+    where: { lastLoginAt: { not: null } },
+    orderBy: { lastLoginAt: "desc" },
+    take: 5,
+  });
 
   try {
     const entries = await readdir(backupRoot, { withFileTypes: true });
@@ -36,6 +50,15 @@ export default async function AdminSettingsPage() {
     );
   } catch {
     backups = [];
+  }
+  const latestBackup = backups[0] ?? null;
+  try {
+    const result = await prisma.$queryRaw<{ size: bigint }[]>`
+      SELECT pg_database_size(current_database()) as size
+    `;
+    databaseSize = result?.[0]?.size ?? null;
+  } catch {
+    databaseSize = null;
   }
 
   if (!settings) {
@@ -84,6 +107,58 @@ export default async function AdminSettingsPage() {
           Automatische Backups, Download sowie erweiterte System-Inhalte.
         </p>
       </div>
+      <section className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+            Systemstatus
+          </p>
+          <p className="mt-2 text-sm text-[var(--color-muted)]">
+            Überblick über Datenbank, Backups und letzte Logins.
+          </p>
+        </div>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4 text-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Datenbankgrösse
+            </p>
+            <p className="mt-2 text-lg font-semibold text-[var(--color-text)]">
+              {formatBytes(databaseSize)}
+            </p>
+          </div>
+          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4 text-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Letztes Backup
+            </p>
+            <p className="mt-2 text-sm font-semibold text-[var(--color-text)]">
+              {latestBackup ? latestBackup.name : "Keins gefunden"}
+            </p>
+            <p className="text-xs text-[var(--color-muted)]">
+              {latestBackup
+                ? latestBackup.updatedAt.toLocaleString("de-CH")
+                : "—"}
+            </p>
+          </div>
+          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4 text-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+              Letzte Logins
+            </p>
+            <div className="mt-2 space-y-1 text-xs text-[var(--color-muted)]">
+              {recentLogins.length ? (
+                recentLogins.map((user) => (
+                  <div key={user.id} className="flex items-center justify-between">
+                    <span>{user.name}</span>
+                    <span>
+                      {user.lastLoginAt?.toLocaleDateString("de-CH")}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p>Keine Logins.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
       <section className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">

@@ -63,7 +63,7 @@ export function WeatherSection({
   };
 
   return (
-    <section id="wetter" className="scroll-mt-20 bg-white py-12">
+    <section id="wetter" className="scroll-mt-16 bg-white py-12">
       <div className="mx-auto w-full max-w-5xl px-4">
         <SectionHeader
           eyebrow={section.eyebrow}

@@ -270,7 +270,7 @@ export default async function Home({
 
       <section
         id="kurse"
-        className="scroll-mt-20 bg-[var(--color-pebble)] py-12"
+        className="scroll-mt-16 bg-[var(--color-pebble)] py-12"
       >
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
@@ -320,7 +320,7 @@ export default async function Home({
       {privateLesson ? (
         <section
           id="privat"
-          className="scroll-mt-20 bg-[var(--color-sage)] py-12"
+          className="scroll-mt-16 bg-[var(--color-sage)] py-12"
         >
           <div className="mx-auto w-full max-w-5xl px-4">
             <SectionHeader
@@ -420,7 +420,7 @@ export default async function Home({
         </section>
       ) : null}
 
-      <section id="ueber" className="scroll-mt-20 bg-white py-12">
+      <section id="ueber" className="scroll-mt-16 bg-white py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow="Über uns"
@@ -505,7 +505,7 @@ export default async function Home({
 
       <section
         id="links"
-        className="scroll-mt-20 section-pattern bg-[var(--color-pebble)] py-12"
+        className="scroll-mt-16 section-pattern bg-[var(--color-pebble)] py-12"
       >
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
@@ -609,7 +609,7 @@ export default async function Home({
         initialLocationId={selectedWeatherId}
       />
 
-      <section id="kontakt" className="scroll-mt-20 bg-[var(--color-pebble)] py-12">
+      <section id="kontakt" className="scroll-mt-16 bg-[var(--color-pebble)] py-12">
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
             eyebrow={contactSection.eyebrow}

@@ -20,6 +20,7 @@ export function Header({
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const [showBreadcrumb, setShowBreadcrumb] = useState(!isHome);
   const manualActiveRef = useRef<{ hash: string; until: number } | null>(null);
 
   useEffect(() => {
@@ -112,6 +113,24 @@ export function Header({
     }
     return items;
   }, [getHash, isHome, navLinks, pathname, routeHighlight]);
+
+  useEffect(() => {
+    setShowBreadcrumb(!isHome);
+  }, [isHome]);
+
+  useEffect(() => {
+    const syncBreadcrumb = () => {
+      if (typeof window === "undefined") return;
+      setShowBreadcrumb(window.location.pathname !== "/");
+    };
+    syncBreadcrumb();
+    window.addEventListener("popstate", syncBreadcrumb);
+    window.addEventListener("hashchange", syncBreadcrumb);
+    return () => {
+      window.removeEventListener("popstate", syncBreadcrumb);
+      window.removeEventListener("hashchange", syncBreadcrumb);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isHome || sections.length === 0) return;
@@ -272,7 +291,7 @@ export function Header({
           </div>
         </div>
       ) : null}
-      {!isHome && breadcrumbItems?.length ? (
+      {!isHome && showBreadcrumb && breadcrumbItems?.length ? (
         <div className="border-t border-[var(--color-border)] bg-white/90">
           <nav
             className="mx-auto w-full max-w-5xl px-4 py-2"
@@ -284,6 +303,11 @@ export function Header({
                   {item.href ? (
                     <Link
                       href={item.href}
+                      onClick={() => {
+                        if (item.href === "/" || item.href.startsWith("/#")) {
+                          setShowBreadcrumb(false);
+                        }
+                      }}
                       className="transition hover:text-[var(--color-forest)]"
                     >
                       {item.label}

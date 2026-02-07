@@ -221,6 +221,11 @@ model Booking {
   customerName    String
   customerEmail   String
   customerPhone   String?
+  customerAddressLine1 String?
+  customerAddressLine2 String?
+  customerPostalCode   String?
+  customerCity         String?
+  customerCountry      String?
   quantity        Int?
   hours           Int?
   amountCHF       Int

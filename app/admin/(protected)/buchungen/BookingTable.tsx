@@ -1,17 +1,24 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import type { BookingStatus, BookingType, PaymentMode } from "@prisma/client";
 
 import { bookingStatusLabels, bookingTypeLabels } from "@/lib/constants";
 import { formatPrice } from "@/lib/format";
-import { resendInvoiceEmail, updateBookingStatus } from "./actions";
+import { resendInvoiceEmail, updateBookingDetails, updateBookingStatus } from "./actions";
 
 type BookingRow = {
   id: string;
   createdAt: string;
   customerName: string;
   customerEmail: string;
+  customerPhone?: string | null;
+  customerAddressLine1?: string | null;
+  customerAddressLine2?: string | null;
+  customerPostalCode?: string | null;
+  customerCity?: string | null;
+  customerCountry?: string | null;
+  notes?: string | null;
   amountCHF: number;
   status: BookingStatus;
   type: BookingType;
@@ -23,6 +30,20 @@ type BookingRow = {
 type SortField = "date" | "customer" | "type" | "amount" | "status";
 type SortDirection = "asc" | "desc";
 type StatusFilter = "ALL" | BookingStatus;
+type SaveState = "idle" | "saving" | "saved" | "error";
+
+type BookingDraft = {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string | null;
+  customerAddressLine1?: string | null;
+  customerAddressLine2?: string | null;
+  customerPostalCode?: string | null;
+  customerCity?: string | null;
+  customerCountry?: string | null;
+  notes?: string | null;
+};
 
 const statusOptions: { value: BookingStatus; label: string }[] = [
   { value: "PENDING", label: "Offen" },
@@ -48,20 +69,33 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [invoicePendingId, setInvoicePendingId] = useState<string | null>(null);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [openActionMenuId, setOpenActionMenuId] = useState<string | null>(null);
+  const [activeRowId, setActiveRowId] = useState<string | null>(null);
+  const [draft, setDraft] = useState<BookingDraft | null>(null);
+  const [saveState, setSaveState] = useState<SaveState>("idle");
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSavedRef = useRef<string>("");
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    if (!openMenuId) return;
+    if (!openMenuId && !openActionMenuId) return;
     const handleClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (target.closest(`[data-status-menu="${openMenuId}"]`)) {
+      if (openMenuId && target.closest(`[data-status-menu="${openMenuId}"]`)) {
+        return;
+      }
+      if (
+        openActionMenuId &&
+        target.closest(`[data-action-menu="${openActionMenuId}"]`)
+      ) {
         return;
       }
       setOpenMenuId(null);
+      setOpenActionMenuId(null);
     };
     window.addEventListener("mousedown", handleClick);
     return () => window.removeEventListener("mousedown", handleClick);
-  }, [openMenuId]);
+  }, [openMenuId, openActionMenuId]);
 
   const statusCounts = useMemo(() => {
     const base: Record<StatusFilter, number> = {
@@ -115,6 +149,84 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
     });
   }, [rows, query, sortField, sortDirection]);
 
+  const activeRow = useMemo(
+    () => rows.find((row) => row.id === activeRowId) || null,
+    [rows, activeRowId]
+  );
+
+  const applyRowUpdate = (id: string, updates: Partial<BookingRow>) => {
+    setRows((prev) =>
+      prev.map((row) => (row.id === id ? { ...row, ...updates } : row))
+    );
+  };
+
+  const openDrawer = (row: BookingRow) => {
+    setOpenActionMenuId(null);
+    setOpenMenuId(null);
+    const draftValue: BookingDraft = {
+      id: row.id,
+      customerName: row.customerName,
+      customerEmail: row.customerEmail,
+      customerPhone: row.customerPhone || "",
+      customerAddressLine1: row.customerAddressLine1 || "",
+      customerAddressLine2: row.customerAddressLine2 || "",
+      customerPostalCode: row.customerPostalCode || "",
+      customerCity: row.customerCity || "",
+      customerCountry: row.customerCountry || "",
+      notes: row.notes || "",
+    };
+    setActiveRowId(row.id);
+    setDraft(draftValue);
+    lastSavedRef.current = JSON.stringify(draftValue);
+    setSaveState("idle");
+  };
+
+  const closeDrawer = () => {
+    setActiveRowId(null);
+    setDraft(null);
+    setSaveState("idle");
+    setOpenMenuId(null);
+    setOpenActionMenuId(null);
+  };
+
+  useEffect(() => {
+    if (!draft) return;
+    const serialized = JSON.stringify(draft);
+    if (serialized === lastSavedRef.current) return;
+
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+    }
+
+    setSaveState("saving");
+    saveTimerRef.current = setTimeout(async () => {
+      const result = await updateBookingDetails(draft);
+      if (result.ok) {
+        lastSavedRef.current = serialized;
+        setSaveState("saved");
+        applyRowUpdate(draft.id, {
+          customerName: draft.customerName,
+          customerEmail: draft.customerEmail,
+          customerPhone: draft.customerPhone,
+          customerAddressLine1: draft.customerAddressLine1,
+          customerAddressLine2: draft.customerAddressLine2,
+          customerPostalCode: draft.customerPostalCode,
+          customerCity: draft.customerCity,
+          customerCountry: draft.customerCountry,
+          notes: draft.notes,
+        });
+      } else {
+        setSaveState("error");
+      }
+    }, 600);
+
+    return () => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+      }
+    };
+  }, [draft]);
+
   const handleHeaderSort = (field: SortField) => {
     if (sortField === field) {
       setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -146,6 +258,7 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
       }
       setPendingId((current) => (current === id ? null : current));
       setOpenMenuId((current) => (current === id ? null : current));
+      setOpenActionMenuId((current) => (current === id ? null : current));
     });
   };
 
@@ -154,8 +267,25 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
     startTransition(async () => {
       await resendInvoiceEmail(id);
       setInvoicePendingId((current) => (current === id ? null : current));
+      setOpenActionMenuId((current) => (current === id ? null : current));
     });
   };
+
+  const updateDraftField = <K extends keyof BookingDraft>(
+    field: K,
+    value: BookingDraft[K]
+  ) => {
+    setDraft((prev) => (prev ? { ...prev, [field]: value } : prev));
+  };
+
+  const saveLabel =
+    saveState === "saving"
+      ? "Speichert…"
+      : saveState === "saved"
+        ? "Gespeichert"
+        : saveState === "error"
+          ? "Fehler"
+          : "Bereit";
 
   return (
     <div className="space-y-4">
@@ -236,7 +366,8 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
             return (
               <div
                 key={row.id}
-                className="grid items-center gap-3 px-4 py-3 text-sm hover:bg-[var(--color-stone)]/60 lg:grid-cols-[110px_minmax(240px,1.5fr)_minmax(220px,1.2fr)_90px_minmax(200px,1fr)_minmax(180px,1fr)]"
+                onClick={() => openDrawer(row)}
+                className="group grid cursor-pointer items-center gap-3 border-l-2 border-transparent px-4 py-3 text-sm transition hover:border-[var(--color-ember)] hover:bg-[var(--color-stone)]/70 lg:grid-cols-[110px_minmax(240px,1.5fr)_minmax(220px,1.2fr)_90px_minmax(200px,1fr)_minmax(180px,1fr)]"
               >
                 <div className="text-xs text-[var(--color-muted)]">{formatDate(row.createdAt)}</div>
                 <div className="min-w-0">
@@ -255,7 +386,11 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
                 </div>
                 <div className="font-semibold text-[var(--color-text)]">{formatPrice(row.amountCHF)}</div>
                 <div className="flex min-w-0 items-center gap-2">
-                  <div className="relative" data-status-menu={row.id}>
+                  <div
+                    className="relative"
+                    data-status-menu={row.id}
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <button
                       type="button"
                       onClick={() =>
@@ -302,32 +437,65 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
                     <span className="text-[11px] text-[var(--color-ember)]">Speichert…</span>
                   ) : null}
                 </div>
-                <div className="flex flex-wrap items-center justify-end gap-2">
+                <div
+                  className="relative flex items-center justify-end"
+                  data-action-menu={row.id}
+                  onClick={(event) => event.stopPropagation()}
+                >
                   <button
                     type="button"
-                    onClick={() => handleStatusChange(row.id, "PAID")}
-                    disabled={row.status === "PAID" || isPending}
-                    className="rounded-full border border-[var(--color-border)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-text)] transition hover:shadow disabled:opacity-60"
+                    onClick={() =>
+                      setOpenActionMenuId((current) => (current === row.id ? null : row.id))
+                    }
+                    className="rounded-full border border-[var(--color-border)] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text)] opacity-80 transition hover:shadow group-hover:opacity-100"
                   >
-                    Bezahlt
+                    Aktionen ▾
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleStatusChange(row.id, "CANCELLED")}
-                    disabled={row.status === "CANCELLED" || isPending}
-                    className="rounded-full border border-[var(--color-border)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-text)] transition hover:shadow disabled:opacity-60"
-                  >
-                    Stornieren
-                  </button>
-                  {isInvoice ? (
-                    <button
-                      type="button"
-                      onClick={() => handleResendInvoice(row.id)}
-                      disabled={invoicePendingId === row.id || isPending}
-                      className="rounded-full border border-[var(--color-border)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-text)] transition hover:shadow disabled:opacity-60"
-                    >
-                      {invoicePendingId === row.id ? "Sendet..." : "Rechnung mailen"}
-                    </button>
+                  {openActionMenuId === row.id ? (
+                    <div className="absolute right-0 top-12 z-20 w-52 rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-xl">
+                      <button
+                        type="button"
+                        onClick={() => openDrawer(row)}
+                        className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
+                      >
+                        Details öffnen
+                      </button>
+                      {row.status !== "PAID" ? (
+                        <button
+                          type="button"
+                          onClick={() => handleStatusChange(row.id, "PAID")}
+                          className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
+                        >
+                          Als bezahlt markieren
+                        </button>
+                      ) : null}
+                      {row.status === "CANCELLED" ? (
+                        <button
+                          type="button"
+                          onClick={() => handleStatusChange(row.id, "PENDING")}
+                          className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
+                        >
+                          Reaktivieren
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleStatusChange(row.id, "CANCELLED")}
+                          className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
+                        >
+                          Stornieren
+                        </button>
+                      )}
+                      {isInvoice ? (
+                        <button
+                          type="button"
+                          onClick={() => handleResendInvoice(row.id)}
+                          className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
+                        >
+                          Rechnung mailen
+                        </button>
+                      ) : null}
+                    </div>
                   ) : null}
                 </div>
               </div>
@@ -340,6 +508,225 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
           ) : null}
         </div>
       </div>
+      {activeRow && draft ? (
+        <div className="fixed inset-0 z-40">
+          <div className="absolute inset-0 bg-black/30" onClick={closeDrawer} />
+          <div className="absolute right-0 top-0 h-full w-full max-w-xl overflow-y-auto bg-white p-6 shadow-2xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-muted)]">
+                  Buchung Details
+                </p>
+                <h3 className="mt-1 text-2xl font-semibold text-[var(--color-text)]">
+                  {activeRow.customerName}
+                </h3>
+                <p className="text-sm text-[var(--color-muted)]">
+                  {activeRow.customerEmail} · {formatPrice(activeRow.amountCHF)}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  {saveLabel}
+                </span>
+                <button
+                  type="button"
+                  onClick={closeDrawer}
+                  className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-text)]"
+                >
+                  Schliessen
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-6">
+              <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  Status & Aktionen
+                </p>
+                <div className="mt-3 flex flex-wrap items-center gap-2" data-status-menu="drawer">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setOpenMenuId((current) => (current === "drawer" ? null : "drawer"))
+                    }
+                    className="rounded-full border border-[var(--color-border)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                  >
+                    {bookingStatusLabels[activeRow.status] ?? activeRow.status} ▾
+                  </button>
+                  {openMenuId === "drawer" ? (
+                    <div className="w-48 rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-lg">
+                      {statusOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => handleStatusChange(activeRow.id, option.value)}
+                          className="w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)]"
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                  <button
+                    type="button"
+                    onClick={() => handleStatusChange(activeRow.id, "PAID")}
+                    disabled={activeRow.status === "PAID" || isPending}
+                    className="rounded-full border border-[var(--color-border)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] disabled:opacity-60"
+                  >
+                    Bezahlt
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleStatusChange(activeRow.id, "CANCELLED")}
+                    disabled={activeRow.status === "CANCELLED" || isPending}
+                    className="rounded-full border border-[var(--color-border)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] disabled:opacity-60"
+                  >
+                    Stornieren
+                  </button>
+                  {activeRow.paymentMode === "INVOICE" ? (
+                    <button
+                      type="button"
+                      onClick={() => handleResendInvoice(activeRow.id)}
+                      disabled={invoicePendingId === activeRow.id || isPending}
+                      className="rounded-full border border-[var(--color-border)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] disabled:opacity-60"
+                    >
+                      {invoicePendingId === activeRow.id ? "Sendet..." : "Rechnung mailen"}
+                    </button>
+                  ) : null}
+                </div>
+              </section>
+
+              <section className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-3">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    Name
+                  </label>
+                  <input
+                    value={draft.customerName}
+                    onChange={(event) => updateDraftField("customerName", event.target.value)}
+                    className="form-input w-full px-3 py-2"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    E-Mail
+                  </label>
+                  <input
+                    value={draft.customerEmail}
+                    onChange={(event) => updateDraftField("customerEmail", event.target.value)}
+                    className="form-input w-full px-3 py-2"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    Telefon
+                  </label>
+                  <input
+                    value={draft.customerPhone || ""}
+                    onChange={(event) => updateDraftField("customerPhone", event.target.value)}
+                    className="form-input w-full px-3 py-2"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    Land
+                  </label>
+                  <input
+                    value={draft.customerCountry || ""}
+                    onChange={(event) => updateDraftField("customerCountry", event.target.value)}
+                    className="form-input w-full px-3 py-2"
+                  />
+                </div>
+              </section>
+
+              <section className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-3 md:col-span-2">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    Adresse
+                  </label>
+                  <input
+                    value={draft.customerAddressLine1 || ""}
+                    onChange={(event) =>
+                      updateDraftField("customerAddressLine1", event.target.value)
+                    }
+                    placeholder="Strasse und Nr."
+                    className="form-input w-full px-3 py-2"
+                  />
+                </div>
+                <div className="space-y-3 md:col-span-2">
+                  <input
+                    value={draft.customerAddressLine2 || ""}
+                    onChange={(event) =>
+                      updateDraftField("customerAddressLine2", event.target.value)
+                    }
+                    placeholder="Zusatz / Firma"
+                    className="form-input w-full px-3 py-2"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    PLZ
+                  </label>
+                  <input
+                    value={draft.customerPostalCode || ""}
+                    onChange={(event) =>
+                      updateDraftField("customerPostalCode", event.target.value)
+                    }
+                    className="form-input w-full px-3 py-2"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                    Ort
+                  </label>
+                  <input
+                    value={draft.customerCity || ""}
+                    onChange={(event) => updateDraftField("customerCity", event.target.value)}
+                    className="form-input w-full px-3 py-2"
+                  />
+                </div>
+              </section>
+
+              <section className="space-y-3">
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  Notizen
+                </label>
+                <textarea
+                  value={draft.notes || ""}
+                  onChange={(event) => updateDraftField("notes", event.target.value)}
+                  rows={4}
+                  className="form-input w-full px-3 py-2"
+                />
+              </section>
+
+              <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4 text-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  Buchungsdetails
+                </p>
+                <div className="mt-3 grid gap-2 text-[var(--color-muted)]">
+                  <div>
+                    <span className="font-semibold text-[var(--color-text)]">Leistung:</span>{" "}
+                    {bookingTypeLabels[activeRow.type] ?? activeRow.type}
+                    {activeRow.title ? ` · ${activeRow.title}` : ""}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-[var(--color-text)]">Datum:</span>{" "}
+                    {formatDate(activeRow.createdAt)}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-[var(--color-text)]">Zahlung:</span>{" "}
+                    {activeRow.paymentMode === "STRIPE"
+                      ? activeRow.stripeConfirmed
+                        ? "Stripe (bestätigt)"
+                        : "Stripe (nicht bestätigt)"
+                      : "Rechnung / manuell"}
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

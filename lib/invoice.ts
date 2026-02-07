@@ -119,9 +119,25 @@ export async function buildInvoiceData(bookingId: string): Promise<InvoiceData |
     mobile: sellerOverride?.mobile || contact.mobile || null,
   };
 
+  const customerAddressLines: string[] = [];
+  if (booking.customerAddressLine1) {
+    customerAddressLines.push(booking.customerAddressLine1);
+  }
+  if (booking.customerAddressLine2) {
+    customerAddressLines.push(booking.customerAddressLine2);
+  }
+  const cityLine = [booking.customerPostalCode, booking.customerCity]
+    .filter(Boolean)
+    .join(" ");
+  if (cityLine) {
+    customerAddressLines.push(cityLine);
+  }
+  if (booking.customerCountry) {
+    customerAddressLines.push(booking.customerCountry);
+  }
   const customer: InvoiceParty = {
     name: booking.customerName,
-    addressLines: [],
+    addressLines: customerAddressLines,
     email: booking.customerEmail,
     phone: booking.customerPhone || null,
   };

@@ -63,3 +63,39 @@ export async function resendInvoiceEmail(bookingId: string) {
     return { ok: false, error: "send_failed" };
   }
 }
+
+type BookingDetailsPayload = {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string | null;
+  customerAddressLine1?: string | null;
+  customerAddressLine2?: string | null;
+  customerPostalCode?: string | null;
+  customerCity?: string | null;
+  customerCountry?: string | null;
+  notes?: string | null;
+};
+
+export async function updateBookingDetails(payload: BookingDetailsPayload) {
+  const admin = await getAdminFromSession();
+  if (!admin) return { ok: false };
+  if (!payload?.id) return { ok: false };
+
+  await prisma.booking.update({
+    where: { id: payload.id },
+    data: {
+      customerName: payload.customerName,
+      customerEmail: payload.customerEmail,
+      customerPhone: payload.customerPhone || null,
+      customerAddressLine1: payload.customerAddressLine1 || null,
+      customerAddressLine2: payload.customerAddressLine2 || null,
+      customerPostalCode: payload.customerPostalCode || null,
+      customerCity: payload.customerCity || null,
+      customerCountry: payload.customerCountry || null,
+      notes: payload.notes || null,
+    },
+  });
+
+  return { ok: true };
+}

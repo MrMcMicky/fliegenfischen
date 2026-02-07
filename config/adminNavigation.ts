@@ -29,6 +29,11 @@ export const adminNavItems: AdminNavItem[] = [
     ],
   },
   {
+    label: "Anfragen",
+    href: "/admin/anfragen",
+    children: [],
+  },
+  {
     label: "Inhalte",
     href: "/admin/inhalte/wysiwyg",
     children: [
@@ -39,15 +44,11 @@ export const adminNavItems: AdminNavItem[] = [
   },
   {
     label: "System",
-    href: "/admin/anfragen",
+    href: "/admin/settings",
+    requiresSuperAdmin: true,
     children: [
-      { label: "Anfragen", href: "/admin/anfragen" },
-      { label: "Benutzer", href: "/admin/users", requiresSuperAdmin: true },
-      {
-        label: "Einstellungen",
-        href: "/admin/settings",
-        requiresSuperAdmin: true,
-      },
+      { label: "Backups", href: "/admin/settings" },
+      { label: "Benutzer", href: "/admin/users" },
     ],
   },
 ];

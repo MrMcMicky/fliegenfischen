@@ -6,7 +6,8 @@ import { bookingStatusLabels } from "@/lib/constants";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [upcomingSessions, bookings, vouchers] = await Promise.all([
+  const [upcomingSessions, bookings, vouchers, openBookingCount, openContactCount] =
+    await Promise.all([
     prisma.courseSession.findMany({
       where: { date: { gte: new Date() } },
       include: { course: true },
@@ -15,10 +16,61 @@ export default async function AdminDashboard() {
     }),
     prisma.booking.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
     prisma.voucher.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
+    prisma.booking.count({
+      where: {
+        status: {
+          in: ["PENDING", "PAYMENT_PENDING", "INVOICE_REQUESTED"],
+        },
+      },
+    }),
+    prisma.contactRequest.count({ where: { status: "OPEN" } }),
   ]);
 
   return (
     <div className="space-y-10">
+      <section className="grid gap-4 md:grid-cols-2">
+        <Link
+          href="/admin/buchungen"
+          className={`rounded-2xl border px-6 py-5 text-sm transition hover:shadow ${
+            openBookingCount
+              ? "border-[var(--color-ember)] bg-[var(--color-ember)]/10"
+              : "border-[var(--color-border)] bg-white"
+          }`}
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+            Offene Buchungen
+          </p>
+          <div className="mt-3 flex items-baseline gap-3">
+            <span className="text-3xl font-semibold text-[var(--color-text)]">
+              {openBookingCount}
+            </span>
+            <span className="text-sm text-[var(--color-muted)]">
+              {openBookingCount === 1 ? "Buchung wartet" : "Buchungen warten"}
+            </span>
+          </div>
+        </Link>
+        <Link
+          href="/admin/anfragen"
+          className={`rounded-2xl border px-6 py-5 text-sm transition hover:shadow ${
+            openContactCount
+              ? "border-[var(--color-ember)] bg-[var(--color-ember)]/10"
+              : "border-[var(--color-border)] bg-white"
+          }`}
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+            Neue Anfragen
+          </p>
+          <div className="mt-3 flex items-baseline gap-3">
+            <span className="text-3xl font-semibold text-[var(--color-text)]">
+              {openContactCount}
+            </span>
+            <span className="text-sm text-[var(--color-muted)]">
+              {openContactCount === 1 ? "Anfrage offen" : "Anfragen offen"}
+            </span>
+          </div>
+        </Link>
+      </section>
+
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">

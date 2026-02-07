@@ -79,9 +79,9 @@ export default async function AdminSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-display text-2xl font-semibold">Einstellungen</h2>
+        <h2 className="font-display text-2xl font-semibold">System & Backups</h2>
         <p className="text-sm text-[var(--color-muted)]">
-          Erweiterte JSON-Inhalte für Navigation und Inhalte.
+          Automatische Backups, Download sowie erweiterte System-Inhalte.
         </p>
       </div>
       <section className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
@@ -100,13 +100,21 @@ export default async function AdminSettingsPage() {
                 key={backup.name}
                 className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] px-4 py-3"
               >
-                <span className="font-semibold text-[var(--color-text)]">
-                  {backup.name}
-                </span>
-                <span className="text-[var(--color-muted)]">
-                  {(backup.size / 1024 / 1024).toFixed(2)} MB ·{" "}
-                  {backup.updatedAt.toLocaleString("de-CH")}
-                </span>
+                <div>
+                  <span className="font-semibold text-[var(--color-text)]">
+                    {backup.name}
+                  </span>
+                  <div className="text-[var(--color-muted)]">
+                    {(backup.size / 1024 / 1024).toFixed(2)} MB ·{" "}
+                    {backup.updatedAt.toLocaleString("de-CH")}
+                  </div>
+                </div>
+                <a
+                  href={`/api/admin/backups/${encodeURIComponent(backup.name)}`}
+                  className="rounded-full border border-[var(--color-border)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-text)] transition hover:shadow"
+                >
+                  Download
+                </a>
               </div>
             ))
           ) : (

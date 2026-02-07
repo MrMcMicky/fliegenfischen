@@ -54,6 +54,7 @@ export default function AdminNavigation({
   children,
 }: AdminNavigationProps) {
   const pathname = usePathname();
+  const roleLabel = isSuperAdmin ? "Super Admin" : "Admin";
   const filteredItems = adminNavItems
     .filter((item) => !item.requiresSuperAdmin || isSuperAdmin)
     .map((item) => ({
@@ -95,6 +96,7 @@ export default function AdminNavigation({
             })}
           </ul>
           <div className={styles.userProfile}>
+            <span className={styles.userRole}>{roleLabel}</span>
             <span className={styles.userName}>{adminName}</span>
             <LogoutButton />
           </div>

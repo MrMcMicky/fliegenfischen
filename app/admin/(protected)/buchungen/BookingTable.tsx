@@ -555,61 +555,33 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
             </div>
 
             <div className="mt-6 space-y-6">
-              <section className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
+              <section className="grid gap-4 md:grid-cols-[1.1fr_1fr]">
                 <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
                     Status
                   </p>
-                  <div className="mt-3 space-y-3">
-                    {[
-                      {
-                        label: "Offen",
-                        values: ["PENDING", "PAYMENT_PENDING", "INVOICE_REQUESTED"] as BookingStatus[],
-                      },
-                      {
-                        label: "Abgeschlossen",
-                        values: ["PAID", "CANCELLED"] as BookingStatus[],
-                      },
-                    ].map((group) => (
-                      <div key={group.label}>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
-                          {group.label}
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          {group.values.map((value) => {
-                            const option = statusOptions.find((item) => item.value === value);
-                            if (!option) return null;
-                            const isActive = activeRow.status === option.value;
-                            const chipClass =
-                              option.value === "PAID"
-                                ? "bg-emerald-100 text-emerald-800"
-                                : option.value === "INVOICE_REQUESTED"
-                                  ? "bg-amber-100 text-amber-800"
-                                  : option.value === "PAYMENT_PENDING"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : option.value === "CANCELLED"
-                                      ? "bg-rose-100 text-rose-800"
-                                      : "bg-gray-100 text-gray-700";
-                            return (
-                              <button
-                                key={option.value}
-                                type="button"
-                                onClick={() => handleStatusChange(activeRow.id, option.value)}
-                                disabled={isPending}
-                                className={`rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
-                                  isActive
-                                    ? chipClass
-                                    : "border border-[var(--color-border)] bg-white text-[var(--color-muted)] hover:border-[var(--color-forest)]"
-                                }`}
-                              >
-                                {option.label}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ))}
+                  <div className="relative mt-3">
+                    <select
+                      value={activeRow.status}
+                      onChange={(event) =>
+                        handleStatusChange(activeRow.id, event.target.value as BookingStatus)
+                      }
+                      className="appearance-none w-full rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
+                      disabled={isPending}
+                    >
+                      {statusOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-[var(--color-muted)]">
+                      ▾
+                    </span>
                   </div>
+                  <p className="mt-2 text-xs text-[var(--color-muted)]">
+                    Status wird automatisch gespeichert.
+                  </p>
                 </div>
                 <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">

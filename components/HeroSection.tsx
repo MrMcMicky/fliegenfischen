@@ -8,6 +8,7 @@ export function HeroSection({
   nextSession,
   hero,
   compact = false,
+  preview = false,
 }: {
   nextSession?: { date: Date } | null;
   hero: {
@@ -17,9 +18,14 @@ export function HeroSection({
     secondaryCta: { label: ReactNode; href: string };
   };
   compact?: boolean;
+  preview?: boolean;
 }) {
   const pillClass =
     "inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/20 px-4 py-1 text-xs font-semibold tracking-[0.25em] text-white backdrop-blur-sm";
+  const baseOverlayClass = preview ? "bg-black/65" : "bg-black/50";
+  const gradientOverlayClass = preview
+    ? "bg-gradient-to-b from-black/50 via-black/60 to-[var(--color-stone)]"
+    : "bg-gradient-to-b from-black/30 via-black/40 to-[var(--color-stone)]";
 
   return (
     <section
@@ -41,8 +47,8 @@ export function HeroSection({
         >
           <source src="/videos/hero-fliegenfischer.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-[var(--color-stone)]" />
+        <div className={`absolute inset-0 ${baseOverlayClass}`} />
+        <div className={`absolute inset-0 ${gradientOverlayClass}`} />
       </div>
       <div className="mx-auto w-full max-w-5xl px-4 text-center text-white">
         {nextSession ? (

@@ -296,14 +296,12 @@ export default async function AdminLandingWysiwygPage() {
         <p className="text-sm text-[var(--color-muted)]">
           Texte direkt anklicken und bearbeiten. Änderungen werden automatisch gespeichert.
         </p>
-        <p className="mt-1 text-xs text-[var(--color-muted)]">
-          Link-Ziele werden hier nur angezeigt (nicht editierbar).
-        </p>
       </div>
 
       <div className="overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-stone)]">
         <HeroSection
           compact
+          preview
           nextSession={nextSession}
           hero={{
             title: (
@@ -348,32 +346,6 @@ export default async function AdminLandingWysiwygPage() {
 
         <div className="mx-auto w-full max-w-5xl px-4 pb-8">
           <div className="rounded-2xl border border-[var(--color-border)] bg-white p-4 text-xs text-[var(--color-muted)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-              Button-Ziele (nur Anzeige)
-            </p>
-            <p className="mt-2 text-[11px] text-[var(--color-muted)]">
-              Link-Ziele werden zentral verwaltet.
-            </p>
-            <div className="mt-3 grid gap-3 md:grid-cols-2">
-              <div className="space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em]">Primär</p>
-                {renderLinkInput(
-                  "homeHero.primaryCta.href",
-                  homeHero.primaryCta?.href || "",
-                  "/kurse/termine"
-                )}
-              </div>
-              <div className="space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em]">Sekundär</p>
-                {renderLinkInput(
-                  "homeHero.secondaryCta.href",
-                  homeHero.secondaryCta?.href || "",
-                  "/buchen?lesson=private"
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 rounded-2xl border border-[var(--color-border)] bg-white p-4 text-xs text-[var(--color-muted)]">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
               Landing-Bilder
             </p>

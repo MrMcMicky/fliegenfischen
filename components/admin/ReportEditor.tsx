@@ -7,6 +7,19 @@ import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import StarterKit from "@tiptap/starter-kit";
 import { EditorContent, useEditor } from "@tiptap/react";
+import {
+  Bold,
+  Italic,
+  Heading2,
+  Heading3,
+  List,
+  ListOrdered,
+  Quote,
+  Link2,
+  Unlink,
+  Undo2,
+  Redo2,
+} from "lucide-react";
 
 type ReportEditorInitial = {
   title: string;
@@ -105,10 +118,10 @@ export function ReportEditor({
   });
 
   const toolbarButtonClass = (active?: boolean) =>
-    `rounded-full border border-[var(--color-border)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] transition ${
+    `inline-flex h-9 w-9 items-center justify-center rounded-md border text-[var(--color-forest)] transition ${
       active
-        ? "bg-[var(--color-forest)] text-white"
-        : "text-[var(--color-muted)] hover:border-[var(--color-forest)]"
+        ? "border-[var(--color-forest)] bg-[var(--color-forest)] text-white"
+        : "border-[var(--color-border)] bg-white hover:border-[var(--color-forest)]/60 hover:bg-[var(--color-stone)]"
     }`;
 
   const safeSlug = useMemo(() => slugify(slug), [slug]);
@@ -389,88 +402,121 @@ export function ReportEditor({
         <input type="hidden" name="body" value={body} />
 
         <div className="space-y-3">
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().toggleBold().run()}
-              className={toolbarButtonClass(editor?.isActive("bold"))}
-            >
-              Fett
-            </button>
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().toggleItalic().run()}
-              className={toolbarButtonClass(editor?.isActive("italic"))}
-            >
-              Kursiv
-            </button>
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-              className={toolbarButtonClass(
-                editor?.isActive("heading", { level: 2 })
-              )}
-            >
-              Titel
-            </button>
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
-              className={toolbarButtonClass(
-                editor?.isActive("heading", { level: 3 })
-              )}
-            >
-              Untertitel
-            </button>
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().toggleBulletList().run()}
-              className={toolbarButtonClass(editor?.isActive("bulletList"))}
-            >
-              Liste
-            </button>
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().toggleOrderedList().run()}
-              className={toolbarButtonClass(editor?.isActive("orderedList"))}
-            >
-              Nummeriert
-            </button>
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().toggleBlockquote().run()}
-              className={toolbarButtonClass(editor?.isActive("blockquote"))}
-            >
-              Zitat
-            </button>
-            <button
-              type="button"
-              onClick={handleLink}
-              className={toolbarButtonClass(editor?.isActive("link"))}
-            >
-              Link
-            </button>
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().unsetLink().run()}
-              className={toolbarButtonClass()}
-            >
-              Link lösen
-            </button>
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().undo().run()}
-              className={toolbarButtonClass()}
-            >
-              Rückgängig
-            </button>
-            <button
-              type="button"
-              onClick={() => editor?.chain().focus().redo().run()}
-              className={toolbarButtonClass()}
-            >
-              Wiederholen
-            </button>
+          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-2">
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleBold().run()}
+                className={toolbarButtonClass(editor?.isActive("bold"))}
+                aria-pressed={editor?.isActive("bold")}
+                title="Fett (Strg+B)"
+              >
+                <Bold size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleItalic().run()}
+                className={toolbarButtonClass(editor?.isActive("italic"))}
+                aria-pressed={editor?.isActive("italic")}
+                title="Kursiv (Strg+I)"
+              >
+                <Italic size={16} />
+              </button>
+            </div>
+            <div className="mx-1 h-6 w-px bg-[var(--color-border)]" />
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+                className={toolbarButtonClass(
+                  editor?.isActive("heading", { level: 2 })
+                )}
+                aria-pressed={editor?.isActive("heading", { level: 2 })}
+                title="Titel"
+              >
+                <Heading2 size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
+                className={toolbarButtonClass(
+                  editor?.isActive("heading", { level: 3 })
+                )}
+                aria-pressed={editor?.isActive("heading", { level: 3 })}
+                title="Untertitel"
+              >
+                <Heading3 size={16} />
+              </button>
+            </div>
+            <div className="mx-1 h-6 w-px bg-[var(--color-border)]" />
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleBulletList().run()}
+                className={toolbarButtonClass(editor?.isActive("bulletList"))}
+                aria-pressed={editor?.isActive("bulletList")}
+                title="Liste"
+              >
+                <List size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+                className={toolbarButtonClass(editor?.isActive("orderedList"))}
+                aria-pressed={editor?.isActive("orderedList")}
+                title="Nummeriert"
+              >
+                <ListOrdered size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().toggleBlockquote().run()}
+                className={toolbarButtonClass(editor?.isActive("blockquote"))}
+                aria-pressed={editor?.isActive("blockquote")}
+                title="Zitat"
+              >
+                <Quote size={16} />
+              </button>
+            </div>
+            <div className="mx-1 h-6 w-px bg-[var(--color-border)]" />
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={handleLink}
+                className={toolbarButtonClass(editor?.isActive("link"))}
+                aria-pressed={editor?.isActive("link")}
+                title="Link einfügen"
+              >
+                <Link2 size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().unsetLink().run()}
+                className={toolbarButtonClass()}
+                title="Link entfernen"
+              >
+                <Unlink size={16} />
+              </button>
+            </div>
+            <div className="mx-1 h-6 w-px bg-[var(--color-border)]" />
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().undo().run()}
+                className={toolbarButtonClass()}
+                title="Rückgängig"
+              >
+                <Undo2 size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => editor?.chain().focus().redo().run()}
+                className={toolbarButtonClass()}
+                title="Wiederholen"
+              >
+                <Redo2 size={16} />
+              </button>
+            </div>
           </div>
 
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">

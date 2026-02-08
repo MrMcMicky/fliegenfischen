@@ -48,6 +48,7 @@ export default function ContactRequestsTable({
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("OPEN");
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [activeRowId, setActiveRowId] = useState<string | null>(null);
+  const [openStatusMenuId, setOpenStatusMenuId] = useState<string | null>(null);
   const [openActionMenuId, setOpenActionMenuId] = useState<string | null>(null);
   const [deletePendingId, setDeletePendingId] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>("idle");
@@ -55,17 +56,21 @@ export default function ContactRequestsTable({
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
-    if (!openActionMenuId) return;
+    if (!openActionMenuId && !openStatusMenuId) return;
     const handleClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
+      if (openStatusMenuId && target.closest(`[data-status-menu="${openStatusMenuId}"]`)) {
+        return;
+      }
       if (target.closest(`[data-action-menu="${openActionMenuId}"]`)) {
         return;
       }
+      setOpenStatusMenuId(null);
       setOpenActionMenuId(null);
     };
     window.addEventListener("mousedown", handleClick);
     return () => window.removeEventListener("mousedown", handleClick);
-  }, [openActionMenuId]);
+  }, [openActionMenuId, openStatusMenuId]);
 
   useEffect(() => {
     if (saveState !== "saved") return;
@@ -122,6 +127,7 @@ export default function ContactRequestsTable({
 
   const closeDrawer = () => {
     setActiveRowId(null);
+    setOpenStatusMenuId(null);
     setOpenActionMenuId(null);
     setSaveState("idle");
   };
@@ -133,6 +139,7 @@ export default function ContactRequestsTable({
     );
     setPendingId(id);
     setSaveState("saving");
+    setOpenStatusMenuId(null);
     startTransition(async () => {
       const result = await updateContactStatus(id, status);
       if (!result.ok && previousStatus) {
@@ -147,6 +154,13 @@ export default function ContactRequestsTable({
       }
       setPendingId((current) => (current === id ? null : current));
     });
+  };
+
+  const openDrawerForRow = (id: string) => {
+    setOpenActionMenuId(null);
+    setOpenStatusMenuId(null);
+    setActiveRowId(id);
+    setSaveState("idle");
   };
 
   const handleDeleteRequest = (id: string) => {
@@ -243,15 +257,20 @@ export default function ContactRequestsTable({
           {filteredRows.map((row) => (
             <div
               key={row.id}
-              onClick={() => {
-                setOpenActionMenuId(null);
-                setActiveRowId(row.id);
-                setSaveState("idle");
-              }}
-              className="group grid cursor-pointer items-center gap-3 border-l-2 border-transparent px-4 py-3 text-sm transition hover:border-[var(--color-ember)] hover:bg-[var(--color-stone)]/70 lg:grid-cols-[110px_minmax(220px,1.2fr)_minmax(260px,2fr)_140px_140px]"
+              className="group grid items-center gap-3 border-l-2 border-transparent px-4 py-3 text-sm transition hover:border-[var(--color-ember)] hover:bg-[var(--color-stone)]/70 lg:grid-cols-[110px_minmax(220px,1.2fr)_minmax(260px,2fr)_140px_140px]"
             >
-              <div className="text-xs text-[var(--color-muted)]">{formatDate(row.createdAt)}</div>
-              <div className="min-w-0">
+              <button
+                type="button"
+                onClick={() => openDrawerForRow(row.id)}
+                className="text-left text-xs text-[var(--color-muted)] hover:text-[var(--color-text)]"
+              >
+                {formatDate(row.createdAt)}
+              </button>
+              <button
+                type="button"
+                onClick={() => openDrawerForRow(row.id)}
+                className="min-w-0 text-left"
+              >
                 <p className="truncate font-semibold text-[var(--color-text)]">
                   {row.name} ·{" "}
                   <span className="font-normal text-[var(--color-muted)]">
@@ -263,21 +282,51 @@ export default function ContactRequestsTable({
                     {row.phone}
                   </p>
                 ) : null}
-              </div>
-              <div className="min-w-0">
+              </button>
+              <button
+                type="button"
+                onClick={() => openDrawerForRow(row.id)}
+                className="min-w-0 text-left"
+              >
                 <p className="truncate text-[var(--color-text)]">
                   {row.subject?.trim() || "Kontaktanfrage"} ·{" "}
                   <span className="text-[var(--color-muted)]">
                     {row.message}
                   </span>
                 </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${statusPillClasses[row.status]}`}
+              </button>
+              <div
+                className="relative flex items-center gap-2"
+                data-status-menu={row.id}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    setOpenStatusMenuId((current) => (current === row.id ? null : row.id))
+                  }
+                  className={`flex items-center gap-2 rounded-full px-2.5 py-1 text-[11px] font-semibold ${statusPillClasses[row.status]}`}
                 >
-                  {statusLabels[row.status]}
-                </span>
+                  {statusLabels[row.status]} <span className="text-[10px]">▾</span>
+                </button>
+                {openStatusMenuId === row.id ? (
+                  <div className="absolute right-0 z-10 mt-2 w-40 rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-xl">
+                    {statusOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => handleStatusChange(row.id, option.value)}
+                        className={`w-full rounded-lg px-3 py-2 text-left transition hover:bg-[var(--color-stone)] ${
+                          row.status === option.value
+                            ? "bg-[var(--color-stone)] font-semibold"
+                            : ""
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
                 {pendingId === row.id ? (
                   <span className="text-[11px] text-[var(--color-ember)]">
                     Speichert…

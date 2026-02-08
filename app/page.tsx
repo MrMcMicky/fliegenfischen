@@ -305,7 +305,7 @@ export default async function Home({
             <CourseGrid sessions={upcomingSessions} />
           </div>
           {courseFaqs.length ? (
-            <div className="mt-12">
+            <div id="faq" className="mt-12 scroll-mt-16">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
                 FAQ
               </p>

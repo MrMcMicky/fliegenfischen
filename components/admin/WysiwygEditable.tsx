@@ -201,13 +201,9 @@ export function EditableImage({
                 : "Bereit"}
         </span>
       </div>
-      <input
-        value={src}
-        onChange={(event) => setSrc(event.target.value)}
-        placeholder={placeholder}
-        data-status={status}
-        className="wysiwyg-input w-full"
-      />
+      <p className="text-xs text-[var(--color-muted)]">
+        Aktuelles Bild: {src || placeholder || "—"}
+      </p>
       {src ? (
         <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
           <img

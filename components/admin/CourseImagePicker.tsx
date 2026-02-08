@@ -60,13 +60,7 @@ export function CourseImagePicker({
         <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
           Kursbild
         </label>
-        <input
-          name="imageSrc"
-          value={imageSrc}
-          onChange={(event) => setImageSrc(event.target.value)}
-          placeholder="/illustrations/course-einhand-v2.png"
-          className="w-full form-input px-3 py-2"
-        />
+        <input type="hidden" name="imageSrc" value={imageSrc} />
         {imageSrc ? (
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
             <img
@@ -75,7 +69,14 @@ export function CourseImagePicker({
               className="h-40 w-full rounded-lg object-cover"
             />
           </div>
-        ) : null}
+        ) : (
+          <div className="rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-stone)] p-4 text-sm text-[var(--color-muted)]">
+            Noch kein Kursbild gewählt.
+          </div>
+        )}
+        <p className="text-xs text-[var(--color-muted)]">
+          Aktuelles Bild: {imageSrc || "—"}
+        </p>
       </div>
 
       <div

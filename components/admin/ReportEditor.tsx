@@ -323,13 +323,10 @@ export function ReportEditor({
             <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
               Kartenbild (Cover)
             </label>
-            <input
-              name="coverImage"
-              value={coverImage}
-              onChange={(event) => setCoverImage(event.target.value)}
-              placeholder="/berichte/slug/cover.jpg"
-              className="mt-2 w-full form-input px-3 py-2"
-            />
+            <input type="hidden" name="coverImage" value={coverImage} />
+            <p className="mt-2 text-xs text-[var(--color-muted)]">
+              Aktuelles Cover: {coverImage || "—"}
+            </p>
           </div>
           {coverImage ? (
             <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-3">

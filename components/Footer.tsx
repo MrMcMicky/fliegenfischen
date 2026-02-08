@@ -1,5 +1,8 @@
 import Link from "next/link";
 
+import { FooterLegalModal } from "@/components/FooterLegalModal";
+import { buildLegalContent } from "@/lib/legal";
+
 export function Footer({
   siteName,
   location,
@@ -22,6 +25,8 @@ export function Footer({
     email: string;
   };
 }) {
+  const legalContent = buildLegalContent({ siteName, contact });
+
   return (
     <footer className="bg-[var(--color-forest)] text-white">
       <div className="mx-auto grid w-full max-w-5xl gap-10 px-4 py-14 md:grid-cols-4">
@@ -69,9 +74,13 @@ export function Footer({
           <ul className="mt-4 space-y-2 text-sm text-white/80">
             {footerLinks.resources.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="hover:text-white">
-                  {item.label}
-                </Link>
+                {item.label === "Rechtliches" || item.href === "/rechtliches" ? (
+                  <FooterLegalModal label={item.label} content={legalContent} />
+                ) : (
+                  <Link href={item.href} className="hover:text-white">
+                    {item.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

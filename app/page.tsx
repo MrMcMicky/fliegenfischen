@@ -90,7 +90,18 @@ export default async function Home({
     timeline: { eyebrow: string; title: string; description: string };
     reports: { eyebrow: string; title: string; description: string };
     private?: { eyebrow: string; title: string; description: string };
-    links?: { eyebrow: string; title: string; description: string };
+    links?: {
+      eyebrow?: string;
+      title?: string;
+      description?: string;
+      sfvTitle?: string;
+      sfvDescription?: string;
+      resources?: {
+        title?: string;
+        items?: { label?: string; href?: string }[];
+      }[];
+      sfvLinks?: { label?: string; href?: string }[];
+    };
     weather?: { eyebrow: string; title: string; description: string };
     contact?: { eyebrow: string; title: string; description: string };
     privateFaqs?: {
@@ -191,12 +202,24 @@ export default async function Home({
     description:
       "Wir richten uns nach deinem Niveau: Technik verfeinern, Gewässer lesen lernen oder gezielt Fehler korrigieren.",
   };
-  const linksSection = homeSections.links ?? {
-    eyebrow: "Links",
-    title: "Links & Berichte",
-    description:
-      "Empfehlungen zu Vereinen, Gewässern und Ausrüstung sowie Hinweise zu SFV und Instruktorenkursen.",
-  };
+  const linksSection = homeSections.links ?? {};
+  const linksEyebrow = linksSection.eyebrow || "Links";
+  const linksTitle = linksSection.title || "Links & Berichte";
+  const linksDescription =
+    linksSection.description ||
+    "Empfehlungen zu Vereinen, Gewässern und Ausrüstung sowie Hinweise zu SFV und Instruktorenkursen.";
+  const linksResources =
+    linksSection.resources && linksSection.resources.length
+      ? linksSection.resources
+      : resourceLinks;
+  const linksSfv =
+    linksSection.sfvLinks && linksSection.sfvLinks.length
+      ? linksSection.sfvLinks
+      : sfvLinks;
+  const sfvTitle = linksSection.sfvTitle || "SFV";
+  const sfvDescription =
+    linksSection.sfvDescription ||
+    "Offizielle Verbandsinfos und Hinweise zu Instruktorenkursen.";
   const weatherSection = homeSections.weather ?? {
     eyebrow: "Wetter",
     title: `Vorhersage für ${weather?.location || "Geroldswil"}`,
@@ -509,12 +532,12 @@ export default async function Home({
       >
         <div className="mx-auto w-full max-w-5xl px-4">
           <SectionHeader
-            eyebrow={linksSection.eyebrow}
-            title={linksSection.title}
-            description={linksSection.description}
+            eyebrow={linksEyebrow}
+            title={linksTitle}
+            description={linksDescription}
           />
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {resourceLinks.map((group) => (
+            {linksResources.map((group) => (
               <div
                 key={group.title}
                 className="rounded-xl border border-[var(--color-border)] bg-white p-6"
@@ -523,8 +546,8 @@ export default async function Home({
                   {group.title}
                 </p>
                 <ul className="mt-4 space-y-2 text-sm">
-                  {group.items.map((item) => (
-                    <li key={item.href}>
+                  {(group.items ?? []).map((item, itemIndex) => (
+                    <li key={`${item.href}-${itemIndex}`}>
                       <a
                         href={item.href}
                         target="_blank"
@@ -540,14 +563,14 @@ export default async function Home({
             ))}
             <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-forest)] p-6 text-white">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
-                SFV
+                {sfvTitle}
               </p>
               <p className="mt-3 text-sm text-white/80">
-                Offizielle Verbandsinfos und Hinweise zu Instruktorenkursen.
+                {sfvDescription}
               </p>
               <ul className="mt-4 space-y-2 text-sm">
-                {sfvLinks.map((item) => (
-                  <li key={item.href}>
+                {linksSfv.map((item, itemIndex) => (
+                  <li key={`${item.href}-${itemIndex}`}>
                     <a
                       href={item.href}
                       target="_blank"

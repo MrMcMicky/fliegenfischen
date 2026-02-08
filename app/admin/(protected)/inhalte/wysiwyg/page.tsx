@@ -9,7 +9,11 @@ import { HeroSection } from "@/components/HeroSection";
 import { SectionHeader } from "@/components/SectionHeader";
 import { TestimonialSection } from "@/components/TestimonialSection";
 import { TimelineSteps } from "@/components/TimelineSteps";
-import { EditableImage, EditableText } from "@/components/admin/WysiwygEditable";
+import {
+  EditableImage,
+  EditableInput,
+  EditableText,
+} from "@/components/admin/WysiwygEditable";
 import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
 import { resourceLinks, sfvLinks } from "@/lib/links";
@@ -76,7 +80,18 @@ export default async function AdminLandingWysiwygPage() {
     timeline?: { eyebrow?: string; title?: string; description?: string };
     reports?: { eyebrow?: string; title?: string; description?: string };
     private?: { eyebrow?: string; title?: string; description?: string };
-    links?: { eyebrow?: string; title?: string; description?: string };
+    links?: {
+      eyebrow?: string;
+      title?: string;
+      description?: string;
+      sfvTitle?: string;
+      sfvDescription?: string;
+      resources?: {
+        title?: string;
+        items?: { label?: string; href?: string }[];
+      }[];
+      sfvLinks?: { label?: string; href?: string }[];
+    };
     weather?: { eyebrow?: string; title?: string; description?: string };
     contact?: { eyebrow?: string; title?: string; description?: string };
     privateFaqs?: { question?: string; answer?: string }[];
@@ -158,12 +173,24 @@ export default async function AdminLandingWysiwygPage() {
     description:
       "Wir richten uns nach deinem Niveau: Technik verfeinern, Gewässer lesen lernen oder gezielt Fehler korrigieren.",
   };
-  const linksSection = homeSections.links ?? {
-    eyebrow: "Links",
-    title: "Links & Berichte",
-    description:
-      "Empfehlungen zu Vereinen, Gewässern und Ausrüstung sowie Hinweise zu SFV und Instruktorenkursen.",
-  };
+  const linksSection = homeSections.links ?? {};
+  const linksEyebrow = linksSection.eyebrow || "Links";
+  const linksTitle = linksSection.title || "Links & Berichte";
+  const linksDescription =
+    linksSection.description ||
+    "Empfehlungen zu Vereinen, Gewässern und Ausrüstung sowie Hinweise zu SFV und Instruktorenkursen.";
+  const linksResources =
+    linksSection.resources && linksSection.resources.length
+      ? linksSection.resources
+      : resourceLinks;
+  const linksSfv =
+    linksSection.sfvLinks && linksSection.sfvLinks.length
+      ? linksSection.sfvLinks
+      : sfvLinks;
+  const sfvTitle = linksSection.sfvTitle || "SFV";
+  const sfvDescription =
+    linksSection.sfvDescription ||
+    "Offizielle Verbandsinfos und Hinweise zu Instruktorenkursen.";
   const weatherSection = homeSections.weather ?? {
     eyebrow: "Wetter",
     title: `Vorhersage für ${weather?.location || "Geroldswil"}`,
@@ -956,25 +983,33 @@ export default async function AdminLandingWysiwygPage() {
               }
             />
             <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {resourceLinks.map((group) => (
+              {linksResources.map((group, groupIndex) => (
                 <div
-                  key={group.title}
+                  key={`${group.title}-${groupIndex}`}
                   className="rounded-xl border border-[var(--color-border)] bg-white p-6"
                 >
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-                    {group.title}
+                    <EditableText
+                      path={`homeSections.links.resources.${groupIndex}.title`}
+                      value={group.title || ""}
+                      placeholder="Rubrik"
+                    />
                   </p>
                   <ul className="mt-4 space-y-2 text-sm">
-                    {group.items.map((item) => (
-                      <li key={item.href}>
-                        <a
-                          href={item.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="font-semibold text-[var(--color-forest)] transition hover:text-[var(--color-ember)]"
-                        >
-                          {item.label}
-                        </a>
+                    {(group.items ?? []).map((item, itemIndex) => (
+                      <li key={`${groupIndex}-${itemIndex}`} className="space-y-1">
+                        <EditableText
+                          path={`homeSections.links.resources.${groupIndex}.items.${itemIndex}.label`}
+                          value={item.label || ""}
+                          placeholder="Link-Label"
+                          className="font-semibold text-[var(--color-forest)]"
+                        />
+                        <EditableInput
+                          path={`homeSections.links.resources.${groupIndex}.items.${itemIndex}.href`}
+                          value={item.href || ""}
+                          placeholder="https://"
+                          className="text-xs"
+                        />
                       </li>
                     ))}
                   </ul>
@@ -982,22 +1017,37 @@ export default async function AdminLandingWysiwygPage() {
               ))}
               <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-forest)] p-6 text-white">
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
-                  SFV
+                  <EditableText
+                    path="homeSections.links.sfvTitle"
+                    value={sfvTitle}
+                    placeholder="SFV"
+                    className="text-white"
+                  />
                 </p>
                 <p className="mt-3 text-sm text-white/80">
-                  Offizielle Verbandsinfos und Hinweise zu Instruktorenkursen.
+                  <EditableText
+                    path="homeSections.links.sfvDescription"
+                    value={sfvDescription}
+                    placeholder="Beschreibung"
+                    multiline
+                    className="text-white/80"
+                  />
                 </p>
                 <ul className="mt-4 space-y-2 text-sm">
-                  {sfvLinks.map((item) => (
-                    <li key={item.href}>
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="font-semibold text-white transition hover:text-[var(--color-ember)]"
-                      >
-                        {item.label}
-                      </a>
+                  {linksSfv.map((item, itemIndex) => (
+                    <li key={`${item.href}-${itemIndex}`} className="space-y-1">
+                      <EditableText
+                        path={`homeSections.links.sfvLinks.${itemIndex}.label`}
+                        value={item.label || ""}
+                        placeholder="SFV Link"
+                        className="font-semibold text-white"
+                      />
+                      <EditableInput
+                        path={`homeSections.links.sfvLinks.${itemIndex}.href`}
+                        value={item.href || ""}
+                        placeholder="https://"
+                        className="text-xs text-white/80"
+                      />
                     </li>
                   ))}
                 </ul>

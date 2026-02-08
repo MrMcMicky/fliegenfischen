@@ -95,7 +95,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_path" }, { status: 400 });
   }
   if (segments.includes("href") && admin.role !== "SUPER_ADMIN") {
-    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+    const linksEditableForAdmin =
+      root === "homeSections" &&
+      segments[0] === "links" &&
+      (segments[1] === "resources" || segments[1] === "sfvLinks");
+    if (!linksEditableForAdmin) {
+      return NextResponse.json({ error: "forbidden" }, { status: 403 });
+    }
   }
 
   const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });

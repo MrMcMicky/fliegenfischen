@@ -524,13 +524,9 @@ export default async function AdminLandingWysiwygPage() {
                         multiline
                       />
                     </p>
-                    <div className="mt-3 text-xs text-[var(--color-muted)]">
-                      {renderLinkInput(
-                        `categorySummaries.${index}.href`,
-                        category.href || "",
-                        "/kurse/termine"
-                      )}
-                    </div>
+                    <p className="mt-3 text-xs text-[var(--color-muted)]">
+                      Link-Ziel wird zentral verwaltet.
+                    </p>
                   </div>
                 ))}
               </div>

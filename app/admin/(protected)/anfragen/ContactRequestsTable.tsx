@@ -245,7 +245,7 @@ export default function ContactRequestsTable({
         ))}
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white">
+      <div className="overflow-visible rounded-2xl border border-[var(--color-border)] bg-white">
         <div className="hidden lg:grid grid-cols-[110px_minmax(220px,1.2fr)_minmax(260px,2fr)_140px_140px] items-center gap-3 bg-[var(--color-stone)] px-4 py-3 text-[11px] uppercase tracking-[0.2em] text-[var(--color-muted)]">
           <span>Datum</span>
           <span>Kunde</span>
@@ -310,7 +310,7 @@ export default function ContactRequestsTable({
                   {statusLabels[row.status]} <span className="text-[10px]">▾</span>
                 </button>
                 {openStatusMenuId === row.id ? (
-                  <div className="absolute right-0 z-10 mt-2 w-40 rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-xl">
+                  <div className="absolute right-0 z-30 mt-2 w-40 rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-xl">
                     {statusOptions.map((option) => (
                       <button
                         key={option.value}
@@ -348,7 +348,7 @@ export default function ContactRequestsTable({
                   Aktionen ▾
                 </button>
                 {openActionMenuId === row.id ? (
-                  <div className="absolute left-0 top-12 z-20 w-56 rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-xl">
+                  <div className="absolute left-0 top-12 z-30 w-56 rounded-xl border border-[var(--color-border)] bg-white p-2 text-xs shadow-xl">
                     <a
                       href={`mailto:${row.email}?subject=${encodeURIComponent(
                         row.subject || "Kontaktanfrage"

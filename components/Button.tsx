@@ -47,6 +47,17 @@ export function Button({
   const classes = `${baseStyles} ${variants[variant]} ${sizes[size]} ${disabled ? "cursor-not-allowed opacity-60" : ""} ${className}`;
 
   if (href) {
+    if (disabled) {
+      return (
+        <span
+          aria-disabled="true"
+          className={classes}
+          tabIndex={-1}
+        >
+          {children}
+        </span>
+      );
+    }
     return (
       <Link href={href} className={classes}>
         {children}

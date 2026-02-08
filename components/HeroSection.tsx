@@ -52,10 +52,17 @@ export function HeroSection({
       </div>
       <div className="mx-auto w-full max-w-5xl px-4 text-center text-white">
         {nextSession ? (
-          <Link href="/kurse/termine" className={pillClass}>
-            <span className="uppercase">Nächster Kurs</span>
-            <span className="text-white/80">· {formatDate(nextSession.date)}</span>
-          </Link>
+          preview ? (
+            <span className={pillClass}>
+              <span className="uppercase">Nächster Kurs</span>
+              <span className="text-white/80">· {formatDate(nextSession.date)}</span>
+            </span>
+          ) : (
+            <Link href="/kurse/termine" className={pillClass}>
+              <span className="uppercase">Nächster Kurs</span>
+              <span className="text-white/80">· {formatDate(nextSession.date)}</span>
+            </Link>
+          )
         ) : (
           <p className={pillClass}>Termine auf Anfrage</p>
         )}
@@ -66,10 +73,10 @@ export function HeroSection({
           {hero.description}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Button href={hero.primaryCta.href} size="lg">
+          <Button href={hero.primaryCta.href} size="lg" disabled={preview}>
             {hero.primaryCta.label}
           </Button>
-          <Button href={hero.secondaryCta.href} variant="light" size="lg">
+          <Button href={hero.secondaryCta.href} variant="light" size="lg" disabled={preview}>
             {hero.secondaryCta.label}
           </Button>
         </div>

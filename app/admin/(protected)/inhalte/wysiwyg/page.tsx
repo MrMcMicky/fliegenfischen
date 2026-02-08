@@ -268,15 +268,6 @@ export default async function AdminLandingWysiwygPage() {
     day: "2-digit",
     month: "2-digit",
   });
-  const renderLinkInput = (
-    _path: string,
-    value: string,
-    _placeholder: string
-  ) => (
-    <div className="wysiwyg-input w-full bg-[var(--color-stone)] text-[var(--color-muted)]">
-      {value || "—"}
-    </div>
-  );
   const renderDynamicPreview = (label: string, children: ReactNode) => (
     <div className="mt-6 rounded-2xl border border-dashed border-[var(--color-border)] bg-white/60 p-4">
       <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-muted)]">
@@ -616,10 +607,13 @@ export default async function AdminLandingWysiwygPage() {
                       className="h-48 w-full object-contain"
                     />
                   </div>
-                  <p className="mt-5 text-sm text-[var(--color-muted)]">
+                  <div className="mt-5 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--color-muted)]">
+                    Dynamisch (Angebote)
+                  </div>
+                  <p className="mt-2 text-sm text-[var(--color-muted)]/70">
                     {privateLesson.description}
                   </p>
-                  <ul className="mt-6 space-y-3 text-sm text-[var(--color-muted)]">
+                  <ul className="mt-6 space-y-3 text-sm text-[var(--color-muted)]/70">
                     {privateLesson.bullets.map((bullet) => (
                       <li key={bullet} className="flex items-start gap-3">
                         <span className="mt-1 h-2 w-2 rounded-full bg-[var(--color-ember)]" />
@@ -630,17 +624,20 @@ export default async function AdminLandingWysiwygPage() {
                 </div>
                 <div className="h-fit rounded-2xl bg-[var(--color-forest)] p-8 text-white shadow-lg">
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
-                    Preis
+                    Preis{" "}
+                    <span className="ml-2 rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.3em] text-white/70">
+                      Dynamisch
+                    </span>
                   </p>
-                  <p className="mt-3 text-4xl font-semibold">
+                  <p className="mt-3 text-4xl font-semibold text-white/80">
                     {formatPrice(privateLesson.priceCHF)} / Std.
                   </p>
-                  <p className="mt-3 text-sm text-white/70">
+                  <p className="mt-3 text-sm text-white/60">
                     Mindestens {privateLesson.minHours} Stunden. Jede weitere Person +
                     {formatPrice(privateLesson.additionalPersonCHF)} / Std.
                   </p>
                   <div className="mt-6">
-                    <Button href="/buchen?lesson=private" className="w-full">
+                    <Button href="/buchen?lesson=private" className="w-full" disabled>
                       Privatlektion buchen
                     </Button>
                   </div>
@@ -875,24 +872,20 @@ export default async function AdminLandingWysiwygPage() {
                   </div>
                   <div className="flex flex-wrap items-center gap-4">
                     <div className="flex flex-col gap-2">
-                      <Button href={aboutPage.cta?.primary?.href || "#"} size="lg">
+                      <Button href={aboutPage.cta?.primary?.href || "#"} size="lg" disabled>
                         <EditableText
                           path="aboutPage.cta.primary.label"
                           value={aboutPage.cta?.primary?.label || ""}
                           placeholder="Button 1"
                         />
                       </Button>
-                      {renderLinkInput(
-                        "aboutPage.cta.primary.href",
-                        aboutPage.cta?.primary?.href || "",
-                        "/kontakt"
-                      )}
                     </div>
                     <div className="flex flex-col gap-2">
                       <Button
                         href={aboutPage.cta?.secondary?.href || "#"}
                         variant="secondary"
                         size="lg"
+                        disabled
                       >
                         <EditableText
                           path="aboutPage.cta.secondary.label"
@@ -900,11 +893,6 @@ export default async function AdminLandingWysiwygPage() {
                           placeholder="Button 2"
                         />
                       </Button>
-                      {renderLinkInput(
-                        "aboutPage.cta.secondary.href",
-                        aboutPage.cta?.secondary?.href || "",
-                        "/privatunterricht"
-                      )}
                     </div>
                   </div>
                 </div>
@@ -1382,24 +1370,20 @@ export default async function AdminLandingWysiwygPage() {
               </div>
               <div className="flex flex-wrap items-center gap-4">
                 <div className="flex flex-col gap-2">
-                  <Button href={homeSections.cta?.primary?.href || "#"} size="lg">
+                  <Button href={homeSections.cta?.primary?.href || "#"} size="lg" disabled>
                     <EditableText
                       path="homeSections.cta.primary.label"
                       value={homeSections.cta?.primary?.label || ""}
                       placeholder="Button 1"
                     />
                   </Button>
-                  {renderLinkInput(
-                    "homeSections.cta.primary.href",
-                    homeSections.cta?.primary?.href || "",
-                    "/kontakt"
-                  )}
                 </div>
                 <div className="flex flex-col gap-2">
                   <Button
                     href={homeSections.cta?.secondary?.href || "#"}
                     variant="secondary"
                     size="lg"
+                    disabled
                   >
                     <EditableText
                       path="homeSections.cta.secondary.label"
@@ -1407,17 +1391,13 @@ export default async function AdminLandingWysiwygPage() {
                       placeholder="Button 2"
                     />
                   </Button>
-                  {renderLinkInput(
-                    "homeSections.cta.secondary.href",
-                    homeSections.cta?.secondary?.href || "",
-                    "/schnupperstunden"
-                  )}
                 </div>
                 <div className="flex flex-col gap-2">
                   <Button
                     href={homeSections.cta?.tertiary?.href || "#"}
                     variant="ghost"
                     size="lg"
+                    disabled
                   >
                     <EditableText
                       path="homeSections.cta.tertiary.label"
@@ -1425,11 +1405,6 @@ export default async function AdminLandingWysiwygPage() {
                       placeholder="Button 3"
                     />
                   </Button>
-                  {renderLinkInput(
-                    "homeSections.cta.tertiary.href",
-                    homeSections.cta?.tertiary?.href || "",
-                    "/gutscheine"
-                  )}
                 </div>
               </div>
             </div>

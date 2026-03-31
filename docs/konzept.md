@@ -1,6 +1,6 @@
 # Konzept: Fliegenfischen (Next.js + Stripe)
 
-Stand: 2026-01-30
+Stand: 2026-03-31
 
 ## 1) Ist-Analyse (fliegenfischer-schule.ch)
 
@@ -181,3 +181,12 @@ Quellen:
 - CMS Entscheidung (Payload vs Strapi)
 - Rechtstexte (AGB/Datenschutz/Impressum) von Kunde freigeben
 - Domain/Redirect Mapping finalisieren
+
+## 12) Laufende UX-Konventionen (live)
+
+- Top-Navigation auf der Startseite beginnt mit `Gutschein`; die zugehoerige Home-Section steht vor den Kursen.
+- Home-Anchor `#gutscheine` und `#kurse` liegen auf den inneren Inhaltscontainern, damit Scroll-Spruenge etwas tiefer und sauber unter dem fixen Header landen.
+- Hero-CTAs auf der Startseite sind aktuell beide hell/weiss gestaltet.
+- Verfuegbare Plaetze in Kurskarten werden als deutlicher Badge dargestellt (`X freie Plaetze`).
+- Zahlenfelder im Booking-Flow sind ohne Browser-Spinner umgesetzt.
+- Mengen-/Teilnehmer-/Stundenfelder im Booking-Flow sind auf zweistellige Werte begrenzt; Preisfelder im Admin bleiben davon ausgenommen.

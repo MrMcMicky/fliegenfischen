@@ -3,6 +3,7 @@ import { reports } from "@/lib/reports";
 import { coursePathSteps, faqs, siteConfig, uspItems } from "@/lib/site";
 
 export const navLinks = [
+  { label: "Gutschein", href: "/#gutscheine" },
   { label: "Kurse", href: "/#kurse" },
   { label: "Privatlektion", href: "/#privat" },
   { label: "Über uns", href: "/#ueber" },

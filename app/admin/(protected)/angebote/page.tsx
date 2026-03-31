@@ -96,6 +96,8 @@ export default async function AdminAngebotePage() {
                   defaultValue={lesson.priceCHF}
                   placeholder="z. B. 70"
                   className="form-input px-3 py-2"
+                  step={1}
+                  inputMode="numeric"
                 />
               </div>
               <div className="space-y-1.5">
@@ -109,6 +111,9 @@ export default async function AdminAngebotePage() {
                   defaultValue={lesson.minHours}
                   placeholder="z. B. 2"
                   className="form-input px-3 py-2"
+                  max={99}
+                  step={1}
+                  inputMode="numeric"
                 />
                 <p className="text-xs text-[var(--color-muted)]">
                   Wird im Text „Mindestens X Stunden“ angezeigt.
@@ -125,6 +130,8 @@ export default async function AdminAngebotePage() {
                   defaultValue={lesson.additionalPersonCHF}
                   placeholder="z. B. 40"
                   className="form-input px-3 py-2"
+                  step={1}
+                  inputMode="numeric"
                 />
                 <p className="text-xs text-[var(--color-muted)]">
                   Beispiel: „jede weitere Person +CHF X / Std.“

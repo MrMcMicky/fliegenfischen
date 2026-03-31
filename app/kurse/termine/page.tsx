@@ -48,9 +48,17 @@ export default async function TerminePage() {
                 <p className="text-lg font-semibold text-[var(--color-forest)]">
                   {formatPrice(session.priceCHF)}
                 </p>
-                <p className="text-xs text-[var(--color-muted)]">
-                  Noch {session.availableSpots} Plätze
-                </p>
+                <div
+                  className={`inline-flex rounded-full px-3 py-1.5 text-sm font-semibold ${
+                    session.availableSpots > 0
+                      ? "bg-[var(--color-forest)] text-white shadow-[0_10px_24px_rgba(15,50,49,0.18)]"
+                      : "bg-[var(--color-border)] text-[var(--color-muted)]"
+                  }`}
+                >
+                  {session.availableSpots > 0
+                    ? `${session.availableSpots} freie Plätze`
+                    : "Aktuell ausgebucht"}
+                </div>
                 <div className="flex flex-wrap gap-3">
                   {session.availableSpots > 0 ? (
                     <Button href={`/buchen?sessionId=${session.id}`} size="sm">

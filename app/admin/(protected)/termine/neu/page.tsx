@@ -101,13 +101,13 @@ export default async function AdminTermineNewPage() {
               <label htmlFor="session-price" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
                 Preis pro Person (CHF)
               </label>
-              <input id="session-price" name="priceCHF" type="number" placeholder="z. B. 200" className="form-input px-3 py-2" />
+              <input id="session-price" name="priceCHF" type="number" placeholder="z. B. 200" className="form-input px-3 py-2" step={1} inputMode="numeric" />
             </div>
             <div className="space-y-1.5">
               <label htmlFor="session-spots" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
                 Verfügbare Plätze
               </label>
-              <input id="session-spots" name="availableSpots" type="number" placeholder="z. B. 6" className="form-input px-3 py-2" />
+              <input id="session-spots" name="availableSpots" type="number" placeholder="z. B. 6" className="form-input px-3 py-2" max={99} step={1} inputMode="numeric" />
             </div>
             <div className="space-y-1.5">
               <label htmlFor="session-status" className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">

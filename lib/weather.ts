@@ -214,7 +214,7 @@ export const getWeatherForecast = async (
         }).toString(),
         900
       );
-    } catch (error) {
+    } catch {
       forecast = await fetchJson(
         buildForecastUrl({
           latitude,
@@ -260,7 +260,7 @@ export const getWeatherForecast = async (
           }).toString(),
           900
         );
-      } catch (error) {
+      } catch {
         fallbackForecast = null;
       }
     }

@@ -10,6 +10,7 @@ export const defaultSiteSettings = {
     email: "info@fliegenfischer-schule.ch",
   },
   navLinks: [
+    { label: "Gutschein", href: "/#gutscheine" },
     { label: "Kurse", href: "/#kurse" },
     { label: "Privatlektion", href: "/#privat" },
       { label: "Über uns", href: "/#ueber" },

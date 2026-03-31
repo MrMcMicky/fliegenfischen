@@ -20,6 +20,7 @@ import {
   Undo2,
   Redo2,
 } from "lucide-react";
+import { AdminPreviewImage } from "@/components/admin/AdminPreviewImage";
 
 type ReportEditorInitial = {
   title: string;
@@ -330,10 +331,10 @@ export function ReportEditor({
           </div>
           {coverImage ? (
             <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)] p-3">
-              <img
+              <AdminPreviewImage
                 src={coverImage}
                 alt="Cover Vorschau"
-                className="h-40 w-full rounded-lg object-cover"
+                wrapperClassName="h-40 w-full rounded-lg"
               />
             </div>
           ) : null}
@@ -389,7 +390,11 @@ export function ReportEditor({
                       : "border-[var(--color-border)]"
                   }`}
                 >
-                  <img src={src} alt="" className="h-20 w-full object-cover" />
+                  <AdminPreviewImage
+                    src={src}
+                    alt=""
+                    wrapperClassName="h-20 w-full"
+                  />
                 </button>
               ))}
             </div>

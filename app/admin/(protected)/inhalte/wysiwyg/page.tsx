@@ -962,21 +962,21 @@ export default async function AdminLandingWysiwygPage() {
               eyebrow={
                 <EditableText
                   path="homeSections.links.eyebrow"
-                  value={linksSection.eyebrow || ""}
+                  value={linksEyebrow}
                   placeholder="Eyebrow"
                 />
               }
               title={
                 <EditableText
                   path="homeSections.links.title"
-                  value={linksSection.title || ""}
+                  value={linksTitle}
                   placeholder="Titel"
                 />
               }
               description={
                 <EditableText
                   path="homeSections.links.description"
-                  value={linksSection.description || ""}
+                  value={linksDescription}
                   placeholder="Beschreibung"
                   multiline
                 />

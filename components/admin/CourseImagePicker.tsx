@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AdminPreviewImage } from "@/components/admin/AdminPreviewImage";
 
 type CourseImagePickerProps = {
   availableImages: string[];
@@ -63,10 +64,10 @@ export function CourseImagePicker({
         <input type="hidden" name="imageSrc" value={imageSrc} />
         {imageSrc ? (
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
-            <img
+            <AdminPreviewImage
               src={imageSrc}
               alt="Vorschau Kursbild"
-              className="h-40 w-full rounded-lg object-cover"
+              wrapperClassName="h-40 w-full rounded-lg"
             />
           </div>
         ) : (
@@ -133,10 +134,10 @@ export function CourseImagePicker({
                 : "border-[var(--color-border)] hover:border-[var(--color-forest)]"
             }`}
           >
-            <img
+            <AdminPreviewImage
               src={src}
               alt=""
-              className="h-24 w-full object-cover"
+              wrapperClassName="h-24 w-full"
             />
           </button>
         ))}

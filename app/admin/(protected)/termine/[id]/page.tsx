@@ -158,6 +158,8 @@ export default async function AdminTerminEditPage({
                 defaultValue={session.priceCHF}
                 placeholder="z. B. 200"
                 className="form-input px-3 py-2"
+                step={1}
+                inputMode="numeric"
               />
             </div>
             <div className="space-y-1.5">
@@ -171,6 +173,9 @@ export default async function AdminTerminEditPage({
                 defaultValue={session.availableSpots}
                 placeholder="z. B. 6"
                 className="form-input px-3 py-2"
+                max={99}
+                step={1}
+                inputMode="numeric"
               />
             </div>
             <div className="space-y-1.5">

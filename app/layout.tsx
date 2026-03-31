@@ -7,6 +7,28 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { prisma } from "@/lib/db";
 
+type NavLink = { label: string; href: string };
+
+const headerVoucherLink: NavLink = {
+  label: "Gutschein",
+  href: "/#gutscheine",
+};
+
+const buildHeaderNavLinks = (links: NavLink[]) => {
+  const filteredLinks = links.filter((item) => {
+    const label = item.label.trim().toLowerCase();
+    const href = item.href.trim().toLowerCase();
+    return !(
+      label === "gutschein" ||
+      href === "/gutscheine" ||
+      href === "/#gutscheine" ||
+      href === "#gutscheine"
+    );
+  });
+
+  return [headerVoucherLink, ...filteredLinks];
+};
+
 const sourceSans = Source_Sans_3({
   subsets: ["latin"],
   variable: "--font-manrope",
@@ -50,7 +72,8 @@ export default async function RootLayout({
 
   const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
 
-  const navLinks = (settings?.navLinks as { label: string; href: string }[]) || [];
+  const navLinks = (settings?.navLinks as NavLink[]) || [];
+  const headerNavLinks = buildHeaderNavLinks(navLinks);
   const footerLinks =
     (settings?.footerLinks as {
       offer: { label: string; href: string }[];
@@ -77,7 +100,7 @@ export default async function RootLayout({
         <div className="flex min-h-screen flex-col">
           <Header
             siteName={settings?.name || "Fliegenfischerschule"}
-            navLinks={navLinks}
+            navLinks={headerNavLinks}
           />
           <main className="flex-1 pt-20">{children}</main>
           <Footer

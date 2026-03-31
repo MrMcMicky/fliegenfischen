@@ -155,7 +155,7 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
       const labelB = bookingStatusLabels[b.status] || b.status;
       return labelA.localeCompare(labelB) * direction;
     });
-  }, [rows, query, sortField, sortDirection]);
+  }, [rows, query, statusFilter, sortField, sortDirection]);
 
   const activeRow = useMemo(
     () => rows.find((row) => row.id === activeRowId) || null,
@@ -206,7 +206,6 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
       clearTimeout(saveTimerRef.current);
     }
 
-    setSaveState("saving");
     saveTimerRef.current = setTimeout(async () => {
       const result = await updateBookingDetails(draft);
       if (result.ok) {
@@ -310,6 +309,7 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
     field: K,
     value: BookingDraft[K]
   ) => {
+    setSaveState("saving");
     setDraft((prev) => (prev ? { ...prev, [field]: value } : prev));
   };
 

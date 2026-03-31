@@ -40,6 +40,19 @@ const getErrorMessage = (code?: string) =>
   (code && ERROR_MESSAGES[code]) ||
   "Buchung fehlgeschlagen. Bitte versuche es erneut.";
 
+const MAX_TWO_DIGIT_VALUE = 99;
+
+const clampInteger = (value: number, min: number, max?: number) => {
+  if (!Number.isFinite(value)) return min;
+
+  const normalized = Math.trunc(value);
+  if (typeof max === "number") {
+    return Math.min(max, Math.max(min, normalized));
+  }
+
+  return Math.max(min, normalized);
+};
+
 type BookingType = "COURSE" | "PRIVATE" | "TASTER" | "VOUCHER";
 
 type BookingFormProps = {
@@ -311,11 +324,30 @@ export function BookingForm({
               <input
                 type="number"
                 min={1}
-                max={session.availableSpots}
+                max={Math.min(session.availableSpots, MAX_TWO_DIGIT_VALUE)}
                 value={quantity}
-                onChange={(event) => setQuantity(Number(event.target.value))}
+                onChange={(event) =>
+                  setQuantity(
+                    clampInteger(
+                      Number(event.target.value),
+                      1,
+                      Math.min(session.availableSpots, MAX_TWO_DIGIT_VALUE)
+                    )
+                  )
+                }
+                onBlur={(event) =>
+                  setQuantity(
+                    clampInteger(
+                      Number(event.target.value),
+                      1,
+                      Math.min(session.availableSpots, MAX_TWO_DIGIT_VALUE)
+                    )
+                  )
+                }
                 disabled={loading}
                 className={`${inputClass} w-32 text-center`}
+                step={1}
+                inputMode="numeric"
               />
               <p className="text-xs text-slate-500">
                 Noch {session.availableSpots} Plätze verfügbar
@@ -331,23 +363,64 @@ export function BookingForm({
                   <input
                     type="number"
                     min={lesson.minHours}
+                    max={MAX_TWO_DIGIT_VALUE}
                     value={hours}
-                    onChange={(event) => setHours(Number(event.target.value))}
+                    onChange={(event) =>
+                      setHours(
+                        clampInteger(
+                          Number(event.target.value),
+                          lesson.minHours,
+                          MAX_TWO_DIGIT_VALUE
+                        )
+                      )
+                    }
+                    onBlur={(event) =>
+                      setHours(
+                        clampInteger(
+                          Number(event.target.value),
+                          lesson.minHours,
+                          MAX_TWO_DIGIT_VALUE
+                        )
+                      )
+                    }
                     disabled={loading}
                     className={`${inputClass} w-28`}
+                    step={1}
+                    inputMode="numeric"
                   />
+                  <p className="text-xs text-slate-500">
+                    {lesson.minHours}h sind das Minimum.
+                  </p>
                 </div>
                 <div className={fieldClass}>
                   <label className={labelClass}>Zusatzpersonen</label>
                   <input
                     type="number"
                     min={0}
+                    max={MAX_TWO_DIGIT_VALUE}
                     value={additionalPeople}
                     onChange={(event) =>
-                      setAdditionalPeople(Number(event.target.value))
+                      setAdditionalPeople(
+                        clampInteger(
+                          Number(event.target.value),
+                          0,
+                          MAX_TWO_DIGIT_VALUE
+                        )
+                      )
+                    }
+                    onBlur={(event) =>
+                      setAdditionalPeople(
+                        clampInteger(
+                          Number(event.target.value),
+                          0,
+                          MAX_TWO_DIGIT_VALUE
+                        )
+                      )
                     }
                     disabled={loading}
                     className={`${inputClass} w-28`}
+                    step={1}
+                    inputMode="numeric"
                   />
                 </div>
               </div>

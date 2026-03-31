@@ -2,6 +2,7 @@
 
 import type { ElementType, FormEvent, KeyboardEvent, MouseEvent } from "react";
 import { useEffect, useRef, useState } from "react";
+import { AdminPreviewImage } from "@/components/admin/AdminPreviewImage";
 
 const saveField = async (path: string, value: string) => {
   const response = await fetch("/api/admin/landing-wysiwyg", {
@@ -206,10 +207,10 @@ export function EditableImage({
       </p>
       {src ? (
         <div className="rounded-xl border border-[var(--color-border)] bg-white p-3">
-          <img
+          <AdminPreviewImage
             src={src}
             alt="Vorschau"
-            className="h-40 w-full rounded-lg object-cover"
+            wrapperClassName="h-40 w-full rounded-lg"
           />
         </div>
       ) : null}

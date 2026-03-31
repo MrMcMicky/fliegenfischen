@@ -9,6 +9,7 @@ import { SectionHeader } from "@/components/SectionHeader";
 import { TestimonialSection } from "@/components/TestimonialSection";
 import { TimelineSteps } from "@/components/TimelineSteps";
 import { UspIcon } from "@/components/UspIcon";
+import { VoucherOptionCard } from "@/components/VoucherOptionCard";
 import { WeatherSection } from "@/components/WeatherSection";
 import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
@@ -46,7 +47,8 @@ export default async function Home({
     weatherLocations.some((loc) => loc.id === rawWeatherParam)
       ? rawWeatherParam
       : weatherLocations[0]?.id;
-  const [settings, upcomingSessions, reports, privateLesson] = await Promise.all([
+  const [settings, upcomingSessions, reports, privateLesson, voucherOptions] =
+    await Promise.all([
     prisma.siteSettings.findUnique({ where: { id: 1 } }),
     prisma.courseSession.findMany({
       where: { status: "VERFUEGBAR" },
@@ -56,6 +58,7 @@ export default async function Home({
     }),
     prisma.report.findMany({ orderBy: { year: "desc" } }),
     prisma.lessonOffering.findUnique({ where: { type: "PRIVATE" } }),
+    prisma.voucherOption.findMany({ orderBy: { title: "asc" } }),
   ]);
 
   const weatherEntries = await Promise.all(
@@ -237,6 +240,9 @@ export default async function Home({
     description: string;
     href: string;
   }[]) || [];
+  const voucherSummary =
+    categorySummaries.find((item) => item.href.startsWith("/gutscheine")) ||
+    null;
   const courseFormatFaqs = categorySummaries
     .filter((item) =>
       ["/kurse", "/schnupperstunden"].some((path) => item.href.startsWith(path))
@@ -291,11 +297,50 @@ export default async function Home({
         </div>
       </section>
 
-      <section
-        id="kurse"
-        className="scroll-mt-16 bg-[var(--color-pebble)] py-12"
-      >
-        <div className="mx-auto w-full max-w-5xl px-4">
+      <section className="bg-[var(--color-stone)] py-12">
+        <div
+          id="gutscheine"
+          className="mx-auto w-full max-w-5xl scroll-mt-16 px-4"
+        >
+          <SectionHeader
+            eyebrow="Gutscheine"
+            title="Geschenk mit Erlebnis"
+            description={
+              voucherSummary?.description ||
+              "Wert- oder Kursgutschein, perfekt als Geschenk."
+            }
+          />
+          {voucherOptions.length ? (
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+              {voucherOptions.map((option) => (
+                <VoucherOptionCard key={option.id} option={option} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 rounded-2xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
+              Gutscheinoptionen werden aktuell vorbereitet. Für Wunschgutscheine
+              melde dich gerne direkt.
+            </div>
+          )}
+          <div className="mt-6 rounded-2xl bg-[var(--color-forest)] p-10 text-white">
+            <h3 className="font-display text-2xl font-semibold">
+              Wunschtext & Versand
+            </h3>
+            <p className="mt-3 text-sm text-white/70">
+              Wir erstellen den Gutschein als PDF mit persönlicher Widmung.
+              Versand per Mail oder auf Wunsch gedruckt.
+            </p>
+            <div className="mt-6">
+              <Button href="/kontakt" variant="secondary">
+                Wunschtext senden
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[var(--color-pebble)] py-12">
+        <div id="kurse" className="mx-auto w-full max-w-5xl scroll-mt-16 px-4">
           <SectionHeader
             eyebrow={homeSections.upcoming?.eyebrow}
             title={homeSections.upcoming?.title}

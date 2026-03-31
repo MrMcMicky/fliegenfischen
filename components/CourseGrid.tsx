@@ -68,11 +68,17 @@ export function CourseGrid({
               {session.course.title}
             </p>
           ) : null}
-          <p className="mt-2 text-xs text-[var(--color-forest)]/60">
+          <div
+            className={`mt-3 inline-flex rounded-full px-3 py-1.5 text-sm font-semibold ${
+              session.availableSpots > 0
+                ? "bg-[var(--color-forest)] text-white shadow-[0_10px_24px_rgba(15,50,49,0.18)]"
+                : "bg-[var(--color-border)] text-[var(--color-muted)]"
+            }`}
+          >
             {session.availableSpots > 0
-              ? `Noch ${session.availableSpots} Plätze`
+              ? `${session.availableSpots} freie Plätze`
               : "Aktuell ausgebucht"}
-          </p>
+          </div>
           <div className="mt-6 flex flex-wrap gap-3">
             {session.availableSpots > 0 ? (
               <Button href={`/buchen?sessionId=${session.id}`} size="sm">

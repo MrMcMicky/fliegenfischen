@@ -22,10 +22,10 @@ export function HeroSection({
 }) {
   const pillClass =
     "inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/20 px-4 py-1 text-xs font-semibold tracking-[0.25em] text-white backdrop-blur-sm";
-  const baseOverlayClass = preview ? "bg-black/65" : "bg-black/50";
+  const baseOverlayClass = preview ? "bg-black/58" : "bg-black/34";
   const gradientOverlayClass = preview
-    ? "bg-gradient-to-b from-black/50 via-black/60 to-[var(--color-stone)]"
-    : "bg-gradient-to-b from-black/30 via-black/40 to-[var(--color-stone)]";
+    ? "bg-gradient-to-b from-black/44 via-black/52 to-[var(--color-stone)]"
+    : "bg-gradient-to-b from-black/16 via-black/22 to-[var(--color-stone)]";
 
   return (
     <section
@@ -73,7 +73,12 @@ export function HeroSection({
           {hero.description}
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Button href={hero.primaryCta.href} size="lg" disabled={preview}>
+          <Button
+            href={hero.primaryCta.href}
+            variant="light"
+            size="lg"
+            disabled={preview}
+          >
             {hero.primaryCta.label}
           </Button>
           <Button href={hero.secondaryCta.href} variant="light" size="lg" disabled={preview}>

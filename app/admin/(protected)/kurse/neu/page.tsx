@@ -192,6 +192,8 @@ export default async function AdminCourseNewPage() {
                 type="number"
                 placeholder="z. B. 200"
                 className="form-input px-3 py-2"
+                step={1}
+                inputMode="numeric"
               />
               <p className="text-xs text-[var(--color-muted)]">Wird in Kurskarten/Details angezeigt.</p>
             </div>
@@ -205,6 +207,9 @@ export default async function AdminCourseNewPage() {
                 type="number"
                 placeholder="z. B. 6"
                 className="form-input px-3 py-2"
+                max={99}
+                step={1}
+                inputMode="numeric"
               />
               <p className="text-xs text-[var(--color-muted)]">Hinweis auf der Kursseite.</p>
             </div>

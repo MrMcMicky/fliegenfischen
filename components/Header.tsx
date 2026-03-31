@@ -6,7 +6,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
-import { Button } from "@/components/Button";
+const getHash = (href: string) => {
+  const index = href.indexOf("#");
+  return index === -1 ? null : href.slice(index);
+};
 
 export function Header({
   siteName,
@@ -20,7 +23,7 @@ export function Header({
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const [showBreadcrumb, setShowBreadcrumb] = useState(!isHome);
+  const showBreadcrumb = !isHome;
   const manualActiveRef = useRef<{ hash: string; until: number } | null>(null);
 
   useEffect(() => {
@@ -59,13 +62,9 @@ export function Header({
     return Array.from(new Set(hashes));
   }, [navLinks]);
 
-  const getHash = (href: string) => {
-    const index = href.indexOf("#");
-    return index === -1 ? null : href.slice(index);
-  };
-
   const routeHighlight = useMemo(() => {
     if (isHome) return null;
+    if (pathname.startsWith("/gutscheine")) return "#gutscheine";
     if (pathname.startsWith("/berichte")) return "#links";
     if (pathname.startsWith("/kontakt")) return "#kontakt";
     if (pathname.startsWith("/wetter")) return "#wetter";
@@ -112,25 +111,7 @@ export function Header({
       items.push({ label: currentLabel });
     }
     return items;
-  }, [getHash, isHome, navLinks, pathname, routeHighlight]);
-
-  useEffect(() => {
-    setShowBreadcrumb(!isHome);
-  }, [isHome]);
-
-  useEffect(() => {
-    const syncBreadcrumb = () => {
-      if (typeof window === "undefined") return;
-      setShowBreadcrumb(window.location.pathname !== "/");
-    };
-    syncBreadcrumb();
-    window.addEventListener("popstate", syncBreadcrumb);
-    window.addEventListener("hashchange", syncBreadcrumb);
-    return () => {
-      window.removeEventListener("popstate", syncBreadcrumb);
-      window.removeEventListener("hashchange", syncBreadcrumb);
-    };
-  }, []);
+  }, [isHome, navLinks, pathname, routeHighlight]);
 
   useEffect(() => {
     if (!isHome || sections.length === 0) return;
@@ -170,12 +151,6 @@ export function Header({
     };
   }, [isHome, sections]);
 
-  useEffect(() => {
-    if (!isHome) {
-      setActiveSection(null);
-    }
-  }, [isHome, pathname]);
-
   const isActive = (href: string) => {
     const hash = getHash(href);
     if (hash) {
@@ -187,13 +162,13 @@ export function Header({
     return pathname === href;
   };
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (href: string, eventTime: number) => {
     const hash = getHash(href);
     if (!hash) return;
     setActiveSection(hash);
     manualActiveRef.current = {
       hash,
-      until: Date.now() + 900,
+      until: eventTime + 900,
     };
   };
 
@@ -214,6 +189,10 @@ export function Header({
 
   const activeNavClass =
     "bg-[var(--color-forest)] text-white shadow-sm pointer-events-none";
+  const voucherNavClass =
+    "rounded-full bg-[var(--color-ember)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-ember)]/90 hover:text-white";
+  const voucherMobileClass =
+    "bg-[var(--color-ember)] text-white hover:bg-[var(--color-ember)]/90";
 
   return (
     <header
@@ -238,10 +217,10 @@ export function Header({
             <Link
               key={item.href}
               href={item.href}
-              onClick={() => handleNavClick(item.href)}
-              className={`transition-colors ${navPillClass} ${
-                isActive(item.href) ? activeNavClass : ""
-              }`}
+              onClick={(event) => handleNavClick(item.href, event.timeStamp)}
+              className={`transition-colors ${
+                item.href === "/#gutscheine" ? voucherNavClass : navPillClass
+              } ${isActive(item.href) && item.href !== "/#gutscheine" ? activeNavClass : ""}`}
               aria-current={isActive(item.href) ? "page" : undefined}
             >
               {item.label}
@@ -249,11 +228,6 @@ export function Header({
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <div className="hidden lg:block">
-            <Button href="/gutscheine" size="sm">
-              Gutschein
-            </Button>
-          </div>
           <button
             type="button"
             aria-label={open ? "Menü schließen" : "Menü öffnen"}
@@ -272,12 +246,14 @@ export function Header({
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => {
-                  handleNavClick(item.href);
+                onClick={(event) => {
+                  handleNavClick(item.href, event.timeStamp);
                   setOpen(false);
                 }}
                 className={`rounded-lg px-3 py-2 text-sm font-semibold ${
-                  isActive(item.href)
+                  item.href === "/#gutscheine"
+                    ? voucherMobileClass
+                    : isActive(item.href)
                     ? "bg-[var(--color-forest)] text-white"
                     : "bg-[var(--color-forest)]/10 text-[var(--color-forest)]"
                 }`}
@@ -285,9 +261,6 @@ export function Header({
                 {item.label}
               </Link>
             ))}
-            <Button href="/gutscheine" size="sm" className="w-fit">
-              Gutschein
-            </Button>
           </div>
         </div>
       ) : null}
@@ -303,14 +276,6 @@ export function Header({
                   {item.href ? (
                     <Link
                       href={item.href}
-                      onClick={() => {
-                        if (
-                          item.href &&
-                          (item.href === "/" || item.href.startsWith("/#"))
-                        ) {
-                          setShowBreadcrumb(false);
-                        }
-                      }}
                       className="transition hover:text-[var(--color-forest)]"
                     >
                       {item.label}

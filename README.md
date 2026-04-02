@@ -34,3 +34,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Verbindlicher Agenten-Standard
+
+- Neue Features, Erweiterungen und groessere Aenderungen nicht mit Dummies, toten Buttons, Platzhalterseiten oder nur teilweise angeschlossenen Flows ausliefern, ausser der Auftrag verlangt das ausdruecklich.
+- Den betroffenen Scope voll funktional zu Ende fuehren: UI, Serverlogik, Datenfluss, Error-Handling, Doku, Tests, Build- und Deploy-Pfad.
+- Vor einer Rueckmeldung den geaenderten Scope vollstaendig pruefen, inklusive Browser-Experience, relevante Happy Paths, wichtige Error Paths, Admin-Flaechen und angrenzende Integrationen wie Stripe.
+- Danach selbststaendig bis zu drei weitere intelligente Optimierungsrunden durchfuehren, auch wenn kein akuter Fehler sichtbar ist.
+- Erst wenn alles funktioniert: committen, pushen und bei laufenden Anwendungen deployen oder einen bewusst ausgenommenen Deploy technisch begruenden.
+- Erst danach Rueckmeldung geben. Wenn Vollendung oder Verifikation blockiert ist, darf der Stand nicht als fertig bezeichnet werden.

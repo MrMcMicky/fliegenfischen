@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Zahlung abgebrochen",
-  description: "Zahlung wurde abgebrochen.",
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  ...buildPageMetadata({
+    title: "Zahlung abgebrochen",
+    description: "Zahlung wurde abgebrochen.",
+    path: "/checkout/cancel",
+  }),
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function CheckoutCancelPage() {

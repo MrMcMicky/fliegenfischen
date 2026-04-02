@@ -59,6 +59,7 @@ export const buildLegalContent = ({
         title: "Datenschutz",
         paragraphs: [
           "Wir bearbeiten personenbezogene Daten (z. B. Name, Kontaktdaten, Nachricht, Buchungs- und Zahlungsinformationen), um Anfragen zu beantworten, Buchungen durchzuführen und unsere Leistungen zu erbringen.",
+          "Zur Verbesserung der Website erfassen wir zudem eigene, datensparsame Nutzungsstatistiken (z. B. besuchte Seiten, Referrer, ungefähre Aufenthaltsdauer, Scrolltiefe und Geräteklasse). Diese Auswertung erfolgt ohne externe Tracking-Skripte direkt auf unserer Infrastruktur.",
           "Für die Zahlungsabwicklung nutzen wir Stripe. Zahlungsdaten werden direkt bei Stripe verarbeitet; wir erhalten keine vollständigen Karten- oder TWINT‑Zahlungsdaten.",
           "Wir setzen Dienstleister (Hosting, E‑Mail, Zahlungsanbieter) ein. Diese erhalten Daten nur, soweit dies zur Leistungserbringung erforderlich ist.",
           "Daten können in Länder ausserhalb der Schweiz/EU übermittelt werden. Dabei werden geeignete Garantien eingesetzt (z. B. Standarddatenschutzklauseln).",

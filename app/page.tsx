@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -5,6 +6,7 @@ import { Button } from "@/components/Button";
 import { ContactForm } from "@/components/ContactForm";
 import { CourseGrid } from "@/components/CourseGrid";
 import { HeroSection } from "@/components/HeroSection";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { SectionHeader } from "@/components/SectionHeader";
 import { TestimonialSection } from "@/components/TestimonialSection";
 import { TimelineSteps } from "@/components/TimelineSteps";
@@ -15,9 +17,18 @@ import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
 import { resourceLinks, sfvLinks } from "@/lib/links";
 import {
+  buildFaqStructuredData,
+  buildPageMetadata,
+  siteUrl,
+} from "@/lib/seo";
+import {
   getWeatherForecast,
   weatherLocations,
 } from "@/lib/weather";
+
+export const metadata: Metadata = buildPageMetadata({
+  path: "/",
+});
 
 export const dynamic = "force-dynamic";
 
@@ -271,9 +282,20 @@ export default async function Home({
       ]
     : [];
   const nextSession = upcomingSessions[0] ?? null;
+  const homeStructuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: settings?.name || "Fliegenfischerschule Urs Müller",
+      description: homeHero.description,
+      url: `${siteUrl}/`,
+    },
+    buildFaqStructuredData([...courseFaqs, ...privateFaqs].slice(0, 10)),
+  ].filter(Boolean) as Record<string, unknown>[];
 
   return (
     <div className="pb-20">
+      <StructuredData data={homeStructuredData} />
       <HeroSection nextSession={nextSession} hero={homeHero} />
 
       <section className="bg-white pb-14 pt-12 -mt-12 sm:-mt-16 lg:-mt-20">

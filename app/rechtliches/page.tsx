@@ -1,12 +1,20 @@
+import type { Metadata } from "next";
+
 import { SectionHeader } from "@/components/SectionHeader";
 import { LegalContent } from "@/components/LegalContent";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { prisma } from "@/lib/db";
 import { buildLegalContent } from "@/lib/legal";
+import {
+  buildBreadcrumbStructuredData,
+  buildPageMetadata,
+} from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Rechtliches",
   description: "Datenschutz, AGB und Impressum der Fliegenfischerschule.",
-};
+  path: "/rechtliches",
+});
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +39,12 @@ export default async function RechtlichesPage() {
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-10 px-4 pb-20 pt-16">
+      <StructuredData
+        data={buildBreadcrumbStructuredData([
+          { name: "Startseite", path: "/" },
+          { name: "Rechtliches", path: "/rechtliches" },
+        ])}
+      />
       <SectionHeader
         eyebrow="Rechtliches"
         title="Datenschutz, Impressum & Hinweise"

@@ -1,12 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
+import { StructuredData } from "@/components/seo/StructuredData";
 import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
+import {
+  buildBreadcrumbStructuredData,
+  buildPageMetadata,
+} from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Wissen & Berichte",
   description: "Reiseberichte, Gewässer und Praxistipps aus der Region.",
-};
+  path: "/berichte",
+});
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +27,12 @@ export default async function BerichtePage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
+      <StructuredData
+        data={buildBreadcrumbStructuredData([
+          { name: "Startseite", path: "/" },
+          { name: "Berichte", path: "/berichte" },
+        ])}
+      />
       <SectionHeader
         eyebrow="Wissen"
         title="Berichte & Einblicke"

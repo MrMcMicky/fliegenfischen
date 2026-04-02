@@ -1,15 +1,28 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
+import { StructuredData } from "@/components/seo/StructuredData";
 import { SectionHeader } from "@/components/SectionHeader";
+import {
+  buildBreadcrumbStructuredData,
+  buildPageMetadata,
+} from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Wetter",
   description: "Wetterinformationen für Kurse in der Schweiz.",
-};
+  path: "/wetter",
+});
 
 export default function WetterPage() {
   return (
     <div className="mx-auto w-full max-w-4xl space-y-8 px-4 pb-20 pt-16">
+      <StructuredData
+        data={buildBreadcrumbStructuredData([
+          { name: "Startseite", path: "/" },
+          { name: "Wetter", path: "/wetter" },
+        ])}
+      />
       <SectionHeader
         eyebrow="Service"
         title="Wetter in der Schweiz"

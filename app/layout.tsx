@@ -3,9 +3,22 @@ import { Playfair_Display, Source_Sans_3 } from "next/font/google";
 import { headers } from "next/headers";
 
 import "./globals.css";
+import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { prisma } from "@/lib/db";
+import { env, isProd } from "@/lib/env";
+import {
+  buildLocalBusinessStructuredData,
+  buildOrganizationStructuredData,
+  buildWebSiteStructuredData,
+  defaultOgImage,
+  defaultSeoDescription,
+  metadataBase,
+  siteName,
+  toAbsoluteUrl,
+} from "@/lib/seo";
 
 type NavLink = { label: string; href: string };
 
@@ -42,12 +55,47 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase,
   title: {
-    default: "Fliegenfischerschule Urs Müller",
-    template: "%s | Fliegenfischerschule Urs Müller",
+    default: siteName,
+    template: `%s | ${siteName}`,
   },
-  description:
-    "Fliegenfischen lernen in der Region Zürich: Einhand- und Zweihandkurse, Privatunterricht, Schnupperstunden und Gutscheine.",
+  description: defaultSeoDescription,
+  applicationName: siteName,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: siteName,
+    description: defaultSeoDescription,
+    url: env.appUrl,
+    siteName,
+    locale: "de_CH",
+    type: "website",
+    images: [
+      {
+        url: toAbsoluteUrl(defaultOgImage),
+        width: 1200,
+        height: 630,
+        alt: siteName,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteName,
+    description: defaultSeoDescription,
+    images: [toAbsoluteUrl(defaultOgImage)],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? {
+        google: process.env.GOOGLE_SITE_VERIFICATION,
+      }
+    : undefined,
 };
 
 export const dynamic = "force-dynamic";
@@ -93,11 +141,26 @@ export default async function RootLayout({
       mobile: "",
       email: "",
     };
+  const structuredData = [
+    buildWebSiteStructuredData({
+      name: settings?.name || siteName,
+    }),
+    buildOrganizationStructuredData({
+      name: settings?.name || siteName,
+    }),
+    buildLocalBusinessStructuredData({
+      name: settings?.name || siteName,
+      location: settings?.location || "",
+      contact,
+    }),
+  ];
 
   return (
     <html lang="de">
       <body className={`${sourceSans.variable} ${playfair.variable} antialiased`}>
         <div className="flex min-h-screen flex-col">
+          <StructuredData data={structuredData} />
+          {isProd ? <AnalyticsTracker /> : null}
           <Header
             siteName={settings?.name || "Fliegenfischerschule"}
             navLinks={headerNavLinks}

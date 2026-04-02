@@ -34,6 +34,11 @@ export const adminNavItems: AdminNavItem[] = [
     children: [],
   },
   {
+    label: "Statistiken",
+    href: "/admin/statistiken",
+    children: [],
+  },
+  {
     label: "Inhalte",
     href: "/admin/inhalte/wysiwyg",
     children: [

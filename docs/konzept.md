@@ -1,6 +1,6 @@
 # Konzept: Fliegenfischen (Next.js + Stripe)
 
-Stand: 2026-03-31
+Stand: 2026-04-02
 
 ## 1) Ist-Analyse (fliegenfischer-schule.ch)
 
@@ -190,3 +190,19 @@ Quellen:
 - Verfuegbare Plaetze in Kurskarten werden als deutlicher Badge dargestellt (`X freie Plaetze`).
 - Zahlenfelder im Booking-Flow sind ohne Browser-Spinner umgesetzt.
 - Mengen-/Teilnehmer-/Stundenfelder im Booking-Flow sind auf zweistellige Werte begrenzt; Preisfelder im Admin bleiben davon ausgenommen.
+
+## 13) SEO-Stand (live)
+
+- Jede zentrale oeffentliche Seite liefert jetzt saubere `title`-/`description`-Metadaten, Canonicals, OpenGraph- und Twitter-Tags aus.
+- `robots.txt` und `sitemap.xml` sind aktiv; `sitemap.xml` nutzt fuer DB-Inhalte vorhandene `updatedAt`-Zeitstempel.
+- Rechtlich oder conversion-seitig unkritische Seiten bleiben indexierbar; Buchungs-, Checkout- und Erfolgspfade sind explizit `noindex`.
+- Strukturierte Daten laufen first-party ueber JSON-LD: `WebSite`, `Organization`, `LocalBusiness`, Breadcrumbs und auf der Startseite zusaetzlich FAQ-Markup.
+- Die Landingpage ist intern staerker verlinkt (Gutschein/Kurse/Privat/Kontakt), damit Google die Angebotsseiten klarer als Such-Landingpages versteht.
+
+## 14) Analytics-Stand (live)
+
+- Es gibt jetzt eine erste eigene First-Party-Analytics-Schicht ohne externe Tracking-Skripte.
+- Erfasst werden oeffentliche Sitzungen, Landingpages, Referrer, Kampagnenparameter (`utm_*`), Geraete/Browser/Land, Pageviews, Aufenthaltszeit, aktive Zeit, Scrolltiefe sowie Klicks auf Links, Buttons und Form-Submits.
+- Die IDs sind pseudonymisiert (`visitorKey`, `sessionKey`); IP-Adressen werden nicht gespeichert. Wenn Browser `Do Not Track` oder `Global Privacy Control` signalisieren, wird nicht getrackt.
+- Im Admin gibt es dafuer den Bereich `Statistiken` mit KPIs, Verlauf, Top-Seiten, Landingpages, Referrern, Kampagnen, Klickzielen und einzelnen Besucherwegen.
+- Datenschutztext wurde entsprechend ergaenzt, damit die Erfassung auf der Website transparent erklaert ist.

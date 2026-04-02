@@ -15,6 +15,7 @@ import {
   Settings,
   Tag,
   Users,
+  BarChart3,
 } from "lucide-react";
 
 import LogoutButton from "@/app/admin/(protected)/LogoutButton";
@@ -45,6 +46,7 @@ const sideNavIcons: Record<string, LucideIcon> = {
   "/admin/berichte": Newspaper,
   "/admin/gutscheine": Gift,
   "/admin/anfragen": Mail,
+  "/admin/statistiken": BarChart3,
   "/admin/users": Users,
   "/admin/settings": Settings,
 };

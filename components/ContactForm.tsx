@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 
 import { submitContact } from "@/app/kontakt/actions";
 import { Button } from "@/components/Button";
+import { dispatchBrowserAnalyticsEvent } from "@/lib/browser-analytics";
 
 const initialState = {
   status: "idle" as const,
@@ -15,6 +16,23 @@ export function ContactForm() {
     submitContact,
     initialState
   );
+  const hasTrackedSuccessRef = useRef(false);
+
+  useEffect(() => {
+    if (state.status === "success" && !hasTrackedSuccessRef.current) {
+      hasTrackedSuccessRef.current = true;
+      dispatchBrowserAnalyticsEvent({
+        eventType: "contact_request_success",
+        label: "Kontaktformular erfolgreich gesendet",
+        path: "/kontakt",
+      });
+      return;
+    }
+
+    if (state.status !== "success") {
+      hasTrackedSuccessRef.current = false;
+    }
+  }, [state.status]);
 
   return (
     <form action={formAction} className="space-y-4">

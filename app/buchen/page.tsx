@@ -1,13 +1,22 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BookingForm } from "@/components/BookingForm";
 import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
 import { formatDate } from "@/lib/format";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Buchung",
-  description: "Kurs oder Gutschein buchen.",
+export const metadata: Metadata = {
+  ...buildPageMetadata({
+    title: "Buchung",
+    description: "Kurs oder Gutschein buchen.",
+    path: "/buchen",
+  }),
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export const dynamic = "force-dynamic";

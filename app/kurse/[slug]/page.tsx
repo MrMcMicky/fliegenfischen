@@ -1,10 +1,16 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { Button } from "@/components/Button";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
 import { formatDate, formatPrice } from "@/lib/format";
+import {
+  buildBreadcrumbStructuredData,
+  buildPageMetadata,
+} from "@/lib/seo";
 import {
   courseCategoryLabels,
   courseLevelLabels,
@@ -16,19 +22,21 @@ export const generateMetadata = async ({
   params,
 }: {
   params: { slug: string } | Promise<{ slug: string }>;
-}) => {
+}): Promise<Metadata> => {
   const { slug } = await Promise.resolve(params);
-  if (!slug) return { title: "Kurs" };
+  if (!slug) return buildPageMetadata({ title: "Kurs", path: "/kurse" });
   const course = await prisma.course.findUnique({
     where: { slug },
   });
   if (!course) {
-    return { title: "Kurs" };
+    return buildPageMetadata({ title: "Kurs", path: "/kurse" });
   }
-  return {
+  return buildPageMetadata({
     title: course.title,
     description: course.summary,
-  };
+    path: `/kurse/${course.slug}`,
+    image: course.imageSrc || undefined,
+  });
 };
 
 export default async function CourseDetailPage({
@@ -55,6 +63,13 @@ export default async function CourseDetailPage({
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
+      <StructuredData
+        data={buildBreadcrumbStructuredData([
+          { name: "Startseite", path: "/" },
+          { name: "Kurse", path: "/kurse" },
+          { name: course.title, path: `/kurse/${course.slug}` },
+        ])}
+      />
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-6">
           <SectionHeader

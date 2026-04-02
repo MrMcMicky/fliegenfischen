@@ -216,6 +216,12 @@ export default async function AdminDashboard() {
         >
           Gutscheine verwalten
         </Link>
+        <Link
+          href="/admin/statistiken"
+          className="rounded-xl border border-[var(--color-border)] bg-white p-5 text-sm font-semibold text-[var(--color-text)] hover:shadow"
+        >
+          Statistiken ansehen
+        </Link>
       </section>
     </div>
   );

@@ -1,12 +1,20 @@
+import type { Metadata } from "next";
+
 import { Button } from "@/components/Button";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
+import {
+  buildBreadcrumbStructuredData,
+  buildPageMetadata,
+} from "@/lib/seo";
 
-export const metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Schnupperstunden",
   description: "Schnupperstunden für den ersten Einstieg ins Fliegenfischen.",
-};
+  path: "/schnupperstunden",
+});
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +52,12 @@ export default async function SchnupperstundenPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-4 pb-20 pt-16">
+      <StructuredData
+        data={buildBreadcrumbStructuredData([
+          { name: "Startseite", path: "/" },
+          { name: "Schnupperstunden", path: "/schnupperstunden" },
+        ])}
+      />
       <SectionHeader
         eyebrow="Schnupperstunden"
         title="Der perfekte Einstieg"

@@ -189,6 +189,85 @@ model ContactRequest {
   updatedAt DateTime             @updatedAt
 }
 
+model AnalyticsVisitor {
+  id         String             @id @default(cuid())
+  visitorKey String             @unique
+  firstSeenAt DateTime          @default(now())
+  lastSeenAt DateTime           @default(now())
+  sessions   AnalyticsSession[]
+}
+
+model AnalyticsSession {
+  id             String             @id @default(cuid())
+  visitor        AnalyticsVisitor   @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  visitorId      String
+  sessionKey     String             @unique
+  landingPath    String
+  landingReferrer String?
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  utmTerm        String?
+  utmContent     String?
+  deviceType     String?
+  browser        String?
+  os             String?
+  country        String?
+  locale         String?
+  screenWidth    Int?
+  screenHeight   Int?
+  viewportWidth  Int?
+  viewportHeight Int?
+  startedAt      DateTime           @default(now())
+  lastSeenAt     DateTime           @default(now())
+  pageViews      AnalyticsPageView[]
+  events         AnalyticsEvent[]
+
+  @@index([startedAt])
+  @@index([landingPath])
+  @@index([visitorId, startedAt])
+}
+
+model AnalyticsPageView {
+  id               String            @id @default(cuid())
+  session          AnalyticsSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId        String
+  path             String
+  title            String?
+  referrer         String?
+  startedAt        DateTime          @default(now())
+  endedAt          DateTime?
+  durationMs       Int?
+  activeMs         Int?
+  maxScrollPercent Int?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  events           AnalyticsEvent[]
+
+  @@index([path])
+  @@index([startedAt])
+  @@index([sessionId, startedAt])
+}
+
+model AnalyticsEvent {
+  id         String            @id @default(cuid())
+  session    AnalyticsSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId  String
+  pageView   AnalyticsPageView? @relation(fields: [pageViewId], references: [id], onDelete: SetNull)
+  pageViewId String?
+  type       String
+  name       String?
+  label      String?
+  path       String?
+  href       String?
+  metadata   Json?
+  createdAt  DateTime          @default(now())
+
+  @@index([createdAt])
+  @@index([type, createdAt])
+  @@index([path])
+}
+
 model SiteSettings {
   id                 Int      @id
   name               String

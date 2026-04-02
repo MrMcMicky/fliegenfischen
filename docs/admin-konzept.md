@@ -1,6 +1,6 @@
 # Admin & Stripe Konzept - Fliegenfischerschule
 
-Stand: 2026-01-31
+Stand: 2026-04-02
 
 ## Ziele
 - Admin-Backend fuer alle Inhalte und Angebote (Kurse, Termine, Gutscheine, Privat/Schnupper, Berichte, Site-Content).
@@ -37,6 +37,9 @@ Stand: 2026-01-31
    - Kontakt, Hero, About, FAQ, CTA-Box, Footer-Links, etc.
 10) **Admin Users** (nur SUPER_ADMIN)
    - User verwalten, Rollen, Reset.
+11) **Statistiken**
+   - Sitzungen, Pageviews, Aufenthaltszeit, Scrolltiefe, Landingpages, Referrer, Kampagnen, Klickziele.
+   - Pseudonymisierte Besucherwege: welche oeffentlichen Seiten in welcher Sitzung besucht wurden und wie aktiv die Nutzung war.
 
 ## Datenmodell (Vorschlag)
 
@@ -64,6 +67,21 @@ Stand: 2026-01-31
 - `SiteSettings`
   - id=1, name, tagline, location, contact (json), hero (json),
     about (json), sections (json), faqs (json), footer (json)
+
+### Analytics
+- `AnalyticsVisitor`
+  - visitorKey, firstSeenAt, lastSeenAt
+- `AnalyticsSession`
+  - visitorId, sessionKey, landingPath, landingReferrer,
+    utmSource/utmMedium/utmCampaign/utmTerm/utmContent,
+    deviceType, browser, os, country, locale,
+    screenWidth/screenHeight/viewportWidth/viewportHeight,
+    startedAt, lastSeenAt
+- `AnalyticsPageView`
+  - sessionId, path, title, referrer, startedAt, endedAt,
+    durationMs, activeMs, maxScrollPercent
+- `AnalyticsEvent`
+  - sessionId, pageViewId?, type, name?, label?, path?, href?, metadata?, createdAt
 
 ### Commerce
 - `Booking`
@@ -97,6 +115,14 @@ Stand: 2026-01-31
 - Checkout-Form erlaubt **"Rechnung anfragen"** via `/api/checkout`.
 - Booking wird mit Status `INVOICE_REQUESTED` gespeichert.
 - Admin kann Status manuell auf `PAID` setzen.
+
+## Analytics Flow (live)
+- Client-seitig laeuft ein eigenes leichtgewichtiges Tracking nur auf der oeffentlichen Site.
+- Start einer Seite -> `POST /api/analytics` mit Sitzung, Landingpage, Referrer, Kampagnen- und Geraetedaten.
+- Ende einer Seite -> Aufenthaltszeit, aktive Zeit und Scrolltiefe werden per `sendBeacon` nachgereicht.
+- Klicks auf Links/Buttons, Form-Submits und wichtige Custom-Events (z.B. Checkout-Start, Kontaktformular erfolgreich) werden als `AnalyticsEvent` gespeichert.
+- Admin `Statistiken` aggregiert diese Rohdaten zusammen mit Buchungen und Kontaktanfragen fuer Conversion-Kontext.
+- Tracking respektiert `Do Not Track` / `Global Privacy Control`.
 
 ## Migrationsplan
 1) Prisma Schema + Migration + Seed (Admin User).

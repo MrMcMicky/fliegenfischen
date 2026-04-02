@@ -6,6 +6,7 @@ import Image from "next/image";
 import { CalendarDays, MapPin, Users, Clock, Gift } from "lucide-react";
 
 import { Button } from "@/components/Button";
+import { dispatchBrowserAnalyticsEvent } from "@/lib/browser-analytics";
 import { formatDate, formatPrice } from "@/lib/format";
 import { calculateLessonTotal, normalizePrice } from "@/lib/booking-utils";
 
@@ -249,6 +250,24 @@ export function BookingForm({
       if (!response.ok) {
         throw new Error(payload.error || "booking_failed");
       }
+
+      dispatchBrowserAnalyticsEvent({
+        eventType:
+          paymentMode === "STRIPE" ? "checkout_started" : "invoice_requested",
+        label: summary?.title || type,
+        path:
+          typeof window !== "undefined"
+            ? `${window.location.pathname}${window.location.search}`
+            : "/buchen",
+        metadata: {
+          bookingType: type,
+          paymentMode,
+          quantity,
+          hours,
+          additionalPeople,
+          totalChf: total,
+        },
+      });
 
       if (payload.url) {
         window.location.href = payload.url;

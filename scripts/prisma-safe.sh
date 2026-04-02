@@ -24,7 +24,7 @@ if [ -z "${DATABASE_URL:-}" ]; then
   exit 1
 fi
 
-db_name="$(printf '%s' "$DATABASE_URL" | sed -E 's#^.*://[^/]+/([^?]+).*#\\1#')"
+db_name="$(printf '%s' "$DATABASE_URL" | sed -E 's#^.*://[^/]+/([^?]+).*#\1#')"
 
 if [ "$db_name" != "$EXPECTED_DATABASE_NAME" ]; then
   echo "Safety check failed: DATABASE_URL points to '$db_name' but expected '$EXPECTED_DATABASE_NAME'." >&2

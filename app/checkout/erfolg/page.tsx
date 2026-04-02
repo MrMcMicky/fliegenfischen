@@ -1,11 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { CheckoutSuccessClient } from "@/components/CheckoutSuccessClient";
 import { prisma } from "@/lib/db";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Zahlung erfolgreich",
-  description: "Vielen Dank für deine Buchung.",
+export const metadata: Metadata = {
+  ...buildPageMetadata({
+    title: "Zahlung erfolgreich",
+    description: "Vielen Dank für deine Buchung.",
+    path: "/checkout/erfolg",
+  }),
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export const dynamic = "force-dynamic";

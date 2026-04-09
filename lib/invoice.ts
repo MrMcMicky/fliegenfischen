@@ -177,13 +177,22 @@ export async function buildInvoiceData(bookingId: string): Promise<InvoiceData |
 
   if (booking.type === "VOUCHER") {
     const title = booking.voucherOption?.title || "Gutschein";
-    const description = `${title} · Gutscheinwert CHF ${booking.amountCHF}`;
+    const voucherValueCHF = booking.voucherValueCHF ?? booking.amountCHF;
+    const description = `${title} · Gutscheinwert CHF ${voucherValueCHF}`;
     items.push({
       description,
       quantity: 1,
-      unitPriceCHF: booking.amountCHF,
-      totalCHF: booking.amountCHF,
+      unitPriceCHF: voucherValueCHF,
+      totalCHF: voucherValueCHF,
     });
+    if (booking.voucherShippingCHF) {
+      items.push({
+        description: "Druck und Versand Gutschein",
+        quantity: 1,
+        unitPriceCHF: booking.voucherShippingCHF,
+        totalCHF: booking.voucherShippingCHF,
+      });
+    }
   }
 
   const issuedAt = booking.createdAt;

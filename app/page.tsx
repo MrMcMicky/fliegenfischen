@@ -11,7 +11,7 @@ import { SectionHeader } from "@/components/SectionHeader";
 import { TestimonialSection } from "@/components/TestimonialSection";
 import { TimelineSteps } from "@/components/TimelineSteps";
 import { UspIcon } from "@/components/UspIcon";
-import { VoucherOptionCard } from "@/components/VoucherOptionCard";
+import { VoucherShowcase } from "@/components/VoucherShowcase";
 import { WeatherSection } from "@/components/WeatherSection";
 import { prisma } from "@/lib/db";
 import { formatPrice } from "@/lib/format";
@@ -251,9 +251,8 @@ export default async function Home({
     description: string;
     href: string;
   }[]) || [];
-  const voucherSummary =
-    categorySummaries.find((item) => item.href.startsWith("/gutscheine")) ||
-    null;
+  const voucherSectionDescription =
+    "Wir erstellen den Gutschein als PDF mit persönlicher Widmung. Versand per Mail oder auf Wunsch gedruckt.";
   const courseFormatFaqs = categorySummaries
     .filter((item) =>
       ["/kurse", "/schnupperstunden"].some((path) => item.href.startsWith(path))
@@ -327,36 +326,11 @@ export default async function Home({
           <SectionHeader
             eyebrow="Gutscheine"
             title="Geschenk mit Erlebnis"
-            description={
-              voucherSummary?.description ||
-              "Wert- oder Kursgutschein, perfekt als Geschenk."
-            }
+            description={voucherSectionDescription}
+            descriptionClassName="max-w-none lg:whitespace-nowrap"
           />
-          {voucherOptions.length ? (
-            <div className="mt-8 grid gap-6 lg:grid-cols-2">
-              {voucherOptions.map((option) => (
-                <VoucherOptionCard key={option.id} option={option} />
-              ))}
-            </div>
-          ) : (
-            <div className="mt-8 rounded-2xl border border-[var(--color-border)] bg-white p-8 text-sm text-[var(--color-muted)]">
-              Gutscheinoptionen werden aktuell vorbereitet. Für Wunschgutscheine
-              melde dich gerne direkt.
-            </div>
-          )}
-          <div className="mt-6 rounded-2xl bg-[var(--color-forest)] p-10 text-white">
-            <h3 className="font-display text-2xl font-semibold">
-              Wunschtext & Versand
-            </h3>
-            <p className="mt-3 text-sm text-white/70">
-              Wir erstellen den Gutschein als PDF mit persönlicher Widmung.
-              Versand per Mail oder auf Wunsch gedruckt.
-            </p>
-            <div className="mt-6">
-              <Button href="/kontakt" variant="secondary">
-                Wunschtext senden
-              </Button>
-            </div>
+          <div className="mt-8">
+            <VoucherShowcase voucherOptions={voucherOptions} />
           </div>
         </div>
       </section>

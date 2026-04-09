@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { prisma } from "@/lib/db";
 import { buildPageMetadata } from "@/lib/seo";
+import { getVoucherDeliverySummary } from "@/lib/vouchers";
 
 export const metadata: Metadata = {
   ...buildPageMetadata({
@@ -42,8 +43,8 @@ export default async function BookingSuccessPage({
         Danke für deine Anfrage!
       </h1>
       <p className="text-sm text-[var(--color-muted)]">
-        Wir senden dir in Kürze die Rechnung und alle Details per E-Mail.
-        Die Platzreservation ist erst nach Zahlungseingang gültig.
+        Wir senden dir in Kürze die Rechnung und alle Details per E-Mail. Die
+        Platzreservation ist erst nach Zahlungseingang gültig.
       </p>
       {booking ? (
         <div className="rounded-xl border border-[var(--color-border)] bg-white p-6 text-sm text-[var(--color-muted)]">
@@ -51,6 +52,21 @@ export default async function BookingSuccessPage({
             Buchung #{booking.id}
           </p>
           <p>Status: {booking.status}</p>
+          {booking.type === "VOUCHER" ? (
+            <div className="mt-3 space-y-1">
+              <p>
+                Zustellung:{" "}
+                {getVoucherDeliverySummary(booking.voucherDeliveryMethod)}
+              </p>
+              {booking.voucherShippingCHF ? (
+                <p>Druck & Versand: CHF {booking.voucherShippingCHF}</p>
+              ) : null}
+              <p>
+                Nach Zahlung senden wir das Gutschein-PDF per E-Mail. Bei
+                Postversand kommt der Gutschein zusätzlich gedruckt per Post.
+              </p>
+            </div>
+          ) : null}
           {booking.paymentMode === "INVOICE" ? (
             <div className="mt-4">
               <a

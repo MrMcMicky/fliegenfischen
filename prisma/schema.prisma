@@ -41,6 +41,11 @@ enum VoucherKind {
   COURSE
 }
 
+enum VoucherDeliveryMethod {
+  EMAIL
+  POSTAL
+}
+
 enum BookingType {
   COURSE
   PRIVATE
@@ -312,6 +317,9 @@ model Booking {
   paymentMode     PaymentMode
   status          BookingStatus @default(PENDING)
   notes           String?
+  voucherValueCHF Int?
+  voucherShippingCHF Int?
+  voucherDeliveryMethod VoucherDeliveryMethod?
   voucherRecipient String?
   voucherMessage  String?
   createdAt       DateTime      @default(now())

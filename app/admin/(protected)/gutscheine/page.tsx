@@ -1,13 +1,24 @@
 import Link from "next/link";
 
 import { prisma } from "@/lib/db";
+import { voucherStatusLabels } from "@/lib/vouchers";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminGutscheinePage() {
   const [options, vouchers] = await Promise.all([
     prisma.voucherOption.findMany({ orderBy: { title: "asc" } }),
-    prisma.voucher.findMany({ orderBy: { createdAt: "desc" }, take: 10 }),
+    prisma.voucher.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      include: {
+        booking: {
+          include: {
+            voucherOption: true,
+          },
+        },
+      },
+    }),
   ]);
 
   return (
@@ -49,10 +60,28 @@ export default async function AdminGutscheinePage() {
         </p>
         <div className="mt-4 space-y-2 text-sm">
           {vouchers.map((voucher) => (
-            <div key={voucher.id} className="flex items-center justify-between">
-              <span className="font-semibold text-[var(--color-text)]">{voucher.code}</span>
-              <span className="text-[var(--color-muted)]">CHF {voucher.remainingAmount}</span>
-            </div>
+            <Link
+              key={voucher.id}
+              href={`/gutscheine/pruefen?code=${voucher.code}`}
+              className="flex items-center justify-between gap-4 rounded-xl border border-[var(--color-border)] px-4 py-3 transition hover:bg-[var(--color-stone)]"
+            >
+              <div>
+                <p className="font-semibold uppercase tracking-[0.08em] text-[var(--color-text)]">
+                  {voucher.code}
+                </p>
+                <p className="text-xs text-[var(--color-muted)]">
+                  {voucher.booking?.voucherOption?.title || "Gutschein"} · {voucherStatusLabels[voucher.status]}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="font-semibold text-[var(--color-text)]">
+                  CHF {voucher.remainingAmount}
+                </p>
+                <p className="text-xs text-[var(--color-muted)]">
+                  Pruefen / einloesen
+                </p>
+              </div>
+            </Link>
           ))}
           {!vouchers.length ? (
             <p className="text-[var(--color-muted)]">Noch keine Gutscheine.</p>

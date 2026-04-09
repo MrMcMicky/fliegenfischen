@@ -9,6 +9,7 @@
   --color-sage: #e8efe6;
   --color-stone: #f8f7f4;
   --color-ember: #e88648;
+  --color-ember-rgb: 232, 134, 72;
   --color-slate: #4a5568;
   --color-text: #1a202c;
   --color-muted: #4a5568;
@@ -30,6 +31,7 @@ html {
   --color-sage: var(--color-sage);
   --color-stone: var(--color-stone);
   --color-ember: var(--color-ember);
+  --color-ember-rgb: var(--color-ember-rgb);
   --color-slate: var(--color-slate);
   --color-text: var(--color-text);
   --color-muted: var(--color-muted);
@@ -92,7 +94,7 @@ main section[id] {
 }
 
 ::selection {
-  background: rgba(232, 134, 72, 0.3);
+  background: rgba(var(--color-ember-rgb), 0.3);
 }
 
 .font-display {
@@ -119,7 +121,7 @@ main section[id] {
 .form-input:focus-visible {
   outline: none;
   border-color: var(--color-ember);
-  box-shadow: 0 0 0 3px rgba(232, 134, 72, 0.2);
+  box-shadow: 0 0 0 3px rgba(var(--color-ember-rgb), 0.2);
 }
 
 .form-input:disabled {
@@ -302,12 +304,12 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .wysiwyg-editable:hover {
-  outline-color: rgba(232, 134, 72, 0.45);
+  outline-color: rgba(var(--color-ember-rgb), 0.45);
 }
 
 .wysiwyg-editable:focus {
   outline-color: var(--color-ember);
-  background: rgba(232, 134, 72, 0.08);
+  background: rgba(var(--color-ember-rgb), 0.08);
 }
 
 .wysiwyg-editable[data-status="saving"] {
@@ -340,7 +342,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .wysiwyg-input:focus {
   outline: none;
   border-color: var(--color-ember);
-  box-shadow: 0 0 0 2px rgba(232, 134, 72, 0.18);
+  box-shadow: 0 0 0 2px rgba(var(--color-ember-rgb), 0.18);
 }
 
 .wysiwyg-input[data-status="saving"] {

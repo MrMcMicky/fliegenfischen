@@ -1,23 +1,37 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import { PDFDocument, type PDFPage, rgb, StandardFonts } from "pdf-lib";
+import QRCode from "qrcode";
+
+import { buildVoucherVerificationUrl } from "@/lib/vouchers";
 
 export type VoucherPdfInput = {
   code: string;
   amountCHF: number;
+  voucherTitle?: string | null;
   recipientName?: string | null;
   message?: string | null;
   purchaserName?: string | null;
   issuedAt?: Date;
 };
 
+const A5_LANDSCAPE: [number, number] = [595.28, 419.53];
+const TEMPLATE_PATHS = [
+  path.join(process.cwd(), "screenshots", "Gutschein-Muster-leer-A5.jpg"),
+  path.join(process.cwd(), "docs", "screenshots", "Gutschein-A5-Hintergrund.png"),
+  path.join(process.cwd(), "docs", "screenshots", "gutschein-a5-hintergrund.png"),
+  path.join(process.cwd(), "public", "branding", "Gutschein-A5-Hintergrund.png"),
+  path.join(process.cwd(), "public", "branding", "gutschein-a5-hintergrund.png"),
+];
+
 const COLORS = {
   forest: rgb(15 / 255, 50 / 255, 49 / 255),
-  ember: rgb(232 / 255, 134 / 255, 72 / 255),
+  forestSoft: rgb(20 / 255, 70 / 255, 68 / 255),
+  ember: rgb(196 / 255, 56 / 255, 46 / 255),
   stone: rgb(248 / 255, 247 / 255, 244 / 255),
-  muted: rgb(74 / 255, 85 / 255, 104 / 255),
-  paper: rgb(1, 1, 1),
-  line: rgb(226 / 255, 232 / 255, 240 / 255),
+  mist: rgb(255 / 255, 255 / 255, 255 / 255),
+  muted: rgb(82 / 255, 92 / 255, 104 / 255),
+  line: rgb(221 / 255, 226 / 255, 232 / 255),
 };
 
 const formatCHF = (amount: number) =>
@@ -42,6 +56,7 @@ const wrapText = (
   const words = text.split(/\s+/).filter(Boolean);
   const lines: string[] = [];
   let line = "";
+
   for (const word of words) {
     const nextLine = line ? `${line} ${word}` : word;
     if (font.widthOfTextAtSize(nextLine, fontSize) > maxWidth && line) {
@@ -51,29 +66,49 @@ const wrapText = (
       line = nextLine;
     }
   }
+
   if (line) lines.push(line);
   return lines;
 };
 
-export async function renderVoucherPdf(input: VoucherPdfInput) {
-  const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([595.28, 841.89]); // A4
-  const { width, height } = page.getSize();
+const limitLines = (lines: string[], maxLines: number) => {
+  if (lines.length <= maxLines) return lines;
+  const visible = lines.slice(0, maxLines);
+  const lastLine = visible[maxLines - 1] || "";
+  visible[maxLines - 1] = `${lastLine.slice(0, Math.max(0, lastLine.length - 3))}...`;
+  return visible;
+};
 
-  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+const loadTemplate = async () => {
+  for (const candidate of TEMPLATE_PATHS) {
+    try {
+      return {
+        bytes: await fs.readFile(candidate),
+        extension: path.extname(candidate).toLowerCase(),
+      };
+    } catch {
+      // Try next path.
+    }
+  }
 
-  const cardMargin = 24;
-  const headerHeight = 90;
-  const card = {
-    x: cardMargin,
-    y: cardMargin,
-    width: width - cardMargin * 2,
-    height: height - cardMargin * 2,
-  };
-  const margin = card.x + 36;
-  const contentWidth = card.width - 72;
+  return null;
+};
 
+const createQrPngBytes = async (value: string) => {
+  const dataUrl = await QRCode.toDataURL(value, {
+    errorCorrectionLevel: "M",
+    margin: 1,
+    width: 512,
+    color: {
+      dark: "#0f3231",
+      light: "#ffffff",
+    },
+  });
+
+  return Buffer.from(dataUrl.split(",")[1], "base64");
+};
+
+const drawFallbackBackground = (page: PDFPage, width: number, height: number) => {
   page.drawRectangle({
     x: 0,
     y: 0,
@@ -83,219 +118,201 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   });
 
   page.drawRectangle({
-    x: card.x,
-    y: card.y,
-    width: card.width,
-    height: card.height,
-    color: COLORS.paper,
-    borderColor: COLORS.line,
-    borderWidth: 1,
-  });
-
-  page.drawRectangle({
-    x: card.x,
-    y: card.y + card.height - headerHeight,
-    width: card.width,
-    height: headerHeight,
+    x: 0,
+    y: height - 110,
+    width,
+    height: 110,
     color: COLORS.forest,
   });
 
-  page.drawText("Fliegenfischerschule Urs Müller", {
-    x: margin,
-    y: card.y + card.height - 48,
-    font: fontBold,
-    size: 18,
-    color: rgb(1, 1, 1),
-  });
-  page.drawText("Geroldswil / Limmat, Zürich", {
-    x: margin,
-    y: card.y + card.height - 68,
-    font: fontRegular,
-    size: 10,
-    color: rgb(1, 1, 1),
-  });
-
-  const iconPath = path.join(
-    process.cwd(),
-    "public",
-    "illustrations",
-    "icon-rod.png"
-  );
-  try {
-    const iconBytes = await fs.readFile(iconPath);
-    const iconImage = await pdfDoc.embedPng(iconBytes);
-    page.drawImage(iconImage, {
-      x: card.x + card.width - 36 - 40,
-      y: card.y + card.height - 74,
-      width: 40,
-      height: 40,
-      opacity: 0.9,
-    });
-  } catch {
-    // Optional icon; ignore if missing.
-  }
-
-  let cursorY = card.y + card.height - headerHeight - 38;
-  page.drawText("GESCHENKGUTSCHEIN", {
-    x: margin,
-    y: cursorY,
-    font: fontBold,
-    size: 10,
-    color: COLORS.muted,
-  });
-  cursorY -= 24;
-  page.drawText("Gutschein", {
-    x: margin,
-    y: cursorY,
-    font: fontBold,
-    size: 32,
+  page.drawRectangle({
+    x: 0,
+    y: 0,
+    width,
+    height: 54,
     color: COLORS.forest,
   });
 
-  cursorY -= 48;
-  const amountBoxHeight = 34;
-  const amountBoxWidth = 170;
   page.drawRectangle({
-    x: margin,
-    y: cursorY - amountBoxHeight + 6,
-    width: amountBoxWidth,
-    height: amountBoxHeight,
-    color: COLORS.stone,
-    borderColor: COLORS.ember,
-    borderWidth: 1,
-  });
-  page.drawText(`CHF ${formatCHF(input.amountCHF)}`, {
-    x: margin + 12,
-    y: cursorY - amountBoxHeight + 16,
-    font: fontBold,
-    size: 20,
-    color: COLORS.ember,
+    x: 0,
+    y: 54,
+    width,
+    height: height - 164,
+    color: rgb(214 / 255, 228 / 255, 234 / 255),
   });
 
-  cursorY -= 40;
-  page.drawLine({
-    start: { x: margin, y: cursorY },
-    end: { x: margin + contentWidth, y: cursorY },
-    thickness: 1,
-    color: COLORS.line,
-  });
-
-  cursorY -= 28;
   page.drawRectangle({
-    x: margin,
-    y: cursorY - 50,
-    width: contentWidth,
-    height: 60,
-    borderColor: COLORS.line,
-    borderWidth: 1,
-    color: COLORS.stone,
+    x: 0,
+    y: 54,
+    width,
+    height: 92,
+    color: rgb(231 / 255, 238 / 255, 243 / 255),
+    opacity: 0.65,
   });
+};
 
-  page.drawText("Gutschein-Code", {
-    x: margin + 16,
-    y: cursorY - 6,
-    font: fontBold,
-    size: 10,
-    color: COLORS.muted,
-  });
-  page.drawText(input.code, {
-    x: margin + 16,
-    y: cursorY - 34,
-    font: fontBold,
-    size: 22,
-    color: COLORS.forest,
-  });
-
-  cursorY -= 92;
+export async function renderVoucherPdf(input: VoucherPdfInput) {
+  const pdfDoc = await PDFDocument.create();
+  const page = pdfDoc.addPage(A5_LANDSCAPE);
+  const { width, height } = page.getSize();
+  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const fontSerifItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
   const issuedDate = input.issuedAt ? formatDate(input.issuedAt) : formatDate(new Date());
   const recipient = input.recipientName?.trim();
   const purchaser = input.purchaserName?.trim();
+  const voucherTitle = input.voucherTitle?.trim() || "Gutschein";
+  const verificationUrl = buildVoucherVerificationUrl(input.code);
+  const template = await loadTemplate();
 
-  if (recipient) {
-    page.drawText(`Für: ${recipient}`, {
-      x: margin,
-      y: cursorY,
+  if (template) {
+    const templateImage =
+      template.extension === ".jpg" || template.extension === ".jpeg"
+        ? await pdfDoc.embedJpg(template.bytes)
+        : await pdfDoc.embedPng(template.bytes);
+    page.drawImage(templateImage, {
+      x: 0,
+      y: 0,
+      width,
+      height,
+    });
+  } else {
+    drawFallbackBackground(page, width, height);
+
+    page.drawText("Fliegenfischerschule Urs Mueller", {
+      x: 34,
+      y: height - 46,
       font: fontBold,
-      size: 12,
+      size: 22,
+      color: COLORS.mist,
+    });
+    page.drawText("Geschenkgutschein", {
+      x: 34,
+      y: height - 88,
+      font: fontBold,
+      size: 30,
       color: COLORS.forest,
     });
-    cursorY -= 20;
   }
 
-  if (input.message) {
-    page.drawText("Nachricht:", {
-      x: margin,
-      y: cursorY,
-      font: fontBold,
-      size: 11,
-      color: COLORS.muted,
-    });
-    cursorY -= 18;
-    const lines = wrapText(
-      input.message,
-      contentWidth,
-      fontRegular,
-      11
-    );
-    for (const line of lines) {
-      page.drawText(line, {
-        x: margin,
-        y: cursorY,
-        font: fontRegular,
-        size: 11,
-        color: COLORS.muted,
-      });
-      cursorY -= 15;
-    }
-    cursorY -= 6;
-  }
+  const qrBox = {
+    x: width - 116,
+    y: 44,
+    width: 74,
+    height: 74,
+  };
+  const recipientLine = recipient || "Name des Beschenkten";
+  const recipientFontSize = recipientLine.length > 22 ? 30 : 36;
+  const recipientWidth = fontSerifItalic.widthOfTextAtSize(
+    recipientLine,
+    recipientFontSize
+  );
+  page.drawText(recipientLine, {
+    x: (width - recipientWidth) / 2,
+    y: 184,
+    font: fontSerifItalic,
+    size: recipientFontSize,
+    color: COLORS.forest,
+  });
 
-  page.drawText("Hinweise:", {
-    x: margin,
-    y: cursorY,
+  const amountLine = `${voucherTitle} · CHF ${formatCHF(input.amountCHF)}`;
+  const amountWidth = fontBold.widthOfTextAtSize(amountLine, 20);
+  page.drawText(amountLine, {
+    x: (width - amountWidth) / 2,
+    y: 108,
     font: fontBold,
-    size: 11,
+    size: 20,
+    color: COLORS.forest,
+  });
+
+  const infoLine = purchaser
+    ? `Ausgestellt fuer ${purchaser} am ${issuedDate}`
+    : `Ausgestellt am ${issuedDate}`;
+  const infoWidth = fontRegular.widthOfTextAtSize(infoLine, 10);
+  page.drawText(infoLine, {
+    x: (width - infoWidth) / 2,
+    y: 90,
+    font: fontRegular,
+    size: 10,
     color: COLORS.muted,
   });
-  cursorY -= 18;
 
-  const metaLines = [
-    purchaser ? `Ausgestellt für: ${purchaser}` : null,
-    `Ausstellungsdatum: ${issuedDate}`,
-    "Einlösbar für Kurse und Privatunterricht.",
-    "Keine Barauszahlung. Termin nach Vereinbarung.",
-  ].filter(Boolean) as string[];
-
-  for (const line of metaLines) {
+  const messageLines = input.message
+    ? limitLines(wrapText(input.message, 330, fontRegular, 10), 2)
+    : [
+        "Einloesbar fuer Kurse und Privatunterricht.",
+        "Keine Barauszahlung. Termin nach Vereinbarung.",
+      ];
+  let textY = 68;
+  for (const line of messageLines) {
+    const lineWidth = fontRegular.widthOfTextAtSize(line, 10);
     page.drawText(line, {
-      x: margin,
-      y: cursorY,
+      x: (width - lineWidth) / 2,
+      y: textY,
       font: fontRegular,
       size: 10,
       color: COLORS.muted,
     });
-    cursorY -= 14;
+    textY -= 12;
   }
 
-  page.drawLine({
-    start: { x: margin, y: card.y + 58 },
-    end: { x: margin + contentWidth, y: card.y + 58 },
-    thickness: 1,
-    color: COLORS.line,
+  page.drawRectangle({
+    x: 38,
+    y: 30,
+    width: 168,
+    height: 42,
+    color: COLORS.mist,
+    borderColor: COLORS.line,
+    borderWidth: 1,
+    opacity: 0.94,
   });
-
-  page.drawText("fliegenfischer-schule.shop", {
-    x: margin,
-    y: card.y + 36,
+  page.drawText("Gutschein-ID", {
+    x: 50,
+    y: 56,
     font: fontBold,
-    size: 10,
+    size: 9,
+    color: COLORS.muted,
+  });
+  page.drawText(input.code, {
+    x: 50,
+    y: 41,
+    font: fontBold,
+    size: 14,
     color: COLORS.forest,
   });
-  page.drawText("info@fliegenfischer-schule.shop", {
-    x: margin,
-    y: card.y + 20,
-    font: fontRegular,
+
+  page.drawRectangle({
+    x: qrBox.x - 8,
+    y: qrBox.y - 8,
+    width: qrBox.width + 16,
+    height: qrBox.height + 16,
+    color: COLORS.mist,
+    borderColor: COLORS.line,
+    borderWidth: 1,
+    opacity: 0.98,
+  });
+
+  const qrBytes = await createQrPngBytes(verificationUrl);
+  const qrImage = await pdfDoc.embedPng(qrBytes);
+  page.drawImage(qrImage, {
+    x: qrBox.x,
+    y: qrBox.y,
+    width: qrBox.width,
+    height: qrBox.height,
+  });
+
+  page.drawText("QR scannen", {
+    x: qrBox.x + 6,
+    y: qrBox.y - 4,
+    font: fontBold,
     size: 9,
+    color: COLORS.forest,
+  });
+  page.drawText("zum Pruefen", {
+    x: qrBox.x + 3,
+    y: qrBox.y - 15,
+    font: fontRegular,
+    size: 8,
     color: COLORS.muted,
   });
 

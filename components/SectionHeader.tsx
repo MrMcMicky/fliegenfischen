@@ -4,6 +4,7 @@ type SectionHeaderProps = {
   eyebrow?: ReactNode;
   title: ReactNode;
   description?: ReactNode;
+  descriptionClassName?: string;
   children?: ReactNode;
 };
 
@@ -11,6 +12,7 @@ export function SectionHeader({
   eyebrow,
   title,
   description,
+  descriptionClassName = "",
   children,
 }: SectionHeaderProps) {
   return (
@@ -24,7 +26,9 @@ export function SectionHeader({
         {title}
       </h2>
       {description ? (
-        <p className="max-w-2xl text-base text-[var(--color-muted)] sm:text-lg">
+        <p
+          className={`max-w-2xl text-base text-[var(--color-muted)] sm:text-lg ${descriptionClassName}`}
+        >
           {description}
         </p>
       ) : null}

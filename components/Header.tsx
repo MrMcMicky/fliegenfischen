@@ -219,8 +219,8 @@ export function Header({
               href={item.href}
               onClick={(event) => handleNavClick(item.href, event.timeStamp)}
               className={`transition-colors ${
-                item.href === "/#gutscheine" ? voucherNavClass : navPillClass
-              } ${isActive(item.href) && item.href !== "/#gutscheine" ? activeNavClass : ""}`}
+                getHash(item.href) === "#gutscheine" ? voucherNavClass : navPillClass
+              } ${isActive(item.href) ? activeNavClass : ""}`}
               aria-current={isActive(item.href) ? "page" : undefined}
             >
               {item.label}
@@ -251,10 +251,10 @@ export function Header({
                   setOpen(false);
                 }}
                 className={`rounded-lg px-3 py-2 text-sm font-semibold ${
-                  item.href === "/#gutscheine"
-                    ? voucherMobileClass
-                    : isActive(item.href)
+                  isActive(item.href)
                     ? "bg-[var(--color-forest)] text-white"
+                    : getHash(item.href) === "#gutscheine"
+                    ? voucherMobileClass
                     : "bg-[var(--color-forest)]/10 text-[var(--color-forest)]"
                 }`}
               >

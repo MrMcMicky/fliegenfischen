@@ -35,8 +35,8 @@ const createVoucherIfNeeded = async (booking: Booking) => {
   return prisma.voucher.create({
     data: {
       code,
-      originalAmount: booking.amountCHF,
-      remainingAmount: booking.amountCHF,
+      originalAmount: booking.voucherValueCHF ?? booking.amountCHF,
+      remainingAmount: booking.voucherValueCHF ?? booking.amountCHF,
       bookingId: booking.id,
       recipientName: booking.voucherRecipient || null,
       message: booking.voucherMessage || null,
@@ -55,7 +55,7 @@ export const markBookingPaid = async ({
 }) => {
   const booking = await prisma.booking.findUnique({
     where: { id: bookingId },
-    include: { payment: true, voucher: true },
+    include: { payment: true, voucher: true, voucherOption: true },
   });
   if (!booking) return null;
 
@@ -104,6 +104,7 @@ export const markBookingPaid = async ({
       const pdfBytes = await renderVoucherPdf({
         code: voucher.code,
         amountCHF: voucher.originalAmount,
+        voucherTitle: booking.voucherOption?.title,
         recipientName: voucher.recipientName,
         message: voucher.message,
         purchaserName: booking.customerName,
@@ -114,8 +115,21 @@ export const markBookingPaid = async ({
         customerName: booking.customerName,
         voucherCode: voucher.code,
         amountCHF: voucher.originalAmount,
+        totalCHF: booking.amountCHF,
+        voucherTitle: booking.voucherOption?.title,
+        voucherDeliveryMethod: booking.voucherDeliveryMethod,
+        voucherShippingCHF: booking.voucherShippingCHF,
         recipientName: voucher.recipientName,
         message: voucher.message,
+        shippingAddressLines: [
+          booking.customerName,
+          booking.customerAddressLine1,
+          booking.customerAddressLine2,
+          [booking.customerPostalCode, booking.customerCity]
+            .filter(Boolean)
+            .join(" "),
+          booking.customerCountry,
+        ].filter(Boolean) as string[],
         pdfBytes,
       });
     } catch (error) {

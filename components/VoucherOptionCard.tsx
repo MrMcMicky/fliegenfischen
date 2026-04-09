@@ -14,9 +14,13 @@ type VoucherOption = {
 
 type VoucherOptionCardProps = {
   option: VoucherOption;
+  ctaLabel?: string;
 };
 
-export function VoucherOptionCard({ option }: VoucherOptionCardProps) {
+export function VoucherOptionCard({
+  option,
+  ctaLabel = "Gutschein bestellen",
+}: VoucherOptionCardProps) {
   const values = useMemo(
     () => [...option.values].sort((a, b) => a - b),
     [option.values]
@@ -56,7 +60,7 @@ export function VoucherOptionCard({ option }: VoucherOptionCardProps) {
       </div>
       <div className="mt-6">
         <Button href={href} variant="secondary">
-          Gutschein bestellen
+          {ctaLabel}
         </Button>
       </div>
     </div>

@@ -6,7 +6,7 @@ const baseStyles =
 
 const variants = {
   primary:
-    "bg-[var(--color-ember)] text-white shadow-[0_12px_30px_rgba(232,134,72,0.35)] hover:translate-y-[-1px] hover:shadow-[0_16px_40px_rgba(232,134,72,0.4)]",
+    "bg-[var(--color-ember)] text-white shadow-[0_12px_30px_rgba(var(--color-ember-rgb),0.35)] hover:translate-y-[-1px] hover:shadow-[0_16px_40px_rgba(var(--color-ember-rgb),0.4)]",
   secondary:
     "border border-[var(--color-forest)]/20 text-[var(--color-forest)] hover:border-[var(--color-forest)]/40 hover:bg-[var(--color-forest)]/5",
   ghost:

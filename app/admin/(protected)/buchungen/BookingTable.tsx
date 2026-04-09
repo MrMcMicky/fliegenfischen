@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
-import type { BookingStatus, BookingType, PaymentMode } from "@prisma/client";
+import type {
+  BookingStatus,
+  BookingType,
+  PaymentMode,
+  VoucherDeliveryMethod,
+} from "@prisma/client";
 
 import { bookingStatusLabels, bookingTypeLabels } from "@/lib/constants";
 import { formatPrice } from "@/lib/format";
+import { voucherDeliveryMethodLabels } from "@/lib/vouchers";
 import {
   deleteBooking,
   resendBookingConfirmation,
@@ -26,6 +32,9 @@ type BookingRow = {
   customerCountry?: string | null;
   notes?: string | null;
   amountCHF: number;
+  voucherValueCHF?: number | null;
+  voucherShippingCHF?: number | null;
+  voucherDeliveryMethod?: VoucherDeliveryMethod | null;
   status: BookingStatus;
   type: BookingType;
   paymentMode: PaymentMode;
@@ -744,6 +753,32 @@ export default function BookingTable({ rows: initialRows }: { rows: BookingRow[]
                     {bookingTypeLabels[activeRow.type] ?? activeRow.type}
                     {activeRow.title ? ` · ${activeRow.title}` : ""}
                   </div>
+                  {activeRow.type === "VOUCHER" ? (
+                    <>
+                      <div>
+                        <span className="font-semibold text-[var(--color-text)]">
+                          Gutscheinwert:
+                        </span>{" "}
+                        {formatPrice(activeRow.voucherValueCHF ?? activeRow.amountCHF)}
+                      </div>
+                      <div>
+                        <span className="font-semibold text-[var(--color-text)]">
+                          Zustellung:
+                        </span>{" "}
+                        {voucherDeliveryMethodLabels[
+                          activeRow.voucherDeliveryMethod || "EMAIL"
+                        ]}
+                      </div>
+                      {activeRow.voucherShippingCHF ? (
+                        <div>
+                          <span className="font-semibold text-[var(--color-text)]">
+                            Druck & Versand:
+                          </span>{" "}
+                          {formatPrice(activeRow.voucherShippingCHF)}
+                        </div>
+                      ) : null}
+                    </>
+                  ) : null}
                   <div>
                     <span className="font-semibold text-[var(--color-text)]">Datum:</span>{" "}
                     {formatDate(activeRow.createdAt)}

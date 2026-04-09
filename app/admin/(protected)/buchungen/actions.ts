@@ -9,6 +9,7 @@ import { buildInvoiceData } from "@/lib/invoice";
 import { renderInvoicePdf } from "@/lib/invoice-pdf";
 import { sendBookingMail, sendInvoiceMail } from "@/lib/email";
 import { env } from "@/lib/env";
+import { getVoucherDeliverySummary } from "@/lib/vouchers";
 
 const VALID_STATUSES: BookingStatus[] = [
   "PENDING",
@@ -147,7 +148,16 @@ export async function resendBookingConfirmation(bookingId: string) {
   } else if (booking.type === "VOUCHER") {
     subject = "Bestätigung: Gutschein";
     lines.push("Gutschein-Bestellung bestätigt.");
-    lines.push("Wir senden dir den Gutschein per E-Mail.");
+    lines.push(
+      `Zustellung: ${getVoucherDeliverySummary(booking.voucherDeliveryMethod)}`
+    );
+    if (booking.voucherShippingCHF) {
+      lines.push(`Druck & Versand: CHF ${booking.voucherShippingCHF}`);
+    }
+    lines.push("Nach Zahlung senden wir dir das PDF per E-Mail.");
+    if (booking.voucherDeliveryMethod === "POSTAL") {
+      lines.push("Zusätzlich versenden wir den Gutschein gedruckt per Post.");
+    }
   }
 
   lines.push("");

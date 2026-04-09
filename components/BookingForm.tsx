@@ -1,14 +1,20 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type { VoucherDeliveryMethod } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { CalendarDays, MapPin, Users, Clock, Gift } from "lucide-react";
 
 import { Button } from "@/components/Button";
+import { VoucherPreview } from "@/components/VoucherPreview";
 import { dispatchBrowserAnalyticsEvent } from "@/lib/browser-analytics";
 import { formatDate, formatPrice } from "@/lib/format";
 import { calculateLessonTotal, normalizePrice } from "@/lib/booking-utils";
+import {
+  getVoucherDeliverySummary,
+  VOUCHER_PRINT_SURCHARGE_CHF,
+} from "@/lib/vouchers";
 
 const paymentOptions = [
   { value: "STRIPE", label: "Sofort bezahlen (TWINT / Karte)" },
@@ -25,6 +31,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   voucher_not_found: "Dieser Gutschein ist nicht verfügbar.",
   invalid_voucher_amount: "Bitte wähle einen gültigen Gutscheinbetrag.",
   invalid_amount: "Der Betrag ist ungültig.",
+  missing_postal_address: "Bitte gib die Versandadresse für den Postversand an.",
   use_invoice_checkout:
     "Bitte wähle die Option Rechnung anfragen, um fortzufahren.",
   use_stripe_checkout:
@@ -108,14 +115,24 @@ export function BookingForm({
   const [voucherAmount, setVoucherAmount] = useState(
     initialVoucherAmountValue
   );
+  const [voucherDeliveryMethod, setVoucherDeliveryMethod] =
+    useState<VoucherDeliveryMethod>("EMAIL");
   const [voucherRecipient, setVoucherRecipient] = useState("");
   const [voucherMessage, setVoucherMessage] = useState("");
+  const [customerAddressLine1, setCustomerAddressLine1] = useState("");
+  const [customerAddressLine2, setCustomerAddressLine2] = useState("");
+  const [customerPostalCode, setCustomerPostalCode] = useState("");
+  const [customerCity, setCustomerCity] = useState("");
+  const [customerCountry, setCustomerCountry] = useState("Schweiz");
   const [paymentMode, setPaymentMode] = useState<"STRIPE" | "INVOICE">(
     "STRIPE"
   );
   const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const showPostalFields =
+    type === "VOUCHER" && voucherDeliveryMethod === "POSTAL";
+  const voucherShippingCHF = showPostalFields ? VOUCHER_PRINT_SURCHARGE_CHF : 0;
 
   const summary = useMemo(() => {
     if (type === "COURSE" && session) {
@@ -165,11 +182,15 @@ export function BookingForm({
     if (type === "VOUCHER" && voucherOption) {
       return {
         title: voucherOption.title,
-        image: "/illustrations/icon-target.png",
+        image: null,
         meta: [
           {
             icon: Gift,
             value: `Gutscheinwert ${formatPrice(normalizePrice(voucherAmount))}`,
+          },
+          {
+            icon: Gift,
+            value: getVoucherDeliverySummary(voucherDeliveryMethod),
           },
         ],
         rows: [
@@ -177,9 +198,20 @@ export function BookingForm({
             label: "Gutscheinwert",
             value: formatPrice(normalizePrice(voucherAmount)),
           },
+          voucherShippingCHF
+            ? {
+                label: "Druck & Versand",
+                value: formatPrice(voucherShippingCHF),
+              }
+            : null,
+          {
+            label: "Zustellung",
+            value: getVoucherDeliverySummary(voucherDeliveryMethod),
+          },
           voucherRecipient
             ? { label: "Empfänger", value: voucherRecipient }
             : null,
+          voucherMessage ? { label: "Widmung", value: voucherMessage } : null,
         ].filter(Boolean) as { label: string; value: string }[],
       };
     }
@@ -190,7 +222,10 @@ export function BookingForm({
     lesson,
     voucherOption,
     voucherAmount,
+    voucherDeliveryMethod,
+    voucherShippingCHF,
     voucherRecipient,
+    voucherMessage,
     quantity,
     hours,
     additionalPeople,
@@ -209,10 +244,19 @@ export function BookingForm({
       );
     }
     if (type === "VOUCHER") {
-      return normalizePrice(voucherAmount);
+      return normalizePrice(voucherAmount) + voucherShippingCHF;
     }
     return 0;
-  }, [type, session, quantity, lesson, hours, additionalPeople, voucherAmount]);
+  }, [
+    type,
+    session,
+    quantity,
+    lesson,
+    hours,
+    additionalPeople,
+    voucherAmount,
+    voucherShippingCHF,
+  ]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -238,9 +282,15 @@ export function BookingForm({
             name: customerName,
             email: customerEmail,
             phone: customerPhone,
+            addressLine1: showPostalFields ? customerAddressLine1 : "",
+            addressLine2: showPostalFields ? customerAddressLine2 : "",
+            postalCode: showPostalFields ? customerPostalCode : "",
+            city: showPostalFields ? customerCity : "",
+            country: showPostalFields ? customerCountry : "",
           },
           paymentMode,
           notes,
+          voucherDeliveryMethod,
           voucherRecipient,
           voucherMessage,
         }),
@@ -494,6 +544,120 @@ export function BookingForm({
                   />
                 </div>
               </div>
+              <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-stone)] p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  Zustellung
+                </p>
+                <div className="mt-3 space-y-2 text-sm text-[var(--color-text)]">
+                  <label className="flex items-start gap-3 rounded-2xl border border-[var(--color-border)] bg-white px-4 py-3">
+                    <input
+                      type="radio"
+                      name="voucherDeliveryMethod"
+                      value="EMAIL"
+                      checked={voucherDeliveryMethod === "EMAIL"}
+                      onChange={() => setVoucherDeliveryMethod("EMAIL")}
+                      disabled={loading}
+                      className="mt-0.5"
+                    />
+                    <span>
+                      <span className="block font-semibold">PDF per E-Mail</span>
+                      <span className="block text-xs text-[var(--color-muted)]">
+                        Download nach Zahlung und PDF direkt per E-Mail.
+                      </span>
+                    </span>
+                  </label>
+                  <label className="flex items-start gap-3 rounded-2xl border border-[var(--color-border)] bg-white px-4 py-3">
+                    <input
+                      type="radio"
+                      name="voucherDeliveryMethod"
+                      value="POSTAL"
+                      checked={voucherDeliveryMethod === "POSTAL"}
+                      onChange={() => setVoucherDeliveryMethod("POSTAL")}
+                      disabled={loading}
+                      className="mt-0.5"
+                    />
+                    <span>
+                      <span className="block font-semibold">
+                        Gedruckt per Post (+ {formatPrice(VOUCHER_PRINT_SURCHARGE_CHF)})
+                      </span>
+                      <span className="block text-xs text-[var(--color-muted)]">
+                        Zusätzlich zum PDF versenden wir den Gutschein gedruckt per Post.
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              {showPostalFields ? (
+                <div className="rounded-2xl border border-[var(--color-border)] bg-white p-4">
+                  <div className="mb-4">
+                    <p className="font-semibold text-[var(--color-text)]">
+                      Versandadresse
+                    </p>
+                    <p className="text-sm text-[var(--color-muted)]">
+                      Der Versand erfolgt an dich als Besteller. Pflichtfelder sind markiert.
+                    </p>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className={`${fieldClass} md:col-span-2`}>
+                      <label className={labelClass}>Strasse und Nr.*</label>
+                      <input
+                        required={showPostalFields}
+                        value={customerAddressLine1}
+                        onChange={(event) =>
+                          setCustomerAddressLine1(event.target.value)
+                        }
+                        disabled={loading}
+                        className={inputClass}
+                      />
+                    </div>
+                    <div className={`${fieldClass} md:col-span-2`}>
+                      <label className={labelClass}>Adresszusatz</label>
+                      <input
+                        value={customerAddressLine2}
+                        onChange={(event) =>
+                          setCustomerAddressLine2(event.target.value)
+                        }
+                        disabled={loading}
+                        className={inputClass}
+                        placeholder="Optional"
+                      />
+                    </div>
+                    <div className={fieldClass}>
+                      <label className={labelClass}>PLZ*</label>
+                      <input
+                        required={showPostalFields}
+                        value={customerPostalCode}
+                        onChange={(event) =>
+                          setCustomerPostalCode(event.target.value)
+                        }
+                        disabled={loading}
+                        className={inputClass}
+                      />
+                    </div>
+                    <div className={fieldClass}>
+                      <label className={labelClass}>Ort*</label>
+                      <input
+                        required={showPostalFields}
+                        value={customerCity}
+                        onChange={(event) => setCustomerCity(event.target.value)}
+                        disabled={loading}
+                        className={inputClass}
+                      />
+                    </div>
+                    <div className={`${fieldClass} md:col-span-2`}>
+                      <label className={labelClass}>Land</label>
+                      <input
+                        value={customerCountry}
+                        onChange={(event) =>
+                          setCustomerCountry(event.target.value)
+                        }
+                        disabled={loading}
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
           ) : null}
 
@@ -561,6 +725,16 @@ export function BookingForm({
                   />
                 </div>
               ) : null}
+              {type === "VOUCHER" && voucherOption ? (
+                <VoucherPreview
+                  title={voucherOption.title}
+                  amountCHF={normalizePrice(voucherAmount)}
+                  recipientName={voucherRecipient}
+                  message={voucherMessage}
+                  deliveryMethod={voucherDeliveryMethod}
+                  className="mt-4"
+                />
+              ) : null}
               <p className="mt-4 text-lg font-semibold text-[var(--color-forest)]">
                 {summary.title}
               </p>
@@ -577,6 +751,21 @@ export function BookingForm({
                   })}
                 </div>
               ) : null}
+              {summary.rows?.length ? (
+                <div className="mt-4 space-y-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)]/65 p-4 text-sm">
+                  {summary.rows.map((row) => (
+                    <div
+                      key={`${row.label}-${row.value}`}
+                      className="flex items-start justify-between gap-4"
+                    >
+                      <span className="text-[var(--color-muted)]">{row.label}</span>
+                      <span className="text-right font-medium text-[var(--color-text)]">
+                        {row.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
               <div className="mt-6 border-t border-dashed border-[var(--color-border)] pt-4">
                 <div className="flex items-end justify-between gap-3">
                   <span className="text-sm text-[var(--color-muted)]">
@@ -589,6 +778,11 @@ export function BookingForm({
                 {type === "COURSE" && session ? (
                   <p className="mt-2 text-xs text-[var(--color-muted)]">
                     {formatPrice(session.priceCHF)} pro Person
+                  </p>
+                ) : null}
+                {type === "VOUCHER" && voucherShippingCHF > 0 ? (
+                  <p className="mt-2 text-xs text-[var(--color-muted)]">
+                    Inklusive Druck & Versand {formatPrice(voucherShippingCHF)}
                   </p>
                 ) : null}
               </div>

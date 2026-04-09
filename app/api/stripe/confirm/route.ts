@@ -30,6 +30,7 @@ export async function POST(request: Request) {
         ok: true,
         status: "paid",
         voucherCode: booking.voucher?.code ?? null,
+        voucherDeliveryMethod: booking.voucherDeliveryMethod ?? null,
       });
     }
 
@@ -63,6 +64,7 @@ export async function POST(request: Request) {
       ok: true,
       status: "paid",
       voucherCode: result?.voucher?.code ?? null,
+      voucherDeliveryMethod: result?.booking.voucherDeliveryMethod ?? null,
     });
   } catch (error) {
     console.error("stripe confirm failed", error);

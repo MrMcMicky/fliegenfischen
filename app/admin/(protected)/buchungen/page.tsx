@@ -9,6 +9,7 @@ export default async function AdminBuchungenPage() {
     include: {
       payment: true,
       courseSession: { include: { course: true } },
+      voucherOption: true,
     },
   });
   const rows = bookings.map((booking) => ({
@@ -24,11 +25,14 @@ export default async function AdminBuchungenPage() {
     customerCountry: booking.customerCountry,
     notes: booking.notes,
     amountCHF: booking.amountCHF,
+    voucherValueCHF: booking.voucherValueCHF,
+    voucherShippingCHF: booking.voucherShippingCHF,
+    voucherDeliveryMethod: booking.voucherDeliveryMethod,
     status: booking.status,
     type: booking.type,
     paymentMode: booking.paymentMode,
     stripeConfirmed: Boolean(booking.payment?.stripePaymentIntentId),
-    title: booking.courseSession?.course?.title || null,
+    title: booking.courseSession?.course?.title || booking.voucherOption?.title || null,
   }));
 
   return (

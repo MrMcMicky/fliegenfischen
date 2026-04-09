@@ -1,4 +1,7 @@
 import nodemailer from "nodemailer";
+import type { VoucherDeliveryMethod } from "@prisma/client";
+
+import { getVoucherDeliverySummary } from "@/lib/vouchers";
 
 export type ContactPayload = {
   name: string;
@@ -13,8 +16,13 @@ export type VoucherEmailPayload = {
   customerName: string;
   voucherCode: string;
   amountCHF: number;
+  totalCHF: number;
+  voucherTitle?: string | null;
+  voucherDeliveryMethod?: VoucherDeliveryMethod | null;
+  voucherShippingCHF?: number | null;
   recipientName?: string | null;
   message?: string | null;
+  shippingAddressLines?: string[];
   pdfBytes: Uint8Array;
 };
 
@@ -273,18 +281,35 @@ export async function sendVoucherMail(payload: VoucherEmailPayload) {
   const transporter = createTransporter();
 
   const subject = "Dein Gutschein – Fliegenfischerschule Urs Müller";
+  const deliveryMethod = payload.voucherDeliveryMethod || "EMAIL";
   const lines = [
     `Hallo ${payload.customerName},`,
     "",
     "Vielen Dank für deine Bestellung.",
     "",
     `Gutschein-Code: ${payload.voucherCode}`,
+    payload.voucherTitle ? `Art: ${payload.voucherTitle}` : null,
     `Wert: CHF ${payload.amountCHF}`,
+    payload.voucherShippingCHF
+      ? `Druck & Versand: CHF ${payload.voucherShippingCHF}`
+      : null,
+    `Total bezahlt: CHF ${payload.totalCHF}`,
+    `Zustellung: ${getVoucherDeliverySummary(deliveryMethod)}`,
     payload.recipientName ? `Empfänger: ${payload.recipientName}` : null,
     "",
     payload.message ? `Nachricht: ${payload.message}` : null,
     "",
     "Der Gutschein ist als PDF im Anhang.",
+    "Der Gutschein enthält einen QR-Code zur Online-Prüfung.",
+    deliveryMethod === "POSTAL"
+      ? "Wir drucken den Gutschein zusätzlich und senden ihn per Post an die angegebene Adresse."
+      : null,
+    deliveryMethod === "POSTAL" && payload.shippingAddressLines?.length
+      ? "Versandadresse:"
+      : null,
+    deliveryMethod === "POSTAL" && payload.shippingAddressLines?.length
+      ? payload.shippingAddressLines.join("\n")
+      : null,
     "Einlösbar für Kurse und Privatunterricht. Keine Barauszahlung.",
     "Termin nach Vereinbarung.",
     "",

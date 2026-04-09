@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 
-import { Button } from "@/components/Button";
 import { SectionHeader } from "@/components/SectionHeader";
 import { StructuredData } from "@/components/seo/StructuredData";
-import { VoucherOptionCard } from "@/components/VoucherOptionCard";
+import { VoucherShowcase } from "@/components/VoucherShowcase";
 import { prisma } from "@/lib/db";
 import {
   buildBreadcrumbStructuredData,
@@ -34,27 +33,10 @@ export default async function GutscheinePage() {
       <SectionHeader
         eyebrow="Gutscheine"
         title="Geschenk mit Erlebnis"
-        description="Ob Wertgutschein oder konkreter Kurs: Gutscheine sind unbefristet gültig und perfekt für Einsteiger wie Fortgeschrittene."
+        description="Wir erstellen den Gutschein als PDF mit persönlicher Widmung. Versand per Mail oder auf Wunsch gedruckt."
+        descriptionClassName="max-w-none lg:whitespace-nowrap"
       />
-      <div className="grid gap-6 lg:grid-cols-2">
-        {voucherOptions.map((option) => (
-          <VoucherOptionCard key={option.id} option={option} />
-        ))}
-      </div>
-      <div className="rounded-2xl bg-[var(--color-forest)] p-10 text-white">
-        <h3 className="font-display text-2xl font-semibold">
-          Wunschtext & Versand
-        </h3>
-        <p className="mt-3 text-sm text-white/70">
-          Wir erstellen den Gutschein als PDF mit persönlicher Widmung. Versand
-          per Mail oder auf Wunsch gedruckt.
-        </p>
-        <div className="mt-6">
-          <Button href="/kontakt" variant="secondary">
-            Wunschtext senden
-          </Button>
-        </div>
-      </div>
+      <VoucherShowcase voucherOptions={voucherOptions} />
     </div>
   );
 }

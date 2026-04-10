@@ -243,7 +243,7 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   );
   page.drawText(recipientLine, {
     x: (width - recipientWidth) / 2,
-    y: 184,
+    y: 167,
     font: fontSerifItalic,
     size: recipientFontSize,
     color: COLORS.forest,
@@ -256,7 +256,7 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   const previewMessageLines = input.message
     ? limitLines(wrapText(input.message, 300, fontSerifItalic, 12), 2)
     : [];
-  let previewMessageY = 150;
+  let previewMessageY = 124;
   for (const line of previewMessageLines) {
     const lineWidth = fontSerifItalic.widthOfTextAtSize(line, 12);
     page.drawText(line, {

@@ -65,7 +65,7 @@ export function VoucherPreview({
         {getVoucherPreviewDeliverySummary(deliveryMethod)}
       </div>
 
-      <div className="absolute inset-x-[13%] top-[41.6%] text-center">
+      <div className="absolute inset-x-[13%] top-[46.2%] text-center">
         <div
           className="whitespace-nowrap font-serif italic leading-none text-[var(--color-forest)] [text-shadow:0_1px_1px_rgba(255,255,255,0.72)]"
           style={{ fontSize: recipientFontClamp }}
@@ -76,7 +76,7 @@ export function VoucherPreview({
 
       {previewMessage ? (
         <div
-          className="absolute inset-x-[18%] top-[54.2%] text-center italic leading-tight text-[var(--color-forest)]/82"
+          className="absolute inset-x-[18%] top-[60.6%] text-center italic leading-tight text-[var(--color-forest)]/82"
           style={{ fontSize: messageFontClamp }}
         >
           {previewMessage}

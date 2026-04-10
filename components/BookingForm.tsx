@@ -132,6 +132,7 @@ export function BookingForm({
   const [loading, setLoading] = useState(false);
   const showPostalFields =
     type === "VOUCHER" && voucherDeliveryMethod === "POSTAL";
+  const isVoucherBooking = type === "VOUCHER" && Boolean(voucherOption);
   const voucherShippingCHF = showPostalFields ? VOUCHER_PRINT_SURCHARGE_CHF : 0;
 
   const summary = useMemo(() => {
@@ -186,7 +187,7 @@ export function BookingForm({
         meta: [
           {
             icon: Gift,
-            value: `Gutscheinwert ${formatPrice(normalizePrice(voucherAmount))}`,
+            value: `Im Wert von ${formatPrice(normalizePrice(voucherAmount))}`,
           },
           {
             icon: Gift,
@@ -347,43 +348,55 @@ export function BookingForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <div className="space-y-6">
-          <div className="text-xs text-[var(--color-muted)]">
-            Pflichtfelder sind mit * markiert.
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className={fieldClass}>
-              <label className={labelClass}>Name*</label>
-              <input
-                required
-                value={customerName}
-                onChange={(event) => setCustomerName(event.target.value)}
-                disabled={loading}
-                className={inputClass}
-                placeholder="Vorname Nachname"
-              />
+          <div className="rounded-xl border border-[var(--color-border)] bg-white p-4 space-y-4">
+            <div>
+              <p className="font-semibold text-[var(--color-text)]">
+                {isVoucherBooking ? "Auftraggeber" : "Kontaktdaten"}
+              </p>
+              <p className="text-sm text-[var(--color-muted)]">
+                Pflichtfelder sind mit * markiert.
+              </p>
             </div>
-            <div className={fieldClass}>
-              <label className={labelClass}>E-Mail*</label>
-              <input
-                required
-                type="email"
-                value={customerEmail}
-                onChange={(event) => setCustomerEmail(event.target.value)}
-                disabled={loading}
-                className={inputClass}
-                placeholder="name@email.ch"
-              />
-            </div>
-            <div className={fieldClass}>
-              <label className={labelClass}>Telefon</label>
-              <input
-                value={customerPhone}
-                onChange={(event) => setCustomerPhone(event.target.value)}
-                disabled={loading}
-                className={inputClass}
-                placeholder="Optional"
-              />
+            <div
+              className={
+                isVoucherBooking
+                  ? "grid gap-4 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0.8fr)]"
+                  : "grid gap-4 md:grid-cols-2"
+              }
+            >
+              <div className={fieldClass}>
+                <label className={labelClass}>Name*</label>
+                <input
+                  required
+                  value={customerName}
+                  onChange={(event) => setCustomerName(event.target.value)}
+                  disabled={loading}
+                  className={inputClass}
+                  placeholder="Vorname Nachname"
+                />
+              </div>
+              <div className={fieldClass}>
+                <label className={labelClass}>E-Mail*</label>
+                <input
+                  required
+                  type="email"
+                  value={customerEmail}
+                  onChange={(event) => setCustomerEmail(event.target.value)}
+                  disabled={loading}
+                  className={inputClass}
+                  placeholder="name@email.ch"
+                />
+              </div>
+              <div className={fieldClass}>
+                <label className={labelClass}>Telefon</label>
+                <input
+                  value={customerPhone}
+                  onChange={(event) => setCustomerPhone(event.target.value)}
+                  disabled={loading}
+                  className={inputClass}
+                  placeholder="Optional"
+                />
+              </div>
             </div>
           </div>
 
@@ -500,10 +513,7 @@ export function BookingForm({
             <div className="rounded-xl border border-[var(--color-border)] bg-white p-4 space-y-4">
               <div>
                 <p className="font-semibold text-[var(--color-text)]">
-                  {voucherOption.title}
-                </p>
-                <p className="text-sm text-[var(--color-muted)]">
-                  {voucherOption.description}
+                  Wert
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">

@@ -23,7 +23,7 @@ export function Header({
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const showBreadcrumb = !isHome;
+  const showBreadcrumb = !isHome && !pathname.startsWith("/buchen");
   const manualActiveRef = useRef<{ hash: string; until: number } | null>(null);
 
   useEffect(() => {

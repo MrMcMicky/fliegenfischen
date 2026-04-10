@@ -161,7 +161,6 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   const issuedDate = input.issuedAt ? formatDate(input.issuedAt) : formatDate(new Date());
   const recipient = input.recipientName?.trim();
   const purchaser = input.purchaserName?.trim();
-  const voucherTitle = input.voucherTitle?.trim() || "Gutschein";
   const verificationUrl = buildVoucherVerificationUrl(input.code);
   const template = await loadTemplate();
 
@@ -202,7 +201,14 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
     height: 74,
   };
   const recipientLine = recipient || "Name des Beschenkten";
-  const recipientFontSize = recipientLine.length > 22 ? 30 : 36;
+  const recipientFontSize =
+    recipientLine.length > 30
+      ? 24
+      : recipientLine.length > 24
+        ? 28
+        : recipientLine.length > 18
+          ? 32
+          : 36;
   const recipientWidth = fontSerifItalic.widthOfTextAtSize(
     recipientLine,
     recipientFontSize
@@ -215,36 +221,60 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
     color: COLORS.forest,
   });
 
-  const amountLine = `${voucherTitle} · CHF ${formatCHF(input.amountCHF)}`;
+  const infoLine = purchaser
+    ? `Ausgestellt fuer ${purchaser} am ${issuedDate}`
+    : `Ausgestellt am ${issuedDate}`;
+  const infoWidth = fontRegular.widthOfTextAtSize(infoLine, 10);
+  const previewMessageLines = input.message
+    ? limitLines(wrapText(input.message, 300, fontSerifItalic, 12), 2)
+    : [];
+  let previewMessageY = 150;
+  for (const line of previewMessageLines) {
+    const lineWidth = fontSerifItalic.widthOfTextAtSize(line, 12);
+    page.drawText(line, {
+      x: (width - lineWidth) / 2,
+      y: previewMessageY,
+      font: fontSerifItalic,
+      size: 12,
+      color: COLORS.forestSoft,
+    });
+    previewMessageY -= 15;
+  }
+
+  page.drawText("IM WERT VON", {
+    x: (width - fontBold.widthOfTextAtSize("IM WERT VON", 10)) / 2,
+    y: 106,
+    font: fontBold,
+    size: 10,
+    color: COLORS.forestSoft,
+  });
+
+  const amountLine = `CHF ${formatCHF(input.amountCHF)}`;
   const amountWidth = fontBold.widthOfTextAtSize(amountLine, 20);
   page.drawText(amountLine, {
     x: (width - amountWidth) / 2,
-    y: 108,
+    y: 86,
     font: fontBold,
     size: 20,
     color: COLORS.forest,
   });
 
-  const infoLine = purchaser
-    ? `Ausgestellt fuer ${purchaser} am ${issuedDate}`
-    : `Ausgestellt am ${issuedDate}`;
-  const infoWidth = fontRegular.widthOfTextAtSize(infoLine, 10);
   page.drawText(infoLine, {
     x: (width - infoWidth) / 2,
-    y: 90,
+    y: 70,
     font: fontRegular,
     size: 10,
     color: COLORS.muted,
   });
 
-  const messageLines = input.message
-    ? limitLines(wrapText(input.message, 330, fontRegular, 10), 2)
+  const detailsLines = input.message
+    ? ["Einloesbar fuer Kurse und Privatunterricht."]
     : [
         "Einloesbar fuer Kurse und Privatunterricht.",
         "Keine Barauszahlung. Termin nach Vereinbarung.",
       ];
-  let textY = 68;
-  for (const line of messageLines) {
+  let textY = 56;
+  for (const line of detailsLines) {
     const lineWidth = fontRegular.widthOfTextAtSize(line, 10);
     page.drawText(line, {
       x: (width - lineWidth) / 2,

@@ -4,9 +4,9 @@ import type { VoucherDeliveryMethod } from "@prisma/client";
 import voucherBlankImage from "@/screenshots/Gutschein-Muster-leer-A5.jpg";
 import { formatPrice } from "@/lib/format";
 import {
-  getVoucherDeliverySummary,
   getVoucherPreviewMessage,
   getVoucherPreviewRecipient,
+  getVoucherPreviewDeliverySummary,
 } from "@/lib/vouchers";
 
 type VoucherPreviewProps = {
@@ -33,6 +33,18 @@ export function VoucherPreview({
   const resolvedCode = code?.trim() ? `ID ${code}` : "ID nach Zahlung";
   const previewMessage =
     resolvedMessage === "Persoenliche Widmung" ? "" : resolvedMessage;
+  const recipientFontClamp =
+    resolvedRecipient.length > 30
+      ? "clamp(0.78rem, 1.35vw, 1.1rem)"
+      : resolvedRecipient.length > 24
+        ? "clamp(0.86rem, 1.48vw, 1.26rem)"
+        : resolvedRecipient.length > 18
+          ? "clamp(0.96rem, 1.65vw, 1.42rem)"
+          : "clamp(1.08rem, 1.82vw, 1.62rem)";
+  const messageFontClamp =
+    previewMessage.length > 36
+      ? "clamp(0.38rem, 0.74vw, 0.56rem)"
+      : "clamp(0.42rem, 0.82vw, 0.64rem)";
 
   return (
     <div
@@ -40,7 +52,7 @@ export function VoucherPreview({
     >
       <Image
         src={voucherBlankImage}
-        alt="Gutschein-Vorschau"
+        alt={`Gutschein-Vorschau ${title}`}
         fill
         sizes="(max-width: 1024px) 100vw, 420px"
         className="object-cover"
@@ -48,29 +60,35 @@ export function VoucherPreview({
       <div className="absolute inset-0 bg-gradient-to-b from-white/4 via-transparent to-white/6" />
 
       <div className="absolute right-[7.5%] top-[10.5%] text-[0.34rem] font-semibold uppercase tracking-[0.16em] text-[var(--color-forest)]/80 sm:text-[0.42rem]">
-        {getVoucherDeliverySummary(deliveryMethod)}
+        {getVoucherPreviewDeliverySummary(deliveryMethod)}
       </div>
 
-      <div className="absolute inset-x-[22%] top-[41.5%] text-center">
-        <div className="font-serif text-[clamp(0.88rem,1.6vw,1.45rem)] italic leading-none text-[var(--color-forest)] [text-shadow:0_1px_1px_rgba(255,255,255,0.7)]">
+      <div className="absolute inset-x-[13%] top-[41.6%] text-center">
+        <div
+          className="whitespace-nowrap font-serif italic leading-none text-[var(--color-forest)] [text-shadow:0_1px_1px_rgba(255,255,255,0.72)]"
+          style={{ fontSize: recipientFontClamp }}
+        >
           {resolvedRecipient}
         </div>
       </div>
 
-      <div className="absolute inset-x-[18%] top-[74.2%] text-center text-[var(--color-forest)]">
-        <div className="text-[0.34rem] font-semibold uppercase tracking-[0.18em] sm:text-[0.42rem]">
-          {title}
-        </div>
-        <div className="mt-0.5 text-[0.78rem] font-semibold sm:text-[1.05rem]">
-          {formatPrice(amountCHF)}
-        </div>
-      </div>
-
       {previewMessage ? (
-        <div className="absolute inset-x-[22%] bottom-[13.2%] text-center text-[0.38rem] leading-tight text-[var(--color-forest)]/82 sm:text-[0.48rem]">
+        <div
+          className="absolute inset-x-[18%] top-[54.2%] text-center italic leading-tight text-[var(--color-forest)]/82"
+          style={{ fontSize: messageFontClamp }}
+        >
           {previewMessage}
         </div>
       ) : null}
+
+      <div className="absolute inset-x-[16%] top-[72.4%] text-center text-[var(--color-forest)]">
+        <div className="text-[0.34rem] font-semibold uppercase tracking-[0.18em] sm:text-[0.42rem]">
+          Im Wert von
+        </div>
+        <div className="mt-0.5 text-[0.76rem] font-semibold sm:text-[1.02rem]">
+          {formatPrice(amountCHF)}
+        </div>
+      </div>
 
       <div className="absolute bottom-[10.5%] right-[9%] text-right text-[0.3rem] uppercase tracking-[0.14em] text-[var(--color-forest)]/78 sm:text-[0.38rem]">
         {resolvedCode}

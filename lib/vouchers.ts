@@ -35,3 +35,7 @@ export const getVoucherDeliverySummary = (
   deliveryMethod?: VoucherDeliveryMethod | null
 ) =>
   voucherDeliveryMethodLabels[deliveryMethod || "EMAIL"];
+
+export const getVoucherPreviewDeliverySummary = (
+  deliveryMethod?: VoucherDeliveryMethod | null
+) => (deliveryMethod === "POSTAL" ? "PDF + Postversand" : "PDF per E-Mail");

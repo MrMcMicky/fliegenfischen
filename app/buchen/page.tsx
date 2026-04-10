@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BookingForm } from "@/components/BookingForm";
-import { SectionHeader } from "@/components/SectionHeader";
 import { prisma } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/seo";
@@ -20,6 +20,49 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = "force-dynamic";
+
+function BookingPageHeader({
+  title,
+  description,
+}: {
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div className="flex flex-col gap-4">
+      <nav aria-label="Breadcrumb">
+        <ol className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)]/60">
+          <li className="flex items-center gap-2">
+            <Link href="/" className="transition hover:text-[var(--color-forest)]">
+              Startseite
+            </Link>
+            <span className="text-[var(--color-muted)]">/</span>
+          </li>
+          <li className="flex items-center gap-2">
+            <Link
+              href="/#kurse"
+              className="transition hover:text-[var(--color-forest)]"
+            >
+              Kurse
+            </Link>
+            <span className="text-[var(--color-muted)]">/</span>
+          </li>
+          <li>
+            <span className="text-[var(--color-text)]">Buchung</span>
+          </li>
+        </ol>
+      </nav>
+      <h1 className="whitespace-pre-line font-display text-3xl font-semibold text-[var(--color-text)] sm:text-4xl">
+        {title}
+      </h1>
+      {description ? (
+        <p className="max-w-2xl text-base text-[var(--color-muted)] sm:text-lg">
+          {description}
+        </p>
+      ) : null}
+    </div>
+  );
+}
 
 export default async function BookingPage({
   searchParams,
@@ -57,11 +100,7 @@ export default async function BookingPage({
 
     return (
       <div className="mx-auto w-full max-w-5xl space-y-8 px-4 pb-20 pt-16">
-        <SectionHeader
-          eyebrow="Buchung"
-          title={session.course?.title || "Kurs"}
-          description=""
-        />
+        <BookingPageHeader title={session.course?.title || "Kurs"} />
         <div className="flex flex-wrap gap-3 text-xs font-semibold text-[var(--color-forest)]">
           <span className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/80 px-3 py-1.5">
             {formatDate(session.date)} · {session.startTime}-{session.endTime}
@@ -98,8 +137,7 @@ export default async function BookingPage({
 
     return (
       <div className="mx-auto w-full max-w-5xl space-y-8 px-4 pb-20 pt-16">
-        <SectionHeader
-          eyebrow="Buchung"
+        <BookingPageHeader
           title={offering.title}
           description={offering.description}
         />
@@ -130,11 +168,7 @@ export default async function BookingPage({
 
     return (
       <div className="mx-auto w-full max-w-5xl space-y-8 px-4 pb-20 pt-16">
-        <SectionHeader
-          eyebrow="Buchung"
-          title={option.title}
-          description={option.description}
-        />
+        <BookingPageHeader title={option.title} />
         <BookingForm
           type="VOUCHER"
           initialVoucherAmount={initialVoucherAmount}

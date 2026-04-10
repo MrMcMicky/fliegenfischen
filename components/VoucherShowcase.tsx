@@ -23,7 +23,7 @@ export function VoucherShowcase({ voucherOptions }: VoucherShowcaseProps) {
   const valueVoucherOption =
     voucherOptions.find((option) => option.kind === "VALUE") || null;
   const chooserButtonClass =
-    "min-w-[18rem] px-7 py-3 text-base shadow-[0_18px_40px_-20px_rgba(15,50,49,0.32)] hover:-translate-y-0.5";
+    "min-w-[18rem] border-[var(--color-forest)] bg-[var(--color-forest)] px-7 py-3 text-base text-white shadow-[0_18px_40px_-20px_rgba(15,50,49,0.32)] hover:-translate-y-0.5 hover:border-[var(--color-forest)] hover:bg-[var(--color-forest)]/95 hover:text-white";
 
   return (
     <>
@@ -52,7 +52,7 @@ export function VoucherShowcase({ voucherOptions }: VoucherShowcaseProps) {
               variant="secondary"
               size="lg"
               href={`/buchen?voucherOptionId=${courseVoucherOption.id}`}
-              className={`${chooserButtonClass} border-[var(--color-forest)]/35 bg-[var(--color-forest)]/12 text-[var(--color-forest)] hover:border-[var(--color-forest)] hover:bg-[var(--color-forest)] hover:text-white`}
+              className={chooserButtonClass}
             >
               Kursgutschein bestellen
             </Button>
@@ -62,7 +62,7 @@ export function VoucherShowcase({ voucherOptions }: VoucherShowcaseProps) {
               variant="secondary"
               size="lg"
               href={`/buchen?voucherOptionId=${valueVoucherOption.id}`}
-              className={`${chooserButtonClass} border-[var(--color-ember)]/35 bg-[rgba(var(--color-ember-rgb),0.12)] text-[var(--color-text)] hover:border-[var(--color-ember)] hover:bg-[var(--color-ember)] hover:text-white`}
+              className={chooserButtonClass}
             >
               Wertgutschein bestellen
             </Button>

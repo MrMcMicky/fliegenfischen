@@ -40,6 +40,7 @@ export async function GET(request: Request) {
     code: resolvedVoucher.code,
     amountCHF: resolvedVoucher.originalAmount,
     voucherTitle: resolvedBooking.voucherOption?.title,
+    voucherKind: resolvedBooking.voucherOption?.kind,
     recipientName: resolvedVoucher.recipientName,
     message: resolvedVoucher.message,
     purchaserName: resolvedBooking.customerName,

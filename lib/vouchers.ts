@@ -1,4 +1,8 @@
-import type { VoucherDeliveryMethod, VoucherStatus } from "@prisma/client";
+import type {
+  VoucherDeliveryMethod,
+  VoucherKind,
+  VoucherStatus,
+} from "@prisma/client";
 
 import { env } from "@/lib/env";
 
@@ -39,3 +43,19 @@ export const getVoucherDeliverySummary = (
 export const getVoucherPreviewDeliverySummary = (
   deliveryMethod?: VoucherDeliveryMethod | null
 ) => (deliveryMethod === "POSTAL" ? "PDF + Postversand" : "PDF per E-Mail");
+
+export const getVoucherTemplateKind = (
+  kind?: VoucherKind | null,
+  title?: string | null
+): VoucherKind => {
+  if (kind) return kind;
+  return title?.toLowerCase().includes("kurs") ? "COURSE" : "VALUE";
+};
+
+export const getVoucherPreviewBackgroundSrc = (
+  kind?: VoucherKind | null,
+  title?: string | null
+) =>
+  getVoucherTemplateKind(kind, title) === "COURSE"
+    ? "/branding/vouchers/gutschein-kurs-hintergrund.jpg"
+    : "/branding/vouchers/gutschein-geschenk-hintergrund.jpg";

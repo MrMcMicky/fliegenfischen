@@ -105,6 +105,7 @@ export const markBookingPaid = async ({
         code: voucher.code,
         amountCHF: voucher.originalAmount,
         voucherTitle: booking.voucherOption?.title,
+        voucherKind: booking.voucherOption?.kind,
         recipientName: voucher.recipientName,
         message: voucher.message,
         purchaserName: booking.customerName,

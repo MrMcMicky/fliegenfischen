@@ -176,6 +176,7 @@ export default async function BookingPage({
             id: option.id,
             title: option.title,
             description: option.description,
+            kind: option.kind,
             values: option.values,
           }}
         />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { VoucherDeliveryMethod } from "@prisma/client";
+import type { VoucherDeliveryMethod, VoucherKind } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { CalendarDays, MapPin, Users, Clock, Gift } from "lucide-react";
@@ -88,6 +88,7 @@ type BookingFormProps = {
     id: string;
     title: string;
     description: string;
+    kind: VoucherKind;
     values: number[];
   };
 };
@@ -738,6 +739,7 @@ export function BookingForm({
               {type === "VOUCHER" && voucherOption ? (
                 <VoucherPreview
                   title={voucherOption.title}
+                  kind={voucherOption.kind}
                   amountCHF={normalizePrice(voucherAmount)}
                   recipientName={voucherRecipient}
                   message={voucherMessage}

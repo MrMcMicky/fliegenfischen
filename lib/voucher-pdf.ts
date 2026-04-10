@@ -1,14 +1,19 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import type { VoucherKind } from "@prisma/client";
 import { PDFDocument, type PDFPage, rgb, StandardFonts } from "pdf-lib";
 import QRCode from "qrcode";
 
-import { buildVoucherVerificationUrl } from "@/lib/vouchers";
+import {
+  buildVoucherVerificationUrl,
+  getVoucherTemplateKind,
+} from "@/lib/vouchers";
 
 export type VoucherPdfInput = {
   code: string;
   amountCHF: number;
   voucherTitle?: string | null;
+  voucherKind?: VoucherKind | null;
   recipientName?: string | null;
   message?: string | null;
   purchaserName?: string | null;
@@ -16,13 +21,36 @@ export type VoucherPdfInput = {
 };
 
 const A5_LANDSCAPE: [number, number] = [595.28, 419.53];
-const TEMPLATE_PATHS = [
-  path.join(process.cwd(), "screenshots", "Gutschein-Muster-leer-A5.jpg"),
-  path.join(process.cwd(), "docs", "screenshots", "Gutschein-A5-Hintergrund.png"),
-  path.join(process.cwd(), "docs", "screenshots", "gutschein-a5-hintergrund.png"),
-  path.join(process.cwd(), "public", "branding", "Gutschein-A5-Hintergrund.png"),
-  path.join(process.cwd(), "public", "branding", "gutschein-a5-hintergrund.png"),
-];
+
+const getTemplatePaths = (kind?: VoucherKind | null, title?: string | null) => {
+  const resolvedKind = getVoucherTemplateKind(kind, title);
+
+  return resolvedKind === "COURSE"
+    ? [
+        path.join(
+          process.cwd(),
+          "public",
+          "branding",
+          "vouchers",
+          "gutschein-kurs-hintergrund.jpg"
+        ),
+        path.join(process.cwd(), "screenshots", "Gutschein-Kurs-Hintergrund.jpg"),
+      ]
+    : [
+        path.join(
+          process.cwd(),
+          "public",
+          "branding",
+          "vouchers",
+          "gutschein-geschenk-hintergrund.jpg"
+        ),
+        path.join(
+          process.cwd(),
+          "screenshots",
+          "Gutschein-Geschenk-Hintergrund.jpg"
+        ),
+      ];
+};
 
 const COLORS = {
   forest: rgb(15 / 255, 50 / 255, 49 / 255),
@@ -79,8 +107,8 @@ const limitLines = (lines: string[], maxLines: number) => {
   return visible;
 };
 
-const loadTemplate = async () => {
-  for (const candidate of TEMPLATE_PATHS) {
+const loadTemplate = async (kind?: VoucherKind | null, title?: string | null) => {
+  for (const candidate of getTemplatePaths(kind, title)) {
     try {
       return {
         bytes: await fs.readFile(candidate),
@@ -162,7 +190,7 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   const recipient = input.recipientName?.trim();
   const purchaser = input.purchaserName?.trim();
   const verificationUrl = buildVoucherVerificationUrl(input.code);
-  const template = await loadTemplate();
+  const template = await loadTemplate(input.voucherKind, input.voucherTitle);
 
   if (template) {
     const templateImage =

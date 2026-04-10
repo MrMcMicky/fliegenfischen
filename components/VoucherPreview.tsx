@@ -1,9 +1,9 @@
 import Image from "next/image";
-import type { VoucherDeliveryMethod } from "@prisma/client";
+import type { VoucherDeliveryMethod, VoucherKind } from "@prisma/client";
 
-import voucherBlankImage from "@/screenshots/Gutschein-Muster-leer-A5.jpg";
 import { formatPrice } from "@/lib/format";
 import {
+  getVoucherPreviewBackgroundSrc,
   getVoucherPreviewMessage,
   getVoucherPreviewRecipient,
   getVoucherPreviewDeliverySummary,
@@ -11,6 +11,7 @@ import {
 
 type VoucherPreviewProps = {
   title: string;
+  kind?: VoucherKind | null;
   amountCHF: number;
   recipientName?: string | null;
   message?: string | null;
@@ -21,6 +22,7 @@ type VoucherPreviewProps = {
 
 export function VoucherPreview({
   title,
+  kind,
   amountCHF,
   recipientName,
   message,
@@ -51,7 +53,7 @@ export function VoucherPreview({
       className={`relative aspect-[16/10] overflow-hidden rounded-[1.5rem] border border-[var(--color-border)] bg-white shadow-[0_20px_45px_rgba(15,50,49,0.12)] ${className}`}
     >
       <Image
-        src={voucherBlankImage}
+        src={getVoucherPreviewBackgroundSrc(kind, title)}
         alt={`Gutschein-Vorschau ${title}`}
         fill
         sizes="(max-width: 1024px) 100vw, 420px"

@@ -37,16 +37,16 @@ export function VoucherPreview({
     resolvedMessage === "Persoenliche Widmung" ? "" : resolvedMessage;
   const recipientFontClamp =
     resolvedRecipient.length > 30
-      ? "clamp(0.72rem, 1.24vw, 1rem)"
+      ? "clamp(0.66rem, 1.08vw, 0.9rem)"
       : resolvedRecipient.length > 24
-        ? "clamp(0.8rem, 1.38vw, 1.16rem)"
+        ? "clamp(0.74rem, 1.22vw, 1rem)"
         : resolvedRecipient.length > 18
-          ? "clamp(0.9rem, 1.54vw, 1.32rem)"
-          : "clamp(1rem, 1.7vw, 1.5rem)";
+          ? "clamp(0.82rem, 1.34vw, 1.12rem)"
+          : "clamp(0.9rem, 1.46vw, 1.24rem)";
   const messageFontClamp =
     previewMessage.length > 36
-      ? "clamp(0.38rem, 0.74vw, 0.56rem)"
-      : "clamp(0.42rem, 0.82vw, 0.64rem)";
+      ? "clamp(0.36rem, 0.68vw, 0.52rem)"
+      : "clamp(0.4rem, 0.76vw, 0.58rem)";
 
   return (
     <div
@@ -65,7 +65,7 @@ export function VoucherPreview({
         {getVoucherPreviewDeliverySummary(deliveryMethod)}
       </div>
 
-      <div className="absolute inset-x-[13%] top-[46.2%] text-center">
+      <div className="absolute inset-x-[13%] top-[49.2%] text-center">
         <div
           className="whitespace-nowrap font-serif italic leading-none text-[var(--color-forest)] [text-shadow:0_1px_1px_rgba(255,255,255,0.72)]"
           style={{ fontSize: recipientFontClamp }}
@@ -76,7 +76,7 @@ export function VoucherPreview({
 
       {previewMessage ? (
         <div
-          className="absolute inset-x-[18%] top-[60.6%] text-center italic leading-tight text-[var(--color-forest)]/82"
+          className="absolute inset-x-[18%] top-[64.2%] text-center italic leading-tight text-[var(--color-forest)]/82"
           style={{ fontSize: messageFontClamp }}
         >
           {previewMessage}

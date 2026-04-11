@@ -231,19 +231,19 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   const recipientLine = recipient || "Name des Beschenkten";
   const recipientFontSize =
     recipientLine.length > 30
-      ? 22
+      ? 18
       : recipientLine.length > 24
-        ? 26
+        ? 21
         : recipientLine.length > 18
-          ? 30
-          : 34;
+          ? 24
+          : 28;
   const recipientWidth = fontSerifItalic.widthOfTextAtSize(
     recipientLine,
     recipientFontSize
   );
   page.drawText(recipientLine, {
     x: (width - recipientWidth) / 2,
-    y: 167,
+    y: 151,
     font: fontSerifItalic,
     size: recipientFontSize,
     color: COLORS.forest,
@@ -254,19 +254,19 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
     : `Ausgestellt am ${issuedDate}`;
   const infoWidth = fontRegular.widthOfTextAtSize(infoLine, 10);
   const previewMessageLines = input.message
-    ? limitLines(wrapText(input.message, 300, fontSerifItalic, 12), 2)
+    ? limitLines(wrapText(input.message, 300, fontSerifItalic, 10), 2)
     : [];
-  let previewMessageY = 124;
+  let previewMessageY = 109;
   for (const line of previewMessageLines) {
-    const lineWidth = fontSerifItalic.widthOfTextAtSize(line, 12);
+    const lineWidth = fontSerifItalic.widthOfTextAtSize(line, 10);
     page.drawText(line, {
       x: (width - lineWidth) / 2,
       y: previewMessageY,
       font: fontSerifItalic,
-      size: 12,
+      size: 10,
       color: COLORS.forestSoft,
     });
-    previewMessageY -= 15;
+    previewMessageY -= 12;
   }
 
   page.drawText("IM WERT VON", {

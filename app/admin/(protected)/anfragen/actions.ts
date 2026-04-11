@@ -4,11 +4,14 @@ import { revalidatePath } from "next/cache";
 import { ContactRequestStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
+import { getAdminFromSession } from "@/lib/auth";
 
 export async function updateContactStatus(
   id: string,
   status: ContactRequestStatus
 ) {
+  const admin = await getAdminFromSession();
+  if (!admin) return { ok: false };
   if (!id) return { ok: false };
   await prisma.contactRequest.update({
     where: { id },
@@ -19,6 +22,8 @@ export async function updateContactStatus(
 }
 
 export async function deleteContactRequest(id: string) {
+  const admin = await getAdminFromSession();
+  if (!admin) return { ok: false };
   if (!id) return { ok: false };
   await prisma.contactRequest.delete({
     where: { id },

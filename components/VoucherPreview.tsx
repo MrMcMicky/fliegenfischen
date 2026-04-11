@@ -37,12 +37,12 @@ export function VoucherPreview({
     resolvedMessage === "Persoenliche Widmung" ? "" : resolvedMessage;
   const recipientFontClamp =
     resolvedRecipient.length > 30
-      ? "clamp(0.78rem, 1.35vw, 1.1rem)"
+      ? "clamp(0.72rem, 1.24vw, 1rem)"
       : resolvedRecipient.length > 24
-        ? "clamp(0.86rem, 1.48vw, 1.26rem)"
+        ? "clamp(0.8rem, 1.38vw, 1.16rem)"
         : resolvedRecipient.length > 18
-          ? "clamp(0.96rem, 1.65vw, 1.42rem)"
-          : "clamp(1.08rem, 1.82vw, 1.62rem)";
+          ? "clamp(0.9rem, 1.54vw, 1.32rem)"
+          : "clamp(1rem, 1.7vw, 1.5rem)";
   const messageFontClamp =
     previewMessage.length > 36
       ? "clamp(0.38rem, 0.74vw, 0.56rem)"

@@ -231,12 +231,12 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   const recipientLine = recipient || "Name des Beschenkten";
   const recipientFontSize =
     recipientLine.length > 30
-      ? 24
+      ? 22
       : recipientLine.length > 24
-        ? 28
+        ? 26
         : recipientLine.length > 18
-          ? 32
-          : 36;
+          ? 30
+          : 34;
   const recipientWidth = fontSerifItalic.widthOfTextAtSize(
     recipientLine,
     recipientFontSize

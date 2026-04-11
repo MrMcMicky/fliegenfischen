@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { startTransition, useMemo, useState } from "react";
 import type { VoucherDeliveryMethod, VoucherKind } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -133,6 +133,7 @@ export function BookingForm({
   const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const showPostalFields =
     type === "VOUCHER" && voucherDeliveryMethod === "POSTAL";
   const isVoucherBooking = type === "VOUCHER" && Boolean(voucherOption);
@@ -266,6 +267,7 @@ export function BookingForm({
     event.preventDefault();
     setError(null);
     setLoading(true);
+    setRedirecting(false);
 
     try {
       const endpoint =
@@ -324,7 +326,22 @@ export function BookingForm({
       });
 
       if (payload.url) {
-        window.location.href = payload.url;
+        const currentOrigin =
+          typeof window !== "undefined" ? window.location.origin : "";
+        const resolvedUrl = new URL(payload.url, currentOrigin || undefined);
+        const isInternalNavigation =
+          Boolean(currentOrigin) && resolvedUrl.origin === currentOrigin;
+
+        setRedirecting(true);
+
+        if (isInternalNavigation) {
+          const nextPath = `${resolvedUrl.pathname}${resolvedUrl.search}${resolvedUrl.hash}`;
+          startTransition(() => {
+            router.push(nextPath);
+          });
+        } else if (typeof window !== "undefined") {
+          window.location.href = payload.url;
+        }
         return;
       }
 
@@ -336,6 +353,7 @@ export function BookingForm({
       throw new Error("Unbekannte Antwort vom Server");
     } catch (err) {
       const code = err instanceof Error ? err.message : undefined;
+      setRedirecting(false);
       setError(getErrorMessage(code));
     } finally {
       setLoading(false);
@@ -346,6 +364,7 @@ export function BookingForm({
     "w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-900 shadow-sm transition focus:border-[var(--color-ember)] focus:outline-none focus:ring-4 focus:ring-[var(--color-ember)]/20";
   const labelClass = "text-sm font-semibold text-slate-700";
   const fieldClass = "space-y-1";
+  const isBusy = loading || redirecting;
   const submitLabel =
     type === "VOUCHER" &&
     voucherTestPaymentBypass &&
@@ -355,6 +374,22 @@ export function BookingForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {redirecting ? (
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-white/78 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-3xl border border-[var(--color-border)] bg-white px-6 py-8 text-center shadow-[0_25px_60px_rgba(15,50,49,0.14)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--color-forest)]/60">
+              Bestellung
+            </p>
+            <h2 className="mt-3 font-display text-2xl font-semibold text-[var(--color-text)]">
+              Bestellung wird abgeschlossen
+            </h2>
+            <p className="mt-3 text-sm text-[var(--color-muted)]">
+              Zahlung, Gutschein und Bestätigung werden vorbereitet. Du wirst
+              sofort weitergeleitet.
+            </p>
+          </div>
+        </div>
+      ) : null}
       <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <div className="space-y-6">
           <div className="rounded-xl border border-[var(--color-border)] bg-white p-4 space-y-4">
@@ -379,7 +414,7 @@ export function BookingForm({
                   required
                   value={customerName}
                   onChange={(event) => setCustomerName(event.target.value)}
-                  disabled={loading}
+                  disabled={isBusy}
                   className={inputClass}
                   placeholder="Vorname Nachname"
                 />
@@ -391,7 +426,7 @@ export function BookingForm({
                   type="email"
                   value={customerEmail}
                   onChange={(event) => setCustomerEmail(event.target.value)}
-                  disabled={loading}
+                  disabled={isBusy}
                   className={inputClass}
                   placeholder="name@email.ch"
                 />
@@ -401,7 +436,7 @@ export function BookingForm({
                 <input
                   value={customerPhone}
                   onChange={(event) => setCustomerPhone(event.target.value)}
-                  disabled={loading}
+                  disabled={isBusy}
                   className={inputClass}
                   placeholder="Optional"
                 />
@@ -435,7 +470,7 @@ export function BookingForm({
                     )
                   )
                 }
-                disabled={loading}
+                disabled={isBusy}
                 className={`${inputClass} w-32 text-center`}
                 step={1}
                 inputMode="numeric"
@@ -474,7 +509,7 @@ export function BookingForm({
                         )
                       )
                     }
-                    disabled={loading}
+                    disabled={isBusy}
                     className={`${inputClass} w-28`}
                     step={1}
                     inputMode="numeric"
@@ -508,7 +543,7 @@ export function BookingForm({
                         )
                       )
                     }
-                    disabled={loading}
+                    disabled={isBusy}
                     className={`${inputClass} w-28`}
                     step={1}
                     inputMode="numeric"
@@ -537,7 +572,7 @@ export function BookingForm({
                       value={value}
                       checked={voucherAmount === value}
                       onChange={() => setVoucherAmount(value)}
-                      disabled={loading}
+                      disabled={isBusy}
                     />
                     {formatPrice(value)}
                   </label>
@@ -549,7 +584,7 @@ export function BookingForm({
                   <input
                     value={voucherRecipient}
                     onChange={(event) => setVoucherRecipient(event.target.value)}
-                    disabled={loading}
+                    disabled={isBusy}
                     className={inputClass}
                   />
                 </div>
@@ -558,7 +593,7 @@ export function BookingForm({
                   <input
                     value={voucherMessage}
                     onChange={(event) => setVoucherMessage(event.target.value)}
-                    disabled={loading}
+                    disabled={isBusy}
                     className={inputClass}
                   />
                 </div>
@@ -575,7 +610,7 @@ export function BookingForm({
                       value="EMAIL"
                       checked={voucherDeliveryMethod === "EMAIL"}
                       onChange={() => setVoucherDeliveryMethod("EMAIL")}
-                      disabled={loading}
+                      disabled={isBusy}
                       className="mt-0.5"
                     />
                     <span>
@@ -592,7 +627,7 @@ export function BookingForm({
                       value="POSTAL"
                       checked={voucherDeliveryMethod === "POSTAL"}
                       onChange={() => setVoucherDeliveryMethod("POSTAL")}
-                      disabled={loading}
+                      disabled={isBusy}
                       className="mt-0.5"
                     />
                     <span>
@@ -625,7 +660,7 @@ export function BookingForm({
                         onChange={(event) =>
                           setCustomerAddressLine1(event.target.value)
                         }
-                        disabled={loading}
+                        disabled={isBusy}
                         className={inputClass}
                       />
                     </div>
@@ -636,7 +671,7 @@ export function BookingForm({
                         onChange={(event) =>
                           setCustomerAddressLine2(event.target.value)
                         }
-                        disabled={loading}
+                        disabled={isBusy}
                         className={inputClass}
                         placeholder="Optional"
                       />
@@ -649,7 +684,7 @@ export function BookingForm({
                         onChange={(event) =>
                           setCustomerPostalCode(event.target.value)
                         }
-                        disabled={loading}
+                        disabled={isBusy}
                         className={inputClass}
                       />
                     </div>
@@ -659,7 +694,7 @@ export function BookingForm({
                         required={showPostalFields}
                         value={customerCity}
                         onChange={(event) => setCustomerCity(event.target.value)}
-                        disabled={loading}
+                        disabled={isBusy}
                         className={inputClass}
                       />
                     </div>
@@ -670,7 +705,7 @@ export function BookingForm({
                         onChange={(event) =>
                           setCustomerCountry(event.target.value)
                         }
-                        disabled={loading}
+                        disabled={isBusy}
                         className={inputClass}
                       />
                     </div>
@@ -693,7 +728,7 @@ export function BookingForm({
                     value={option.value}
                     checked={paymentMode === option.value}
                     onChange={() => setPaymentMode(option.value)}
-                    disabled={loading}
+                    disabled={isBusy}
                   />
                   {option.label}
                 </label>
@@ -712,7 +747,7 @@ export function BookingForm({
               value={notes}
               onChange={(event) => setNotes(event.target.value)}
               rows={4}
-              disabled={loading}
+              disabled={isBusy}
               className={`${inputClass} min-h-[120px]`}
               placeholder="Wunschdatum, Erfahrung, Ziel"
             />
@@ -807,8 +842,8 @@ export function BookingForm({
                 ) : null}
               </div>
               <div className="mt-6">
-                <Button type="submit" disabled={loading} className="w-full">
-                  {loading ? "Senden..." : submitLabel}
+                <Button type="submit" disabled={isBusy} className="w-full">
+                  {loading ? "Senden..." : redirecting ? "Weiterleiten..." : submitLabel}
                 </Button>
               </div>
             </div>

@@ -20,9 +20,11 @@ export const env = {
   stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || "",
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || "",
   voucherTestPaymentBypass: toBoolean(process.env.VOUCHER_TEST_PAYMENT_BYPASS),
-  adminCookieSecret: requireSecret(process.env.ADMIN_COOKIE_SECRET, "ADMIN_COOKIE_SECRET"),
   sessionMaxAgeDays: toNumber(process.env.SESSION_MAX_AGE_DAYS, 7),
   nodeEnv: process.env.NODE_ENV || "development",
 };
 
 export const isProd = env.nodeEnv === "production";
+
+export const getAdminCookieSecret = () =>
+  requireSecret(process.env.ADMIN_COOKIE_SECRET, "ADMIN_COOKIE_SECRET");

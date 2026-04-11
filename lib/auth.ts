@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
-import { env, isProd } from "@/lib/env";
+import { env, getAdminCookieSecret, isProd } from "@/lib/env";
 
 export const SESSION_COOKIE = "fliegen_admin_session";
 
@@ -33,7 +33,10 @@ export const getSessionToken = async (request?: Request) => {
 };
 
 const hashToken = (token: string) =>
-  crypto.createHmac("sha256", env.adminCookieSecret).update(token).digest("hex");
+  crypto
+    .createHmac("sha256", getAdminCookieSecret())
+    .update(token)
+    .digest("hex");
 
 export const verifyPassword = (password: string, hash: string) =>
   bcrypt.compare(password, hash);

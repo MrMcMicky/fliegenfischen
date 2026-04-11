@@ -1,7 +1,10 @@
 import nodemailer from "nodemailer";
 import type { VoucherDeliveryMethod } from "@prisma/client";
 
-import { getVoucherDeliverySummary } from "@/lib/vouchers";
+import {
+  buildVoucherVerificationUrl,
+  getVoucherDeliverySummary,
+} from "@/lib/vouchers";
 
 export type ContactPayload = {
   name: string;
@@ -87,6 +90,288 @@ const escapeHtml = (value: string) =>
 
 const formatMultiline = (value: string) =>
   escapeHtml(value).replace(/\n/g, "<br/>");
+
+const EMAIL_COLORS = {
+  forest: "#0F3231",
+  river: "#355A58",
+  ember: "#E88648",
+  stone: "#F8F7F4",
+  riverMist: "#EFF6F7",
+  text: "#1A202C",
+  muted: "#4A5568",
+  border: "#E5E7EB",
+  white: "#FFFFFF",
+};
+
+const formatCurrency = (value: number) =>
+  `CHF ${new Intl.NumberFormat("de-CH", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value)}`;
+
+const splitMailBlocks = (lines: string[]) => {
+  const blocks: string[][] = [];
+  let current: string[] = [];
+
+  for (const line of lines) {
+    if (!line.trim()) {
+      if (current.length) {
+        blocks.push(current);
+        current = [];
+      }
+      continue;
+    }
+
+    current.push(line);
+  }
+
+  if (current.length) {
+    blocks.push(current);
+  }
+
+  return blocks;
+};
+
+const renderEmailShell = ({
+  eyebrow,
+  title,
+  bodyHtml,
+}: {
+  eyebrow: string;
+  title: string;
+  bodyHtml: string;
+}) => `
+  <div style="margin:0;padding:24px 12px;background:${EMAIL_COLORS.stone};font-family:Arial,Helvetica,sans-serif;color:${EMAIL_COLORS.text};">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:640px;margin:0 auto;border-collapse:separate;">
+      <tr>
+        <td style="background:${EMAIL_COLORS.white};border:1px solid ${EMAIL_COLORS.border};border-radius:18px;overflow:hidden;">
+          <div style="background:${EMAIL_COLORS.forest};padding:22px 28px;">
+            <div style="font-size:11px;line-height:1.4;letter-spacing:0.28em;text-transform:uppercase;color:rgba(255,255,255,0.74);">
+              ${escapeHtml(eyebrow)}
+            </div>
+            <div style="margin-top:10px;font-size:28px;line-height:1.2;font-weight:700;color:${EMAIL_COLORS.white};">
+              ${escapeHtml(title)}
+            </div>
+            <div style="margin-top:8px;font-size:14px;line-height:1.6;color:#D7E3E2;">
+              Fliegenfischerschule Urs Müller
+            </div>
+          </div>
+          <div style="padding:28px 28px 24px;">
+            ${bodyHtml}
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+`;
+
+const renderDetailTable = (
+  rows: { label: string; value: string }[],
+  title = "Zusammenfassung"
+) => {
+  if (!rows.length) return "";
+
+  return `
+    <div style="margin:20px 0 0;border:1px solid ${EMAIL_COLORS.border};border-radius:14px;background:${EMAIL_COLORS.riverMist};padding:18px 20px;">
+      <div style="margin:0 0 10px;font-size:12px;line-height:1.4;letter-spacing:0.16em;text-transform:uppercase;color:${EMAIL_COLORS.muted};">
+        ${escapeHtml(title)}
+      </div>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;font-size:14px;line-height:1.55;">
+        ${rows
+          .map(
+            (row) => `
+              <tr>
+                <td style="padding:6px 14px 6px 0;color:${EMAIL_COLORS.muted};vertical-align:top;width:170px;">
+                  ${escapeHtml(row.label)}
+                </td>
+                <td style="padding:6px 0;color:${EMAIL_COLORS.text};font-weight:600;vertical-align:top;">
+                  ${formatMultiline(row.value)}
+                </td>
+              </tr>
+            `
+          )
+          .join("")}
+      </table>
+    </div>
+  `;
+};
+
+const renderMessageCard = (title: string, value?: string | null) => {
+  const trimmed = value?.trim();
+  if (!trimmed) return "";
+
+  return `
+    <div style="margin:20px 0 0;border:1px solid ${EMAIL_COLORS.border};border-radius:14px;background:${EMAIL_COLORS.stone};padding:18px 20px;">
+      <div style="margin:0 0 10px;font-size:12px;line-height:1.4;letter-spacing:0.16em;text-transform:uppercase;color:${EMAIL_COLORS.muted};">
+        ${escapeHtml(title)}
+      </div>
+      <div style="font-size:14px;line-height:1.7;color:${EMAIL_COLORS.text};">
+        ${formatMultiline(trimmed)}
+      </div>
+    </div>
+  `;
+};
+
+const renderParagraphBlock = (lines: string[]) => `
+  <p style="margin:18px 0 0;font-size:14px;line-height:1.7;color:${EMAIL_COLORS.muted};">
+    ${lines.map((line) => escapeHtml(line)).join("<br />")}
+  </p>
+`;
+
+const renderSignatureHtml = (lines?: string[]) => {
+  if (!lines?.length) return "";
+
+  return `
+    <div style="margin-top:24px;padding-top:18px;border-top:1px solid ${EMAIL_COLORS.border};font-size:13px;line-height:1.7;color:${EMAIL_COLORS.muted};">
+      ${lines
+        .map((line, index) => {
+          const content =
+            index === 1
+              ? `<span style="font-weight:700;color:${EMAIL_COLORS.text};">${escapeHtml(
+                  line
+                )}</span>`
+              : escapeHtml(line);
+          return `<div>${content}</div>`;
+        })
+        .join("")}
+    </div>
+  `;
+};
+
+export const buildVoucherEmailHtml = (payload: VoucherEmailPayload) => {
+  const deliveryMethod = payload.voucherDeliveryMethod || "EMAIL";
+  const summaryRows = [
+    { label: "Gutschein-Code", value: payload.voucherCode },
+    ...(payload.voucherTitle ? [{ label: "Art", value: payload.voucherTitle }] : []),
+    { label: "Wert", value: formatCurrency(payload.amountCHF) },
+    ...(payload.voucherShippingCHF
+      ? [{ label: "Druck & Versand", value: formatCurrency(payload.voucherShippingCHF) }]
+      : []),
+    { label: "Total bezahlt", value: formatCurrency(payload.totalCHF) },
+    { label: "Zustellung", value: getVoucherDeliverySummary(deliveryMethod) },
+    ...(payload.recipientName
+      ? [{ label: "Empfänger", value: payload.recipientName }]
+      : []),
+  ];
+  const shippingAddress = payload.shippingAddressLines?.filter(Boolean) ?? [];
+  const verificationUrl = buildVoucherVerificationUrl(payload.voucherCode);
+
+  return renderEmailShell({
+    eyebrow: "Gutschein",
+    title: "Dein Gutschein ist bereit",
+    bodyHtml: `
+      <p style="margin:0;font-size:14px;line-height:1.7;color:${EMAIL_COLORS.text};">
+        Hallo ${escapeHtml(payload.customerName)},
+      </p>
+      <p style="margin:14px 0 0;font-size:14px;line-height:1.7;color:${EMAIL_COLORS.muted};">
+        vielen Dank für deine Bestellung. Dein Gutschein ist als PDF im Anhang
+        und kann direkt verwendet oder ausgedruckt werden.
+      </p>
+      ${renderDetailTable(summaryRows)}
+      ${renderMessageCard("Widmung", payload.message)}
+      <div style="margin:20px 0 0;border:1px solid #D9E6E4;border-radius:14px;background:#F4FAF9;padding:18px 20px;">
+        <div style="font-size:14px;line-height:1.7;color:${EMAIL_COLORS.text};">
+          Der Gutschein enthält einen QR-Code zur Online-Prüfung und ist einlösbar
+          für Kurse und Privatunterricht. Keine Barauszahlung. Termin nach
+          Vereinbarung.
+        </div>
+      </div>
+      ${
+        deliveryMethod === "POSTAL"
+          ? `
+            <p style="margin:18px 0 0;font-size:14px;line-height:1.7;color:${EMAIL_COLORS.muted};">
+              Wir drucken den Gutschein zusätzlich und senden ihn per Post an die
+              angegebene Adresse.
+            </p>
+            ${renderDetailTable(
+              shippingAddress.map((line, index) => ({
+                label: index === 0 ? "Versand an" : "",
+                value: line,
+              })),
+              "Versandadresse"
+            )}
+          `
+          : ""
+      }
+      <div style="margin-top:22px;">
+        <a href="${escapeHtml(
+          verificationUrl
+        )}" style="display:inline-block;background:${EMAIL_COLORS.ember};color:${EMAIL_COLORS.white};text-decoration:none;padding:12px 18px;border-radius:999px;font-size:14px;font-weight:700;">
+          Gutschein online prüfen
+        </a>
+      </div>
+      ${renderSignatureHtml([
+        "Petri Heil",
+        "Urs Müller",
+        "Fliegenfischerschule Urs Müller",
+        "Geroldswil / Limmat / Zürich",
+        "fliegenfischer-schule.shop",
+        "info@fliegenfischer-schule.shop",
+      ])}
+    `,
+  });
+};
+
+export const buildBookingEmailHtml = (payload: BookingEmailPayload) => {
+  const signatureStart = payload.lines.findIndex(
+    (line) => line.trim() === "Petri Heil"
+  );
+  const contentLines =
+    signatureStart >= 0 ? payload.lines.slice(0, signatureStart) : payload.lines;
+  const signatureLines =
+    signatureStart >= 0 ? payload.lines.slice(signatureStart) : [];
+  const blocks = splitMailBlocks(contentLines);
+  const [firstBlock, ...restBlocks] = blocks;
+  const greetingLine = firstBlock?.[0] || "";
+  const greetingRest = firstBlock?.slice(1) || [];
+
+  const sectionsHtml = restBlocks
+    .map((block, index) => {
+      const isDetailBlock = block.every((line) => {
+        const separatorIndex = line.indexOf(":");
+        return separatorIndex > 0 && separatorIndex < line.length - 1;
+      });
+
+      if (isDetailBlock) {
+        return renderDetailTable(
+          block.map((line) => {
+            const separatorIndex = line.indexOf(":");
+            return {
+              label: line.slice(0, separatorIndex).trim(),
+              value: line.slice(separatorIndex + 1).trim(),
+            };
+          }),
+          index === 0 ? "Zusammenfassung" : "Details"
+        );
+      }
+
+      return renderParagraphBlock(block);
+    })
+    .join("");
+
+  return renderEmailShell({
+    eyebrow: "Buchung",
+    title: payload.subject,
+    bodyHtml: `
+      ${
+        greetingLine
+          ? `<p style="margin:0;font-size:14px;line-height:1.7;color:${EMAIL_COLORS.text};">${escapeHtml(
+              greetingLine
+            )}</p>`
+          : ""
+      }
+      ${
+        greetingRest.length
+          ? `<p style="margin:14px 0 0;font-size:14px;line-height:1.7;color:${EMAIL_COLORS.muted};">${greetingRest
+              .map((line) => escapeHtml(line))
+              .join("<br />")}</p>`
+          : ""
+      }
+      ${sectionsHtml}
+      ${renderSignatureHtml(signatureLines)}
+    `,
+  });
+};
 
 export async function sendContactMail(payload: ContactPayload) {
   const to =
@@ -282,6 +567,7 @@ export async function sendVoucherMail(payload: VoucherEmailPayload) {
 
   const subject = "Dein Gutschein – Fliegenfischerschule Urs Müller";
   const deliveryMethod = payload.voucherDeliveryMethod || "EMAIL";
+  const html = buildVoucherEmailHtml(payload);
   const lines = [
     `Hallo ${payload.customerName},`,
     "",
@@ -330,6 +616,7 @@ export async function sendVoucherMail(payload: VoucherEmailPayload) {
     replyTo: getReplyTo(),
     subject,
     text: lines,
+    html,
     attachments: [
       {
         filename: `Gutschein-${payload.voucherCode}.pdf`,
@@ -343,6 +630,7 @@ export async function sendBookingMail(payload: BookingEmailPayload) {
   const from = getEnv("BOOKING_EMAIL_FROM") || getDefaultFrom();
   const bcc = getEnv("BOOKING_EMAIL_BCC") || "";
   const transporter = createTransporter();
+  const html = buildBookingEmailHtml(payload);
 
   await transporter.sendMail({
     to: payload.to,
@@ -351,6 +639,7 @@ export async function sendBookingMail(payload: BookingEmailPayload) {
     replyTo: getReplyTo(),
     subject: payload.subject,
     text: payload.lines.join("\n"),
+    html,
   });
 }
 

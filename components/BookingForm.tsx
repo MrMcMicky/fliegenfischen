@@ -66,6 +66,7 @@ type BookingType = "COURSE" | "PRIVATE" | "TASTER" | "VOUCHER";
 type BookingFormProps = {
   type: BookingType;
   initialVoucherAmount?: number;
+  voucherTestPaymentBypass?: boolean;
   session?: {
     id: string;
     date: string;
@@ -99,6 +100,7 @@ export function BookingForm({
   lesson,
   voucherOption,
   initialVoucherAmount,
+  voucherTestPaymentBypass = false,
 }: BookingFormProps) {
   const router = useRouter();
   const [customerName, setCustomerName] = useState("");
@@ -344,6 +346,12 @@ export function BookingForm({
     "w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-900 shadow-sm transition focus:border-[var(--color-ember)] focus:outline-none focus:ring-4 focus:ring-[var(--color-ember)]/20";
   const labelClass = "text-sm font-semibold text-slate-700";
   const fieldClass = "space-y-1";
+  const submitLabel =
+    type === "VOUCHER" &&
+    voucherTestPaymentBypass &&
+    paymentMode === "STRIPE"
+      ? "Testzahlung abschliessen"
+      : "Weiter";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -692,9 +700,9 @@ export function BookingForm({
               ))}
             </div>
             <p className="mt-3 text-xs text-[var(--color-muted)]">
-              Sofortzahlung via Stripe (TWINT, Visa, Mastercard). Bei Rechnung
-              schicken wir dir die Zahlungsdetails per E-Mail. Die
-              Platzreservation ist erst nach Zahlungseingang gültig.
+              {type === "VOUCHER" && voucherTestPaymentBypass
+                ? "Testmodus aktiv: Beim Weitergehen wird Stripe fuer Gutscheine uebersprungen und die Zahlung direkt als bezahlt markiert. Mailversand, PDF-Download und Gutschein-Erstellung laufen normal weiter."
+                : "Sofortzahlung via Stripe (TWINT, Visa, Mastercard). Bei Rechnung schicken wir dir die Zahlungsdetails per E-Mail. Die Platzreservation ist erst nach Zahlungseingang gültig."}
             </p>
           </div>
 
@@ -800,7 +808,7 @@ export function BookingForm({
               </div>
               <div className="mt-6">
                 <Button type="submit" disabled={loading} className="w-full">
-                  {loading ? "Senden..." : "Weiter"}
+                  {loading ? "Senden..." : submitLabel}
                 </Button>
               </div>
             </div>

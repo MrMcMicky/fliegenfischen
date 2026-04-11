@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { BookingForm } from "@/components/BookingForm";
 import { prisma } from "@/lib/db";
+import { env } from "@/lib/env";
 import { formatDate } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -172,6 +173,7 @@ export default async function BookingPage({
         <BookingForm
           type="VOUCHER"
           initialVoucherAmount={initialVoucherAmount}
+          voucherTestPaymentBypass={env.voucherTestPaymentBypass}
           voucherOption={{
             id: option.id,
             title: option.title,

@@ -2,17 +2,14 @@ import { NextResponse } from "next/server";
 
 import type { CheckoutPayload } from "@/lib/checkout";
 import { createCheckoutBooking } from "@/lib/checkout";
-import { prisma } from "@/lib/db";
+import { markBookingPaid } from "@/lib/booking-service";
 import { env } from "@/lib/env";
+import { prisma } from "@/lib/db";
 import { getStripe } from "@/lib/stripe";
 
 export async function POST(request: Request) {
   try {
     const payload = (await request.json().catch(() => null)) as CheckoutPayload | null;
-
-    if (!env.stripeSecretKey) {
-      return NextResponse.json({ error: "missing_stripe" }, { status: 500 });
-    }
 
     if (!payload) {
       return NextResponse.json({ error: "invalid_request" }, { status: 400 });
@@ -25,6 +22,26 @@ export async function POST(request: Request) {
     const result = await createCheckoutBooking(payload, "STRIPE");
     if (!result.ok) {
       return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+
+    if (env.voucherTestPaymentBypass && payload.type === "VOUCHER") {
+      const paid = await markBookingPaid({
+        bookingId: result.booking.id,
+        sessionId: `test_voucher_${result.booking.id}`,
+        paymentIntentId: `test_payment_${result.booking.id}`,
+      });
+
+      if (!paid) {
+        return NextResponse.json({ error: "checkout_failed" }, { status: 500 });
+      }
+
+      return NextResponse.json({
+        url: `${env.appUrl}/checkout/erfolg?bookingId=${result.booking.id}`,
+      });
+    }
+
+    if (!env.stripeSecretKey) {
+      return NextResponse.json({ error: "missing_stripe" }, { status: 500 });
     }
 
     const stripe = getStripe();

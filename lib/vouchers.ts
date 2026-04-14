@@ -10,7 +10,7 @@ export const VOUCHER_PRINT_SURCHARGE_CHF = 5;
 
 export const voucherStatusLabels: Record<VoucherStatus, string> = {
   ACTIVE: "Aktiv",
-  REDEEMED: "Eingeloest",
+  REDEEMED: "Eingelöst",
   EXPIRED: "Abgelaufen",
 };
 

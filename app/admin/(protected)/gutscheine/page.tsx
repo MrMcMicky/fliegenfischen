@@ -78,7 +78,7 @@ export default async function AdminGutscheinePage() {
                   CHF {voucher.remainingAmount}
                 </p>
                 <p className="text-xs text-[var(--color-muted)]">
-                  Pruefen / einloesen
+                  Prüfen / einlösen
                 </p>
               </div>
             </Link>

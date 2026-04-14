@@ -15,8 +15,8 @@ import {
 
 export const metadata: Metadata = {
   ...buildPageMetadata({
-    title: "Gutschein pruefen",
-    description: "Gutscheinstatus online pruefen oder im Admin einloesen.",
+    title: "Gutschein prüfen",
+    description: "Gutscheinstatus online prüfen oder im Admin einlösen.",
     path: "/gutscheine/pruefen",
   }),
   robots: {
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const updateMessages: Record<string, string> = {
-  redeemed: "Der Gutschein wurde als eingeloest markiert.",
+  redeemed: "Der Gutschein wurde als eingelöst markiert.",
   active: "Der Gutschein wurde wieder aktiviert.",
   expired: "Der Gutschein wurde als abgelaufen markiert.",
   missing: "Der Gutschein konnte nicht gefunden werden.",
@@ -135,14 +135,14 @@ export default async function GutscheinPruefenPage({
     <div className="mx-auto w-full max-w-4xl space-y-8 px-4 pb-20 pt-16">
       <div className="space-y-3">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
-          Gutschein pruefen
+          Gutschein prüfen
         </p>
         <h1 className="font-display text-3xl font-semibold text-[var(--color-text)] sm:text-4xl">
           QR-Code scannen oder Gutschein-Code eingeben
         </h1>
         <p className="max-w-2xl text-sm text-[var(--color-muted)] sm:text-base">
           Diese Seite zeigt den aktuellen Gutscheinstatus. Angemeldete Admins
-          koennen Gutscheine hier direkt als eingeloest markieren.
+          können Gutscheine hier direkt als eingelöst markieren.
         </p>
       </div>
 
@@ -165,7 +165,7 @@ export default async function GutscheinPruefenPage({
             placeholder="z. B. AB12CD34EF"
             className="w-full rounded-xl border border-[var(--color-border)] px-4 py-3 text-sm uppercase tracking-[0.15em] text-[var(--color-text)] focus:border-[var(--color-ember)] focus:outline-none focus:ring-4 focus:ring-[var(--color-ember)]/15"
           />
-          <Button type="submit">Pruefen</Button>
+          <Button type="submit">Prüfen</Button>
         </div>
       </form>
 
@@ -244,7 +244,7 @@ export default async function GutscheinPruefenPage({
             <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-stone)]/60 p-5">
               {voucher.recipientName ? (
                 <p className="text-sm text-[var(--color-text)]">
-                  <span className="font-semibold">Empfaenger:</span>{" "}
+                  <span className="font-semibold">Empfänger:</span>{" "}
                   {voucher.recipientName}
                 </p>
               ) : null}
@@ -261,7 +261,7 @@ export default async function GutscheinPruefenPage({
               Neue Gutscheine bestellen
             </Button>
             <Button href="/kontakt" variant="secondary">
-              Rueckfrage senden
+              Rückfrage senden
             </Button>
             {voucher.bookingId ? (
               <Button
@@ -281,8 +281,8 @@ export default async function GutscheinPruefenPage({
                     Admin-Aktionen
                   </p>
                   <p className="text-xs text-[var(--color-muted)]">
-                    Teil-Einloesungen sind noch nicht integriert. &quot;Eingeloest&quot;
-                    markiert den Gutschein vollstaendig als verwendet.
+                    Teil-Einlösungen sind noch nicht integriert. &quot;Eingelöst&quot;
+                    markiert den Gutschein vollständig als verwendet.
                   </p>
                 </div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-forest)]/70">
@@ -297,7 +297,7 @@ export default async function GutscheinPruefenPage({
                   value="redeem"
                   className="rounded-full bg-[var(--color-ember)] px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white"
                 >
-                  Als eingeloest markieren
+                  Als eingelöst markieren
                 </button>
                 <button
                   type="submit"
@@ -321,7 +321,7 @@ export default async function GutscheinPruefenPage({
 
           {!admin ? (
             <p className="text-xs text-[var(--color-muted)]">
-              Fuer die Einloesung bitte im Admin anmelden.
+              Für die Einlösung bitte im Admin anmelden.
             </p>
           ) : null}
         </div>

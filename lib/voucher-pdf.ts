@@ -223,10 +223,22 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   }
 
   const qrBox = {
-    x: width - 116,
-    y: 44,
+    x: width - 108,
+    y: 52,
     width: 74,
     height: 74,
+  };
+  const recipientY = 170;
+  const messageStartY = 136;
+  const amountLabelY = 102;
+  const amountY = 80;
+  const infoY = 64;
+  const detailsStartY = 50;
+  const voucherIdBox = {
+    x: 34,
+    y: 36,
+    width: 146,
+    height: 38,
   };
   const recipientLine = recipient || "Name des Beschenkten";
   const recipientFontSize =
@@ -243,20 +255,20 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   );
   page.drawText(recipientLine, {
     x: (width - recipientWidth) / 2,
-    y: 151,
+    y: recipientY,
     font: fontSerifItalic,
     size: recipientFontSize,
     color: COLORS.forest,
   });
 
   const infoLine = purchaser
-    ? `Ausgestellt fuer ${purchaser} am ${issuedDate}`
+    ? `Ausgestellt für ${purchaser} am ${issuedDate}`
     : `Ausgestellt am ${issuedDate}`;
   const infoWidth = fontRegular.widthOfTextAtSize(infoLine, 10);
   const previewMessageLines = input.message
     ? limitLines(wrapText(input.message, 300, fontSerifItalic, 10), 2)
     : [];
-  let previewMessageY = 109;
+  let previewMessageY = messageStartY;
   for (const line of previewMessageLines) {
     const lineWidth = fontSerifItalic.widthOfTextAtSize(line, 10);
     page.drawText(line, {
@@ -271,7 +283,7 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
 
   page.drawText("IM WERT VON", {
     x: (width - fontBold.widthOfTextAtSize("IM WERT VON", 10)) / 2,
-    y: 106,
+    y: amountLabelY,
     font: fontBold,
     size: 10,
     color: COLORS.forestSoft,
@@ -281,7 +293,7 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   const amountWidth = fontBold.widthOfTextAtSize(amountLine, 20);
   page.drawText(amountLine, {
     x: (width - amountWidth) / 2,
-    y: 86,
+    y: amountY,
     font: fontBold,
     size: 20,
     color: COLORS.forest,
@@ -289,19 +301,19 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
 
   page.drawText(infoLine, {
     x: (width - infoWidth) / 2,
-    y: 70,
+    y: infoY,
     font: fontRegular,
     size: 10,
     color: COLORS.muted,
   });
 
   const detailsLines = input.message
-    ? ["Einloesbar fuer Kurse und Privatunterricht."]
+    ? ["Einlösbar für Kurse und Privatunterricht."]
     : [
-        "Einloesbar fuer Kurse und Privatunterricht.",
+        "Einlösbar für Kurse und Privatunterricht.",
         "Keine Barauszahlung. Termin nach Vereinbarung.",
       ];
-  let textY = 56;
+  let textY = detailsStartY;
   for (const line of detailsLines) {
     const lineWidth = fontRegular.widthOfTextAtSize(line, 10);
     page.drawText(line, {
@@ -315,35 +327,35 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
   }
 
   page.drawRectangle({
-    x: 38,
-    y: 30,
-    width: 168,
-    height: 42,
+    x: voucherIdBox.x,
+    y: voucherIdBox.y,
+    width: voucherIdBox.width,
+    height: voucherIdBox.height,
     color: COLORS.mist,
     borderColor: COLORS.line,
     borderWidth: 1,
     opacity: 0.94,
   });
   page.drawText("Gutschein-ID", {
-    x: 50,
-    y: 56,
+    x: voucherIdBox.x + 12,
+    y: voucherIdBox.y + 24,
     font: fontBold,
     size: 9,
     color: COLORS.muted,
   });
   page.drawText(input.code, {
-    x: 50,
-    y: 41,
+    x: voucherIdBox.x + 12,
+    y: voucherIdBox.y + 9,
     font: fontBold,
-    size: 14,
+    size: 13,
     color: COLORS.forest,
   });
 
   page.drawRectangle({
     x: qrBox.x - 8,
-    y: qrBox.y - 8,
+    y: qrBox.y - 18,
     width: qrBox.width + 16,
-    height: qrBox.height + 16,
+    height: qrBox.height + 26,
     color: COLORS.mist,
     borderColor: COLORS.line,
     borderWidth: 1,
@@ -366,7 +378,7 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
     size: 9,
     color: COLORS.forest,
   });
-  page.drawText("zum Pruefen", {
+  page.drawText("zum Prüfen", {
     x: qrBox.x + 3,
     y: qrBox.y - 15,
     font: fontRegular,

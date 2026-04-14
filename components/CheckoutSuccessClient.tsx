@@ -85,7 +85,7 @@ export function CheckoutSuccessClient({
               href={`/gutscheine/pruefen?code=${encodeURIComponent(voucherCode)}`}
               className="inline-flex items-center justify-center rounded-full border border-[var(--color-forest)]/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[var(--color-forest)]"
             >
-              Gutschein pruefen
+              Gutschein prüfen
             </a>
           </div>
         </div>

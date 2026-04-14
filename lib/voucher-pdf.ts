@@ -224,19 +224,19 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
 
   const qrBox = {
     x: width - 108,
-    y: 52,
+    y: 58,
     width: 74,
     height: 74,
   };
   const recipientY = 170;
   const messageStartY = 136;
-  const amountLabelY = 102;
-  const amountY = 80;
-  const infoY = 64;
-  const detailsStartY = 50;
+  const amountLabelY = 108;
+  const amountY = 86;
+  const infoY = 69;
+  const detailsStartY = 55;
   const voucherIdBox = {
     x: 34,
-    y: 36,
+    y: 42,
     width: 146,
     height: 38,
   };
@@ -353,9 +353,9 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
 
   page.drawRectangle({
     x: qrBox.x - 8,
-    y: qrBox.y - 18,
+    y: qrBox.y - 16,
     width: qrBox.width + 16,
-    height: qrBox.height + 26,
+    height: qrBox.height + 24,
     color: COLORS.mist,
     borderColor: COLORS.line,
     borderWidth: 1,
@@ -373,17 +373,10 @@ export async function renderVoucherPdf(input: VoucherPdfInput) {
 
   page.drawText("QR scannen", {
     x: qrBox.x + 6,
-    y: qrBox.y - 4,
+    y: qrBox.y - 11,
     font: fontBold,
     size: 9,
     color: COLORS.forest,
-  });
-  page.drawText("zum Prüfen", {
-    x: qrBox.x + 3,
-    y: qrBox.y - 15,
-    font: fontRegular,
-    size: 8,
-    color: COLORS.muted,
   });
 
   return await pdfDoc.save();

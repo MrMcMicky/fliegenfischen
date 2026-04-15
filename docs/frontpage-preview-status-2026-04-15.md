@@ -16,8 +16,10 @@ Vorgesehene Adresse:
   Stand 404.
 - Im aktuellen Git-Stand und in den lokalen Reflog-/Stash-Objekten existiert
   keine separate alte `app/test`-Frontpage-Implementierung.
-- Die Preview-Route wurde daher als noindex-Wrapper der aktuellen Frontpage
+- Die Preview-Route wurde daher als noindex-Variante der aktuellen Frontpage
   wiederhergestellt: `app/test/page.tsx`.
+- Abweichung zur Live-Startseite: Die Hero-Section verwendet auf der Preview
+  ein statisches Foto (`/videos/hero-fliegenfischer.jpg`) statt des Hero-Videos.
 - `proxy.ts` rewritet Requests an `test.fliegenfischer-schule.shop/` intern auf
   `/test`.
 - Der alte Admin-Header-Proxy bleibt unverändert erhalten.

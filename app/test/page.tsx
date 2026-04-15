@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import HomePage from "@/app/page";
+import { HomeContent } from "@/app/page";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -17,4 +17,10 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default HomePage;
+export default function TestHome({
+  searchParams,
+}: {
+  searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
+}) {
+  return <HomeContent searchParams={searchParams} heroMedia="image" />;
+}

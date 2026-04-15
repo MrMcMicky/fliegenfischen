@@ -9,6 +9,7 @@ export function HeroSection({
   hero,
   compact = false,
   preview = false,
+  media = "video",
 }: {
   nextSession?: { date: Date } | null;
   hero: {
@@ -19,6 +20,7 @@ export function HeroSection({
   };
   compact?: boolean;
   preview?: boolean;
+  media?: "video" | "image";
 }) {
   const pillClass =
     "inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/20 px-4 py-1 text-xs font-semibold tracking-[0.25em] text-white backdrop-blur-sm";
@@ -36,17 +38,24 @@ export function HeroSection({
       }`}
     >
       <div className="absolute inset-0 -z-10">
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster="/videos/hero-fliegenfischer.jpg"
-        >
-          <source src="/videos/hero-fliegenfischer.mp4" type="video/mp4" />
-        </video>
+        {media === "image" ? (
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/videos/hero-fliegenfischer.jpg')" }}
+          />
+        ) : (
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster="/videos/hero-fliegenfischer.jpg"
+          >
+            <source src="/videos/hero-fliegenfischer.mp4" type="video/mp4" />
+          </video>
+        )}
         <div className={`absolute inset-0 ${baseOverlayClass}`} />
         <div className={`absolute inset-0 ${gradientOverlayClass}`} />
       </div>

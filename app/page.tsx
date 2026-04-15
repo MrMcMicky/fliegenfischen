@@ -37,11 +37,23 @@ const extractFirstImage = (body: string) => {
   return match?.[1] || null;
 };
 
+type HomeContentProps = {
+  searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
+  heroMedia?: "video" | "image";
+};
+
 export default async function Home({
   searchParams,
 }: {
   searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
 }) {
+  return <HomeContent searchParams={searchParams} />;
+}
+
+export async function HomeContent({
+  searchParams,
+  heroMedia = "video",
+}: HomeContentProps) {
   const resolvedParams = await Promise.resolve(searchParams);
   const params =
     resolvedParams && typeof (resolvedParams as { get?: unknown }).get === "function"
@@ -295,7 +307,7 @@ export default async function Home({
   return (
     <div className="pb-20">
       <StructuredData data={homeStructuredData} />
-      <HeroSection nextSession={nextSession} hero={homeHero} />
+      <HeroSection nextSession={nextSession} hero={homeHero} media={heroMedia} />
 
       <section className="bg-white pb-14 pt-12 -mt-12 sm:-mt-16 lg:-mt-20">
         <div className="mx-auto w-full max-w-5xl px-4">

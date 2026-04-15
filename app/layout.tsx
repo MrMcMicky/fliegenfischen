@@ -107,6 +107,8 @@ export default async function RootLayout({
 }>) {
   const requestHeaders = await headers();
   const isAdmin = requestHeaders.get("x-admin-section") === "1";
+  const host = requestHeaders.get("host")?.toLowerCase() ?? "";
+  const isPreviewHost = host === "test.fliegenfischer-schule.shop";
 
   if (isAdmin) {
     return (
@@ -164,6 +166,7 @@ export default async function RootLayout({
           <Header
             siteName={settings?.name || "Fliegenfischerschule"}
             navLinks={headerNavLinks}
+            previewMode={isPreviewHost}
           />
           <main className="flex-1 pt-20">{children}</main>
           <Footer

@@ -14,24 +14,27 @@ const getHash = (href: string) => {
 export function Header({
   siteName,
   navLinks,
+  previewMode = false,
 }: {
   siteName: string;
   navLinks: { label: string; href: string }[];
+  previewMode?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const pathname = usePathname();
-  const isPreviewHome = pathname === "/test";
-  const isHome = pathname === "/" || isPreviewHome;
+  const isPreviewRoute = pathname === "/test";
+  const isPreviewMode = previewMode || isPreviewRoute;
+  const isHome = pathname === "/" || isPreviewRoute;
   const showBreadcrumb = !isHome && !pathname.startsWith("/buchen");
   const manualActiveRef = useRef<{ hash: string; until: number } | null>(null);
   const displayedNavLinks = useMemo(() => {
-    if (!isPreviewHome) return navLinks;
+    if (!isPreviewMode) return navLinks;
     const voucherLinks = navLinks.filter((item) => getHash(item.href) === "#gutscheine");
     const regularLinks = navLinks.filter((item) => getHash(item.href) !== "#gutscheine");
     return [...regularLinks, ...voucherLinks];
-  }, [isPreviewHome, navLinks]);
+  }, [isPreviewMode, navLinks]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -179,7 +182,7 @@ export function Header({
     };
   };
   const localizeHomeAnchor = (href: string) => {
-    if (!isPreviewHome || !href.startsWith("/#")) return href;
+    if (!isPreviewRoute || !href.startsWith("/#")) return href;
     const hash = getHash(href);
     return hash ? `/test${hash}` : href;
   };
@@ -211,7 +214,7 @@ export function Header({
       className={`fixed top-0 z-50 w-full transition-colors duration-300 ${headerClass}`}
     >
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-4">
-        <Link href={isPreviewHome ? "/test" : "/"} className="flex items-center gap-3">
+        <Link href={isPreviewRoute ? "/test" : "/"} className="flex items-center gap-3">
           <span className="sr-only">{siteName}</span>
           <div className={logoWrapClass}>
             <Image

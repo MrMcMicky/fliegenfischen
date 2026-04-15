@@ -22,5 +22,5 @@ export default function TestHome({
 }: {
   searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
 }) {
-  return <HomeContent searchParams={searchParams} heroMedia="image" />;
+  return <HomeContent searchParams={searchParams} heroVariant="legacy" />;
 }

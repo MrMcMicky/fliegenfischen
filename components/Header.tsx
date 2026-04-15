@@ -22,7 +22,8 @@ export function Header({
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isPreviewHome = pathname === "/test";
+  const isHome = pathname === "/" || isPreviewHome;
   const showBreadcrumb = !isHome && !pathname.startsWith("/buchen");
   const manualActiveRef = useRef<{ hash: string; until: number } | null>(null);
 
@@ -171,6 +172,11 @@ export function Header({
       until: eventTime + 900,
     };
   };
+  const localizeHomeAnchor = (href: string) => {
+    if (!isPreviewHome || !href.startsWith("/#")) return href;
+    const hash = getHash(href);
+    return hash ? `/test${hash}` : href;
+  };
 
   const logoWrapClass = "rounded-lg bg-transparent";
   const showHeroLogo = isHome && !scrolled;
@@ -199,7 +205,7 @@ export function Header({
       className={`fixed top-0 z-50 w-full transition-colors duration-300 ${headerClass}`}
     >
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-4">
-        <Link href="/" className="flex items-center gap-3">
+        <Link href={isPreviewHome ? "/test" : "/"} className="flex items-center gap-3">
           <span className="sr-only">{siteName}</span>
           <div className={logoWrapClass}>
             <Image
@@ -213,19 +219,22 @@ export function Header({
           </div>
         </Link>
         <nav className="hidden items-center gap-2 text-sm lg:flex">
-          {navLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={(event) => handleNavClick(item.href, event.timeStamp)}
-              className={`transition-colors ${
-                getHash(item.href) === "#gutscheine" ? voucherNavClass : navPillClass
-              } ${isActive(item.href) ? activeNavClass : ""}`}
-              aria-current={isActive(item.href) ? "page" : undefined}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navLinks.map((item) => {
+            const href = localizeHomeAnchor(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={href}
+                onClick={(event) => handleNavClick(href, event.timeStamp)}
+                className={`transition-colors ${
+                  getHash(item.href) === "#gutscheine" ? voucherNavClass : navPillClass
+                } ${isActive(item.href) ? activeNavClass : ""}`}
+                aria-current={isActive(item.href) ? "page" : undefined}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
         <div className="flex items-center gap-3">
           <button
@@ -242,25 +251,28 @@ export function Header({
       {open ? (
         <div className="border-t border-[var(--color-border)] bg-white/95 backdrop-blur-md lg:hidden">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-4">
-            {navLinks.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={(event) => {
-                  handleNavClick(item.href, event.timeStamp);
-                  setOpen(false);
-                }}
-                className={`rounded-lg px-3 py-2 text-sm font-semibold ${
-                  isActive(item.href)
-                    ? "bg-[var(--color-forest)] text-white"
-                    : getHash(item.href) === "#gutscheine"
-                    ? voucherMobileClass
-                    : "bg-[var(--color-forest)]/10 text-[var(--color-forest)]"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navLinks.map((item) => {
+              const href = localizeHomeAnchor(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={href}
+                  onClick={(event) => {
+                    handleNavClick(href, event.timeStamp);
+                    setOpen(false);
+                  }}
+                  className={`rounded-lg px-3 py-2 text-sm font-semibold ${
+                    isActive(item.href)
+                      ? "bg-[var(--color-forest)] text-white"
+                      : getHash(item.href) === "#gutscheine"
+                      ? voucherMobileClass
+                      : "bg-[var(--color-forest)]/10 text-[var(--color-forest)]"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       ) : null}

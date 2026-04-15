@@ -14,20 +14,26 @@ Vorgesehene Adresse:
 
 - Die Live-Route `https://fliegenfischer-schule.shop/test` liefert vor diesem
   Stand 404.
-- Im aktuellen Git-Stand und in den lokalen Reflog-/Stash-Objekten existiert
+- Im aktuellen Git-Stand und in den lokalen Reflog-/Stash-Objekten existierte
   keine separate alte `app/test`-Frontpage-Implementierung.
-- Die Preview-Route wurde daher als noindex-Variante der aktuellen Frontpage
-  wiederhergestellt: `app/test/page.tsx`.
+- Der frühere Teststand vom 2026-04-08 wurde aus der lokalen Codex-Session-
+  Historie und dem Screenshot `output/screenshots/live-test-after-reload.png`
+  rekonstruiert.
+- Die Preview-Route ist eine noindex-Variante der aktuellen Frontpage:
+  `app/test/page.tsx`.
 - Abweichung zur Live-Startseite: Die Hero-Section verwendet auf der Preview
-  ein statisches Foto (`/videos/hero-fliegenfischer.jpg`) statt des Hero-Videos.
+  das alte Foto `public/illustrations/landing/mann-fliegenfischen.png`, eine
+  andere Hero-Typografie, andere Positionierung und die Legacy-Logo-/Header-
+  Behandlung.
 - `proxy.ts` rewritet Requests an `test.fliegenfischer-schule.shop/` intern auf
   `/test`.
 - Der alte Admin-Header-Proxy bleibt unverändert erhalten.
 
 ## Design-Analyse
 
-Das derzeit verfügbare Frontpage-Design ist die aktuelle One-Page-Startseite.
-Sie enthält bereits die relevanten Ankerbereiche:
+Das Preview-Design nutzt dieselben funktionalen Inhaltsbereiche wie die
+aktuelle One-Page-Startseite, aber mit der wiederhergestellten Legacy-Hero-
+Gestaltung. Die relevanten Ankerbereiche bleiben erhalten:
 
 - `#gutscheine`
 - `#kurse`
@@ -38,11 +44,11 @@ Sie enthält bereits die relevanten Ankerbereiche:
 - `#wetter`
 - `#kontakt`
 
-Die Seite ist funktional weit ausgebaut: Hero, USP-Karten, Gutscheine,
-Kurstermine, FAQ, Testimonials, Privatlektion, Über-uns, Links/Berichte,
-Wetter und Kontaktformular sind verbunden. Der alternative frühere
-Standalone-Stand ist im Repository nicht mehr als eigenständiges Design
-rekonstruierbar.
+Die Seite ist funktional verbunden: Hero, USP-Karten, Gutscheine, Kurstermine,
+FAQ, Testimonials, Privatlektion, Über-uns, Links/Berichte, Wetter und
+Kontaktformular. Der alternative Stand war nicht als Git-Commit gesichert; die
+wiederhergestellte Variante ist deshalb jetzt explizit über `heroVariant="legacy"`
+angebunden und versioniert.
 
 ## DNS-Status
 

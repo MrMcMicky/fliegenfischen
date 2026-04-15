@@ -40,7 +40,12 @@ const extractFirstImage = (body: string) => {
 type HomeContentProps = {
   searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
   heroMedia?: "video" | "image";
-  heroVariant?: "default" | "legacy";
+  heroOverride?: {
+    title: string;
+    description: string;
+    primaryCta: { label: string; href: string };
+    secondaryCta: { label: string; href: string };
+  };
 };
 
 export default async function Home({
@@ -54,7 +59,7 @@ export default async function Home({
 export async function HomeContent({
   searchParams,
   heroMedia = "video",
-  heroVariant = "default",
+  heroOverride,
 }: HomeContentProps) {
   const resolvedParams = await Promise.resolve(searchParams);
   const params =
@@ -113,6 +118,7 @@ export async function HomeContent({
     primaryCta: { label: string; href: string };
     secondaryCta: { label: string; href: string };
   };
+  const effectiveHomeHero = heroOverride ?? homeHero;
   const homeSections = settings.homeSections as {
     upcoming: { eyebrow: string; title: string; description: string };
     timeline: { eyebrow: string; title: string; description: string };
@@ -300,7 +306,7 @@ export async function HomeContent({
       "@context": "https://schema.org",
       "@type": "WebPage",
       name: settings?.name || "Fliegenfischerschule Urs Müller",
-      description: homeHero.description,
+      description: effectiveHomeHero.description,
       url: `${siteUrl}/`,
     },
     buildFaqStructuredData([...courseFaqs, ...privateFaqs].slice(0, 10)),
@@ -311,9 +317,8 @@ export async function HomeContent({
       <StructuredData data={homeStructuredData} />
       <HeroSection
         nextSession={nextSession}
-        hero={homeHero}
+        hero={effectiveHomeHero}
         media={heroMedia}
-        variant={heroVariant}
       />
 
       <section className="bg-white pb-14 pt-12 -mt-12 sm:-mt-16 lg:-mt-20">

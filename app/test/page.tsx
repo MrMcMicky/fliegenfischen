@@ -22,5 +22,17 @@ export default function TestHome({
 }: {
   searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
 }) {
-  return <HomeContent searchParams={searchParams} heroVariant="legacy" />;
+  return (
+    <HomeContent
+      searchParams={searchParams}
+      heroMedia="image"
+      heroOverride={{
+        title: "Fliegenfischen in der Region Zürich – ruhig, präzise, draussen.",
+        description:
+          "Kleine Gruppen, klare Lernschritte und ein Instruktor mit SFV- und EFFA-Hintergrund.",
+        primaryCta: { label: "Gruppenkurse entdecken", href: "/#kurse" },
+        secondaryCta: { label: "Privatlektion buchen", href: "/#privat" },
+      }}
+    />
+  );
 }

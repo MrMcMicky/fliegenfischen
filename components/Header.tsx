@@ -26,6 +26,12 @@ export function Header({
   const isHome = pathname === "/" || isPreviewHome;
   const showBreadcrumb = !isHome && !pathname.startsWith("/buchen");
   const manualActiveRef = useRef<{ hash: string; until: number } | null>(null);
+  const displayedNavLinks = useMemo(() => {
+    if (!isPreviewHome) return navLinks;
+    const voucherLinks = navLinks.filter((item) => getHash(item.href) === "#gutscheine");
+    const regularLinks = navLinks.filter((item) => getHash(item.href) !== "#gutscheine");
+    return [...regularLinks, ...voucherLinks];
+  }, [isPreviewHome, navLinks]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,7 +59,7 @@ export function Header({
     : "border-[var(--color-border)] bg-white/90 text-[var(--color-text)]";
 
   const sections = useMemo(() => {
-    const hashes = navLinks
+    const hashes = displayedNavLinks
       .map((item) => {
         const index = item.href.indexOf("#");
         if (index === -1) return null;
@@ -61,7 +67,7 @@ export function Header({
       })
       .filter(Boolean) as string[];
     return Array.from(new Set(hashes));
-  }, [navLinks]);
+  }, [displayedNavLinks]);
 
   const routeHighlight = useMemo(() => {
     if (isHome) return null;
@@ -219,7 +225,7 @@ export function Header({
           </div>
         </Link>
         <nav className="hidden items-center gap-2 text-sm lg:flex">
-          {navLinks.map((item) => {
+          {displayedNavLinks.map((item) => {
             const href = localizeHomeAnchor(item.href);
             return (
               <Link
@@ -251,7 +257,7 @@ export function Header({
       {open ? (
         <div className="border-t border-[var(--color-border)] bg-white/95 backdrop-blur-md lg:hidden">
           <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-4">
-            {navLinks.map((item) => {
+            {displayedNavLinks.map((item) => {
               const href = localizeHomeAnchor(item.href);
               return (
                 <Link

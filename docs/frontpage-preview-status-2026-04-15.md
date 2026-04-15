@@ -16,15 +16,16 @@ Vorgesehene Adresse:
   Stand 404.
 - Im aktuellen Git-Stand und in den lokalen Reflog-/Stash-Objekten existierte
   keine separate alte `app/test`-Frontpage-Implementierung.
-- Der frühere Teststand vom 2026-04-08 wurde aus der lokalen Codex-Session-
-  Historie und dem Screenshot `output/screenshots/live-test-after-reload.png`
-  rekonstruiert.
+- Der zuerst rekonstruierte Teststand aus
+  `output/screenshots/live-test-after-reload.png` wurde verworfen, weil er
+  nicht dem gesuchten Alternativdesign entsprach.
 - Die Preview-Route ist eine noindex-Variante der aktuellen Frontpage:
   `app/test/page.tsx`.
 - Abweichung zur Live-Startseite: Die Hero-Section verwendet auf der Preview
-  das alte Foto `public/illustrations/landing/mann-fliegenfischen.png`, eine
-  andere Hero-Typografie, andere Positionierung und die Legacy-Logo-/Header-
-  Behandlung.
+  das foto-basierte Hero-Medium statt Video und die Navigation wird wie im
+  alten visuellen Stand mit `Gutschein` am Ende der Hauptnavigation angezeigt.
+- Referenz fuer den wiedergefundenen visuellen Stand:
+  `/home/michael/webapps/screenshots/image copy 139.png`.
 - `proxy.ts` rewritet Requests an `test.fliegenfischer-schule.shop/` intern auf
   `/test`.
 - Der alte Admin-Header-Proxy bleibt unverändert erhalten.
@@ -32,8 +33,10 @@ Vorgesehene Adresse:
 ## Design-Analyse
 
 Das Preview-Design nutzt dieselben funktionalen Inhaltsbereiche wie die
-aktuelle One-Page-Startseite, aber mit der wiederhergestellten Legacy-Hero-
-Gestaltung. Die relevanten Ankerbereiche bleiben erhalten:
+aktuelle One-Page-Startseite, aber mit der wiedergefundenen foto-basierten
+Hero-Gestaltung: dunkler Hero, altes helles Logo im Hero-Kontext, gruen/orange
+Farbwirkung und statisches Hero-Foto. Die relevanten Ankerbereiche bleiben
+erhalten:
 
 - `#gutscheine`
 - `#kurse`
@@ -46,9 +49,9 @@ Gestaltung. Die relevanten Ankerbereiche bleiben erhalten:
 
 Die Seite ist funktional verbunden: Hero, USP-Karten, Gutscheine, Kurstermine,
 FAQ, Testimonials, Privatlektion, Über-uns, Links/Berichte, Wetter und
-Kontaktformular. Der alternative Stand war nicht als Git-Commit gesichert; die
-wiederhergestellte Variante ist deshalb jetzt explizit über `heroVariant="legacy"`
-angebunden und versioniert.
+Kontaktformular. Der alternative Stand war nicht als separate `app/test`-
+Implementierung gesichert; die Preview ist deshalb ueber `heroMedia="image"`
+an die aktuelle Frontpage angebunden und versioniert.
 
 ## DNS-Status
 

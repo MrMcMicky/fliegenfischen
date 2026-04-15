@@ -42,18 +42,23 @@ Wetter und Kontaktformular sind verbunden. Der alternative frühere
 Standalone-Stand ist im Repository nicht mehr als eigenständiges Design
 rekonstruierbar.
 
-## Externer Blocker
+## DNS-Status
 
-Der Cloudflare-DNS-Eintrag für `test.fliegenfischer-schule.shop` kann mit den
-lokal vorhandenen Cloudflare-Zugangsdaten nicht korrekt in der Zone
-`fliegenfischer-schule.shop` angelegt werden. Der lokale `cloudflared`-Login ist
-auf eine andere Zone ausgerichtet.
+Der Cloudflare-DNS-Eintrag für `test.fliegenfischer-schule.shop` wurde am
+2026-04-15 in der Zone `fliegenfischer-schule.shop` angelegt.
 
-In Cloudflare muss in der korrekten Zone noch ein Hostname auf denselben Tunnel
-wie `fliegenfischer-schule.shop` geroutet werden:
+- Typ: `CNAME`
+- Name: `test`
+- Ziel: `4e1ac6f2-95fe-45e4-96bb-c903f64c9f40.cfargotunnel.com`
+- Proxy: aktiviert
 
-- Hostname: `test.fliegenfischer-schule.shop`
-- Ziel: derselbe Cloudflare Tunnel wie die Hauptdomain
+Verifizierte URLs:
 
-Danach sollte die Subdomain automatisch die App-seitige `/test`-Preview
-ausliefern.
+- `https://test.fliegenfischer-schule.shop/`
+- `https://fliegenfischer-schule.shop/test`
+
+Hinweis: Ein vorheriger lokaler `cloudflared`-Aufruf hat in einer anderen Zone
+den falschen Record `test.fliegenfischer-schule.shop.assistent.my.id` angelegt.
+Der lokal vorhandene API-Token kann diese Zone nicht bereinigen; der Record ist
+für die Preview-Subdomain nicht relevant, sollte aber in der Zone
+`assistent.my.id` entfernt werden, falls dort sichtbar.

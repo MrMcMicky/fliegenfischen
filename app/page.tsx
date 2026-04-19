@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/Button";
 import { ContactForm } from "@/components/ContactForm";
@@ -40,12 +41,14 @@ const extractFirstImage = (body: string) => {
 type HomeContentProps = {
   searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
   heroMedia?: "video" | "image";
+  heroImage?: string;
   heroOverride?: {
     title: string;
-    description: string;
+    description?: string;
     primaryCta: { label: string; href: string };
     secondaryCta: { label: string; href: string };
   };
+  hideSessionBadge?: boolean;
 };
 
 export default async function Home({
@@ -59,7 +62,9 @@ export default async function Home({
 export async function HomeContent({
   searchParams,
   heroMedia = "video",
+  heroImage,
   heroOverride,
+  hideSessionBadge = false,
 }: HomeContentProps) {
   const resolvedParams = await Promise.resolve(searchParams);
   const params =
@@ -316,28 +321,44 @@ export async function HomeContent({
     <div className="pb-20">
       <StructuredData data={homeStructuredData} />
       <HeroSection
-        nextSession={nextSession}
+        nextSession={hideSessionBadge ? undefined : nextSession}
+        hideBadge={hideSessionBadge}
         hero={effectiveHomeHero}
         media={heroMedia}
+        heroImage={heroImage}
       />
 
       <section className="bg-white pb-14 pt-12 -mt-12 sm:-mt-16 lg:-mt-20">
         <div className="mx-auto w-full max-w-5xl px-4">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {uspItems.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-2xl bg-white p-6 text-center shadow-[0_18px_24px_-8px_rgba(15,50,49,0.08),0_8px_12px_-6px_rgba(15,50,49,0.06)]"
-              >
-                <UspIcon title={item.title} />
-                <h3 className="mt-4 font-display text-xl font-semibold text-[var(--color-text)]">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-sm text-[var(--color-muted)]">
-                  {item.description}
-                </p>
-              </div>
-            ))}
+            {uspItems.map((item, i) => {
+              const cardBgs = [
+                "bg-[var(--color-stone)]",
+                "bg-[var(--color-sage)]",
+                "bg-[var(--color-river-mist)]",
+                "bg-[var(--color-mist)]",
+              ];
+              const iconVariants: ("ember" | "forest" | "river")[] = [
+                "ember",
+                "forest",
+                "river",
+                "ember",
+              ];
+              return (
+                <div
+                  key={item.title}
+                  className={`rounded-2xl ${cardBgs[i % 4]} p-6 text-center shadow-[0_18px_24px_-8px_rgba(15,50,49,0.07),0_8px_12px_-6px_rgba(15,50,49,0.05)]`}
+                >
+                  <UspIcon title={item.title} variant={iconVariants[i % 4]} />
+                  <h3 className="mt-4 font-display text-xl font-semibold text-[var(--color-text)]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm text-[var(--color-muted)]">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -381,13 +402,11 @@ export async function HomeContent({
                 {courseFaqs.map((faq) => (
                   <details
                     key={faq.question}
-                    className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4"
+                    className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4 open:border-[var(--color-ember)]/30 open:bg-[var(--color-forest)]/[0.025]"
                   >
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-[var(--color-text)]">
                       <span>{faq.question}</span>
-                      <span className="text-xl text-[var(--color-forest)] transition-transform duration-200 group-open:rotate-45">
-                        +
-                      </span>
+                      <ChevronDown className="h-4 w-4 shrink-0 text-[var(--color-forest)]/60 transition-transform duration-200 group-open:rotate-180" />
                     </summary>
                     <p className="mt-3 text-sm text-[var(--color-muted)]">
                       {faq.answer}
@@ -488,13 +507,11 @@ export async function HomeContent({
                   {privateFaqs.map((faq) => (
                     <details
                       key={faq.question}
-                      className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4"
+                      className="group rounded-xl border border-[var(--color-border)] bg-white/90 p-4 open:border-[var(--color-ember)]/30 open:bg-[var(--color-forest)]/[0.025]"
                     >
                       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-[var(--color-text)]">
                         <span>{faq.question}</span>
-                        <span className="text-xl text-[var(--color-forest)] transition-transform duration-200 group-open:rotate-45">
-                          +
-                        </span>
+                        <ChevronDown className="h-4 w-4 shrink-0 text-[var(--color-forest)]/60 transition-transform duration-200 group-open:rotate-180" />
                       </summary>
                       <p className="mt-3 text-sm text-[var(--color-muted)]">
                         {faq.answer}

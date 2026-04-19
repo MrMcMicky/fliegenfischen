@@ -23,6 +23,27 @@ export function CourseGrid({
     availableSpots: number;
   }[];
 }) {
+  if (sessions.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-[var(--color-border)] bg-white/60 px-8 py-12 text-center">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-forest)]/10">
+          <Fish size={20} className="text-[var(--color-forest)]/50" aria-hidden="true" />
+        </div>
+        <p className="font-display text-xl font-semibold text-[var(--color-text)]">
+          Neue Termine folgen bald
+        </p>
+        <p className="mx-auto mt-2 max-w-sm text-sm text-[var(--color-muted)]">
+          Die nächsten Kursdaten sind in Vorbereitung. Melde dich jetzt und ich informiere dich sobald sie feststehen.
+        </p>
+        <div className="mt-6">
+          <Button href="/#kontakt" size="sm">
+            Jetzt Kontakt aufnehmen
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-6 lg:grid-cols-3">
       {sessions.map((session) => (

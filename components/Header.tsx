@@ -15,10 +15,12 @@ export function Header({
   siteName,
   navLinks,
   previewMode = false,
+  classicLogo = false,
 }: {
   siteName: string;
   navLinks: { label: string; href: string }[];
   previewMode?: boolean;
+  classicLogo?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -128,7 +130,8 @@ export function Header({
 
     const elements = sections
       .map((id) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
+      .filter(Boolean)
+      .sort((a, b) => (a as HTMLElement).offsetTop - (b as HTMLElement).offsetTop) as HTMLElement[];
     if (elements.length === 0) return;
 
     const updateActive = () => {
@@ -178,7 +181,7 @@ export function Header({
     setActiveSection(hash);
     manualActiveRef.current = {
       hash,
-      until: eventTime + 900,
+      until: eventTime + 1200,
     };
   };
   const localizeHomeAnchor = (href: string) => {
@@ -187,25 +190,50 @@ export function Header({
     return hash ? `/test${hash}` : href;
   };
 
-  const logoWrapClass = "rounded-lg bg-transparent";
   const showHeroLogo = isHome && !scrolled;
-  const logoSrc = showHeroLogo
-    ? "/branding/logo-hero.png"
-    : scrolled
-      ? "/branding/logo-mark.png"
-      : "/branding/logo-dark.png";
-  const logoWidth = showHeroLogo ? 260 : scrolled ? 110 : 260;
-  const logoHeight = showHeroLogo ? 66 : scrolled ? 36 : 66;
-  const logoClass = showHeroLogo
-    ? "h-12 w-auto drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)] sm:h-14"
-    : scrolled
-      ? "h-8 w-auto"
-      : "h-12 w-auto";
+  const logoWrapClass = "rounded-lg bg-transparent";
+
+  let logoSrc: string;
+  let logoWidth: number;
+  let logoHeight: number;
+  let logoClass: string;
+
+  if (classicLogo) {
+    // Dark background states: hero overlay → neon dark logo
+    // Light background states: scrolled/non-home → classic light logo
+    logoSrc = showHeroLogo
+      ? "/branding/logo-classic-dark.png"
+      : scrolled
+        ? "/branding/logo-classic-mark.png"
+        : "/branding/logo-classic.png";
+    logoWidth = showHeroLogo ? 600 : scrolled ? 160 : 400;
+    logoHeight = showHeroLogo ? 200 : scrolled ? 64 : 130;
+    logoClass = showHeroLogo
+      ? "h-36 w-auto drop-shadow-[0_3px_12px_rgba(0,0,0,0.6)] sm:h-40"
+      : scrolled
+        ? "h-11 w-auto"
+        : "h-16 w-auto";
+  } else {
+    logoSrc = showHeroLogo
+      ? "/branding/logo-hero.png"
+      : scrolled
+        ? "/branding/logo-mark.png"
+        : "/branding/logo-dark.png";
+    logoWidth = showHeroLogo ? 260 : scrolled ? 110 : 260;
+    logoHeight = showHeroLogo ? 66 : scrolled ? 36 : 66;
+    logoClass = showHeroLogo
+      ? "h-12 w-auto drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)] sm:h-14"
+      : scrolled
+        ? "h-8 w-auto"
+        : "h-12 w-auto";
+  }
 
   const activeNavClass =
-    "bg-[var(--color-forest)] text-white shadow-sm pointer-events-none";
+    isHome && !scrolled
+      ? "bg-white/25 text-white ring-1 ring-white/25 pointer-events-none"
+      : "bg-[var(--color-forest)] text-white font-bold pointer-events-none";
   const voucherNavClass =
-    "rounded-full bg-[var(--color-ember)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--color-ember)]/90 hover:text-white";
+    "rounded-full bg-[var(--color-ember)] px-5 py-2 text-sm font-bold text-white shadow-[0_4px_14px_rgba(var(--color-ember-rgb),0.4)] transition hover:bg-[var(--color-ember)]/90 hover:text-white hover:shadow-[0_6px_20px_rgba(var(--color-ember-rgb),0.5)]";
   const voucherMobileClass =
     "bg-[var(--color-ember)] text-white hover:bg-[var(--color-ember)]/90";
 
@@ -213,8 +241,12 @@ export function Header({
     <header
       className={`fixed top-0 z-50 w-full transition-colors duration-300 ${headerClass}`}
     >
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-4">
-        <Link href={isPreviewRoute ? "/test" : "/"} className="flex items-center gap-3">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-5 py-4 sm:px-8">
+        <Link
+          href={isPreviewRoute ? "/test" : "/"}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="flex items-center gap-3"
+        >
           <span className="sr-only">{siteName}</span>
           <div className={logoWrapClass}>
             <Image
@@ -227,7 +259,7 @@ export function Header({
             />
           </div>
         </Link>
-        <nav className="hidden items-center gap-2 text-sm lg:flex">
+        <nav className="hidden items-center gap-3 text-sm lg:flex">
           {displayedNavLinks.map((item) => {
             const href = localizeHomeAnchor(item.href);
             return (
@@ -235,9 +267,11 @@ export function Header({
                 key={item.href}
                 href={href}
                 onClick={(event) => handleNavClick(href, event.timeStamp)}
-                className={`transition-colors ${
-                  getHash(item.href) === "#gutscheine" ? voucherNavClass : navPillClass
-                } ${isActive(item.href) ? activeNavClass : ""}`}
+                className={`whitespace-nowrap transition-colors ${
+                  getHash(item.href) === "#gutscheine"
+                    ? `${voucherNavClass}${isActive(item.href) ? " ring-2 ring-offset-2 ring-[var(--color-ember)] pointer-events-none" : ""}`
+                    : `${navPillClass}${isActive(item.href) ? ` ${activeNavClass}` : ""}`
+                }`}
                 aria-current={isActive(item.href) ? "page" : undefined}
               >
                 {item.label}

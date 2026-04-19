@@ -26,12 +26,12 @@ export default function TestHome({
     <HomeContent
       searchParams={searchParams}
       heroMedia="image"
+      heroImage="/videos/hero-urs.jpg"
+      hideSessionBadge
       heroOverride={{
-        title: "Fliegenfischen in der Region Zürich – ruhig, präzise, draussen.",
-        description:
-          "Kleine Gruppen, klare Lernschritte und ein Instruktor mit SFV- und EFFA-Hintergrund.",
-        primaryCta: { label: "Gruppenkurse entdecken", href: "/#kurse" },
-        secondaryCta: { label: "Privatlektion buchen", href: "/#privat" },
+        title: "Herzlich willkommen in der Fliegenfischerschule Urs Müller",
+        primaryCta: { label: "Kursangebot entdecken", href: "/#kurse" },
+        secondaryCta: { label: "Privatlektion anfragen", href: "/#privat" },
       }}
     />
   );

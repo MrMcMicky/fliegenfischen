@@ -157,16 +157,19 @@ export default async function RootLayout({
     }),
   ];
 
+  const themeClass = isPreviewHost ? "theme-classic" : "";
+
   return (
     <html lang="de">
       <body className={`${sourceSans.variable} ${playfair.variable} antialiased`}>
-        <div className="flex min-h-screen flex-col">
+        <div className={`flex min-h-screen flex-col ${themeClass}`}>
           <StructuredData data={structuredData} />
           {isProd ? <AnalyticsTracker /> : null}
           <Header
             siteName={settings?.name || "Fliegenfischerschule"}
             navLinks={headerNavLinks}
             previewMode={isPreviewHost}
+            classicLogo={isPreviewHost}
           />
           <main className="flex-1 pt-20">{children}</main>
           <Footer

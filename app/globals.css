@@ -40,6 +40,36 @@ html {
   --font-display: var(--font-display);
 }
 
+.theme-classic {
+  --color-forest: #2d4a3e;
+  --color-river: #4a6b5d;
+  --color-mist: #f2efea;
+  --color-river-mist: #eef3ef;
+  --color-pebble: #e8e6e2;
+  --color-sage: #e4ebe2;
+  --color-stone: #f7f5f2;
+  --color-ember: #c03030;
+  --color-ember-rgb: 192, 48, 48;
+  --color-slate: #555a58;
+  --color-text: #1f2a24;
+  --color-muted: #555a58;
+  --color-border: #ddd9d4;
+}
+
+.theme-classic::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(
+      circle at 20% 15%,
+      rgba(192, 48, 48, 0.08),
+      transparent 45%
+    ),
+    radial-gradient(circle at 85% 10%, rgba(45, 74, 62, 0.10), transparent 40%);
+  pointer-events: none;
+  z-index: -2;
+}
+
 * {
   box-sizing: border-box;
 }

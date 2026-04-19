@@ -204,14 +204,14 @@ export function Header({
     logoSrc = showHeroLogo
       ? "/branding/logo-classic-dark.png"
       : scrolled
-        ? "/branding/logo-classic-mark.png"
+        ? "/branding/logo-dark.png"
         : "/branding/logo-classic.png";
-    logoWidth = showHeroLogo ? 680 : scrolled ? 160 : 400;
-    logoHeight = showHeroLogo ? 226 : scrolled ? 64 : 130;
+    logoWidth = showHeroLogo ? 680 : scrolled ? 260 : 400;
+    logoHeight = showHeroLogo ? 226 : scrolled ? 66 : 130;
     logoClass = showHeroLogo
       ? "h-40 w-auto drop-shadow-[0_4px_16px_rgba(0,0,0,0.78)] sm:h-44"
       : scrolled
-        ? "h-11 w-auto"
+        ? "h-12 w-auto"
         : "h-16 w-auto";
   } else {
     logoSrc = showHeroLogo
@@ -236,12 +236,20 @@ export function Header({
     "rounded-full bg-[var(--color-ember)] px-5 py-2 text-base font-bold text-white shadow-[0_5px_18px_rgba(var(--color-ember-rgb),0.45)] transition hover:bg-[var(--color-ember)]/90 hover:text-white hover:shadow-[0_8px_24px_rgba(var(--color-ember-rgb),0.5)]";
   const voucherMobileClass =
     "bg-[var(--color-ember)] text-white hover:bg-[var(--color-ember)]/90";
+  const headerInnerClass =
+    isHome && !scrolled
+      ? "items-start py-1"
+      : "items-center py-3";
+  const navClass =
+    isHome && !scrolled
+      ? "items-center gap-4 pt-6 text-base"
+      : "items-center gap-4 pt-0 text-base";
 
   return (
     <header
       className={`fixed top-0 z-50 w-full transition-colors duration-300 ${headerClass}`}
     >
-      <div className="mx-auto flex w-full max-w-7xl items-start justify-between gap-6 px-5 py-1 sm:px-8">
+      <div className={`mx-auto flex w-full max-w-7xl justify-between gap-6 px-5 sm:px-8 ${headerInnerClass}`}>
         <Link
           href={isPreviewRoute ? "/test" : "/"}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -259,7 +267,7 @@ export function Header({
             />
           </div>
         </Link>
-        <nav className="hidden items-center gap-4 pt-6 text-base lg:flex">
+        <nav className={`hidden ${navClass} lg:flex`}>
           {displayedNavLinks.map((item) => {
             const href = localizeHomeAnchor(item.href);
             return (

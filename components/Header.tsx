@@ -209,7 +209,7 @@ export function Header({
     logoWidth = showHeroLogo ? 680 : scrolled ? 300 : 400;
     logoHeight = showHeroLogo ? 226 : scrolled ? 200 : 130;
     logoClass = showHeroLogo
-      ? "h-40 w-auto drop-shadow-[0_4px_16px_rgba(0,0,0,0.78)] sm:h-44"
+      ? "-mt-8 h-40 w-auto drop-shadow-[0_4px_16px_rgba(0,0,0,0.78)] sm:-mt-10 sm:h-44"
       : scrolled
         ? "h-16 w-auto"
         : "h-16 w-auto";

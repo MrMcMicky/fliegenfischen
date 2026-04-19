@@ -73,10 +73,10 @@ export function HeroSection({
             <div className="grid w-full max-w-4xl gap-4 sm:grid-cols-2 sm:gap-8">
               <Button
                 href={hero.primaryCta.href}
-                variant="light"
+                variant="ghostLight"
                 size="lg"
                 disabled={preview}
-                className="whitespace-nowrap border-white/65 bg-white/92 px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[var(--color-forest)] shadow-[0_16px_45px_rgba(0,0,0,0.26)] hover:bg-white"
+                className="whitespace-nowrap border border-white/45 bg-black/16 px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-white shadow-[0_16px_45px_rgba(0,0,0,0.22)] backdrop-blur-[2px] hover:border-white/70 hover:bg-black/24"
               >
                 {hero.primaryCta.label}
               </Button>

@@ -204,14 +204,14 @@ export function Header({
     logoSrc = showHeroLogo
       ? "/branding/logo-classic-dark.png"
       : scrolled
-        ? "/branding/logo-dark.png"
+        ? "/branding/logo-classic-mark.png"
         : "/branding/logo-classic.png";
-    logoWidth = showHeroLogo ? 680 : scrolled ? 260 : 400;
-    logoHeight = showHeroLogo ? 226 : scrolled ? 66 : 130;
+    logoWidth = showHeroLogo ? 680 : scrolled ? 300 : 400;
+    logoHeight = showHeroLogo ? 226 : scrolled ? 200 : 130;
     logoClass = showHeroLogo
       ? "h-40 w-auto drop-shadow-[0_4px_16px_rgba(0,0,0,0.78)] sm:h-44"
       : scrolled
-        ? "h-12 w-auto"
+        ? "h-16 w-auto"
         : "h-16 w-auto";
   } else {
     logoSrc = showHeroLogo

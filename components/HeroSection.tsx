@@ -47,27 +47,36 @@ export function HeroSection({
   // On a colourful custom photo, white buttons have maximum contrast regardless of background colours
   const primaryVariant = hasCustomImage ? "light" : isImagePreview ? "primary" : "light";
   const secondaryVariant = hasCustomImage ? "ghostLight" : "light";
+  const heroTitleText = typeof hero.title === "string" ? hero.title : null;
+  const classicTitle =
+    heroTitleText === "Herzlich willkommen in der Fliegenfischerschule Urs Müller"
+      ? {
+          eyebrow: "Herzlich willkommen in der",
+          title: "Fliegenfischerschule Urs Müller",
+        }
+      : null;
 
   if (hasCustomImage) {
     return (
-      <section className="relative -mt-20 min-h-[620px] overflow-hidden bg-[var(--color-forest)] sm:min-h-[700px] lg:min-h-[760px]">
+      <section className="relative -mt-20 min-h-[600px] overflow-hidden bg-[var(--color-forest)] sm:min-h-[660px] lg:min-h-[690px] xl:min-h-[740px]">
         <div
-          className="absolute inset-0 bg-cover bg-[position:28%_center] sm:bg-[position:35%_center] lg:bg-center"
+          className="absolute inset-0 scale-[1.01] bg-cover bg-[position:28%_center] sm:bg-[position:35%_center] lg:bg-center"
           style={{ backgroundImage: `url('${backgroundImage}')` }}
         />
-        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/42 via-black/18 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/46 via-black/12 to-transparent" />
-        <div className="absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-black/22 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/38 via-black/14 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/64 via-black/28 to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-black/18 via-black/6 to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black/16 to-transparent" />
 
-        <div className="relative z-10 mx-auto flex min-h-[620px] w-full max-w-7xl flex-col px-4 pb-16 pt-32 text-white sm:min-h-[700px] sm:px-6 sm:pb-20 sm:pt-36 lg:min-h-[760px] lg:pb-24">
-          <div className="flex flex-1 items-center justify-center pt-8 sm:pt-12">
-            <div className="flex w-full max-w-4xl flex-col items-center justify-between gap-5 sm:flex-row sm:gap-10">
+        <div className="relative z-10 mx-auto flex min-h-[600px] w-full max-w-7xl flex-col px-5 pb-10 pt-28 text-white sm:min-h-[660px] sm:px-8 sm:pb-12 sm:pt-32 lg:min-h-[690px] lg:pb-14 xl:min-h-[740px] xl:pb-16">
+          <div className="flex flex-1 items-center justify-center pt-8 sm:pt-10">
+            <div className="grid w-full max-w-4xl gap-4 sm:grid-cols-2 sm:gap-8">
               <Button
                 href={hero.primaryCta.href}
-                variant="ghostLight"
+                variant="light"
                 size="lg"
                 disabled={preview}
-                className="px-8 text-lg tracking-[0.08em] text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.82)]"
+                className="whitespace-nowrap border-white/65 bg-white/92 px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[var(--color-forest)] shadow-[0_16px_45px_rgba(0,0,0,0.26)] hover:bg-white"
               >
                 {hero.primaryCta.label}
               </Button>
@@ -76,7 +85,7 @@ export function HeroSection({
                 variant="ghostLight"
                 size="lg"
                 disabled={preview}
-                className="px-8 text-lg tracking-[0.08em] text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.82)]"
+                className="whitespace-nowrap border border-white/45 bg-black/16 px-7 py-3 text-sm font-bold uppercase tracking-[0.14em] text-white shadow-[0_16px_45px_rgba(0,0,0,0.22)] backdrop-blur-[2px] hover:border-white/70 hover:bg-black/24"
               >
                 {hero.secondaryCta.label}
               </Button>
@@ -84,9 +93,26 @@ export function HeroSection({
           </div>
 
           <div className="mx-auto w-full max-w-7xl text-center">
-            <h1 className="font-display text-[1.8rem] font-semibold leading-[1.04] tracking-[0.025em] text-white drop-shadow-[0_5px_18px_rgba(0,0,0,0.84)] sm:text-[3.05rem] sm:tracking-[0.08em] lg:text-[3.65rem]">
-              {hero.title}
-            </h1>
+            {classicTitle ? (
+              <>
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.36em] text-white/82 drop-shadow-[0_3px_12px_rgba(0,0,0,0.8)] sm:text-base">
+                  {classicTitle.eyebrow}
+                </p>
+                <h1
+                  className="text-[2.85rem] font-semibold leading-[0.88] text-white drop-shadow-[0_7px_22px_rgba(0,0,0,0.86)] sm:text-[4.55rem] lg:text-[5.15rem] xl:text-[5.65rem]"
+                  style={{ fontFamily: "var(--font-hero), serif" }}
+                >
+                  {classicTitle.title}
+                </h1>
+              </>
+            ) : (
+              <h1
+                className="text-[2.7rem] font-semibold leading-[0.95] text-white drop-shadow-[0_7px_22px_rgba(0,0,0,0.86)] sm:text-[4.5rem] lg:text-[5.1rem] xl:text-[6rem]"
+                style={{ fontFamily: "var(--font-hero), serif" }}
+              >
+                {hero.title}
+              </h1>
+            )}
             {hero.description && (
               <p className="mx-auto mt-4 max-w-2xl text-base text-white/90 drop-shadow-[0_3px_12px_rgba(0,0,0,0.75)] sm:text-lg">
                 {hero.description}

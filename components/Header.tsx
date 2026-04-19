@@ -230,7 +230,7 @@ export function Header({
 
   const activeNavClass =
     isHome && !scrolled
-      ? "bg-white/25 text-white ring-1 ring-white/25 pointer-events-none"
+      ? "text-white pointer-events-none"
       : "bg-[var(--color-forest)] text-white font-bold pointer-events-none";
   const voucherNavClass =
     "rounded-full bg-[var(--color-ember)] px-5 py-2 text-sm font-bold text-white shadow-[0_4px_14px_rgba(var(--color-ember-rgb),0.4)] transition hover:bg-[var(--color-ember)]/90 hover:text-white hover:shadow-[0_6px_20px_rgba(var(--color-ember-rgb),0.5)]";

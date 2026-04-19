@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Source_Sans_3 } from "next/font/google";
+import { Cormorant_Garamond, Playfair_Display, Source_Sans_3 } from "next/font/google";
 import { headers } from "next/headers";
 
 import "./globals.css";
@@ -52,6 +52,12 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-fraunces",
   weight: ["400", "500", "600", "700"],
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-hero",
+  weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -113,7 +119,7 @@ export default async function RootLayout({
   if (isAdmin) {
     return (
       <html lang="de">
-        <body className={`${sourceSans.variable} ${playfair.variable} antialiased`}>
+        <body className={`${sourceSans.variable} ${playfair.variable} ${cormorant.variable} antialiased`}>
           <div className="min-h-screen bg-[var(--color-stone)]">{children}</div>
         </body>
       </html>
@@ -161,7 +167,7 @@ export default async function RootLayout({
 
   return (
     <html lang="de">
-      <body className={`${sourceSans.variable} ${playfair.variable} antialiased`}>
+      <body className={`${sourceSans.variable} ${playfair.variable} ${cormorant.variable} antialiased`}>
         <div className={`flex min-h-screen flex-col ${themeClass}`}>
           <StructuredData data={structuredData} />
           {isProd ? <AnalyticsTracker /> : null}

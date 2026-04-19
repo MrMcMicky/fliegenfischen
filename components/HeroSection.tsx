@@ -63,7 +63,7 @@ export function HeroSection({
           className="absolute inset-0 scale-[1.01] bg-cover bg-[position:28%_center] sm:bg-[position:35%_center] lg:bg-center"
           style={{ backgroundImage: `url('${backgroundImage}')` }}
         />
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/38 via-black/14 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/62 via-black/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/64 via-black/28 to-transparent" />
         <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-black/18 via-black/6 to-transparent" />
         <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black/16 to-transparent" />

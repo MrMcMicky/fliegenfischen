@@ -55,7 +55,7 @@ export function Header({
   const navPillClass = isHome
     ? scrolled
       ? "rounded-full px-3 py-1.5 text-[var(--color-forest)] font-semibold transition-colors hover:bg-[var(--color-forest)]/10"
-      : "rounded-full px-3 py-1.5 text-white/85 font-semibold transition-colors hover:bg-black/35 hover:text-white"
+      : "rounded-full px-3.5 py-1.5 text-white/95 font-bold tracking-[0.02em] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] transition-colors hover:bg-black/28 hover:text-white"
     : "rounded-full px-3 py-1.5 text-[var(--color-forest)] font-semibold transition-colors hover:bg-[var(--color-forest)]/10";
   const menuButtonClass = isHome
     ? scrolled
@@ -206,10 +206,10 @@ export function Header({
       : scrolled
         ? "/branding/logo-classic-mark.png"
         : "/branding/logo-classic.png";
-    logoWidth = showHeroLogo ? 600 : scrolled ? 160 : 400;
-    logoHeight = showHeroLogo ? 200 : scrolled ? 64 : 130;
+    logoWidth = showHeroLogo ? 680 : scrolled ? 160 : 400;
+    logoHeight = showHeroLogo ? 226 : scrolled ? 64 : 130;
     logoClass = showHeroLogo
-      ? "h-36 w-auto drop-shadow-[0_3px_12px_rgba(0,0,0,0.6)] sm:h-40"
+      ? "h-40 w-auto drop-shadow-[0_4px_16px_rgba(0,0,0,0.78)] sm:h-44"
       : scrolled
         ? "h-11 w-auto"
         : "h-16 w-auto";
@@ -233,7 +233,7 @@ export function Header({
       ? "text-white pointer-events-none"
       : "bg-[var(--color-forest)] text-white font-bold pointer-events-none";
   const voucherNavClass =
-    "rounded-full bg-[var(--color-ember)] px-5 py-2 text-sm font-bold text-white shadow-[0_4px_14px_rgba(var(--color-ember-rgb),0.4)] transition hover:bg-[var(--color-ember)]/90 hover:text-white hover:shadow-[0_6px_20px_rgba(var(--color-ember-rgb),0.5)]";
+    "rounded-full bg-[var(--color-ember)] px-5 py-2 text-base font-bold text-white shadow-[0_5px_18px_rgba(var(--color-ember-rgb),0.45)] transition hover:bg-[var(--color-ember)]/90 hover:text-white hover:shadow-[0_8px_24px_rgba(var(--color-ember-rgb),0.5)]";
   const voucherMobileClass =
     "bg-[var(--color-ember)] text-white hover:bg-[var(--color-ember)]/90";
 
@@ -241,7 +241,7 @@ export function Header({
     <header
       className={`fixed top-0 z-50 w-full transition-colors duration-300 ${headerClass}`}
     >
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-5 py-4 sm:px-8">
+      <div className="mx-auto flex w-full max-w-7xl items-start justify-between gap-6 px-5 py-1 sm:px-8">
         <Link
           href={isPreviewRoute ? "/test" : "/"}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -259,7 +259,7 @@ export function Header({
             />
           </div>
         </Link>
-        <nav className="hidden items-center gap-3 text-sm lg:flex">
+        <nav className="hidden items-center gap-4 pt-6 text-base lg:flex">
           {displayedNavLinks.map((item) => {
             const href = localizeHomeAnchor(item.href);
             return (

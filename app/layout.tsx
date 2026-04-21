@@ -32,7 +32,7 @@ const selfAssessmentLink: NavLink = {
   href: "/#standortbestimmung",
 };
 
-const buildHeaderNavLinks = (links: NavLink[]) => {
+const buildHeaderNavLinks = (links: NavLink[], includeSelfAssessment: boolean) => {
   const filteredLinks = links.filter((item) => {
     const label = item.label.trim().toLowerCase();
     const href = item.href.trim().toLowerCase();
@@ -47,7 +47,11 @@ const buildHeaderNavLinks = (links: NavLink[]) => {
     );
   });
 
-  return [headerVoucherLink, selfAssessmentLink, ...filteredLinks];
+  return [
+    headerVoucherLink,
+    ...(includeSelfAssessment ? [selfAssessmentLink] : []),
+    ...filteredLinks,
+  ];
 };
 
 const sourceSans = Source_Sans_3({
@@ -138,7 +142,7 @@ export default async function RootLayout({
   const settings = await prisma.siteSettings.findUnique({ where: { id: 1 } });
 
   const navLinks = (settings?.navLinks as NavLink[]) || [];
-  const headerNavLinks = buildHeaderNavLinks(navLinks);
+  const headerNavLinks = buildHeaderNavLinks(navLinks, isClassicHost);
   const footerLinks =
     (settings?.footerLinks as {
       offer: { label: string; href: string }[];

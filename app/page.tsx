@@ -56,6 +56,7 @@ type HomeContentProps = {
     secondaryCta: { label: string; href: string };
   };
   hideSessionBadge?: boolean;
+  showCastingAssessment?: boolean;
 };
 
 export default async function Home({
@@ -70,6 +71,7 @@ export default async function Home({
       heroImage="/videos/hero-urs.jpg"
       hideSessionBadge
       heroOverride={classicHomeHero}
+      showCastingAssessment
     />
   );
 }
@@ -80,6 +82,7 @@ export async function HomeContent({
   heroImage,
   heroOverride,
   hideSessionBadge = false,
+  showCastingAssessment = false,
 }: HomeContentProps) {
   const resolvedParams = await Promise.resolve(searchParams);
   const params =
@@ -378,11 +381,13 @@ export async function HomeContent({
         </div>
       </section>
 
-      <section id="standortbestimmung" className="scroll-mt-20 bg-[var(--color-stone)] py-12">
-        <div className="mx-auto w-full max-w-5xl px-4">
-          <CastingAssessment />
-        </div>
-      </section>
+      {showCastingAssessment ? (
+        <section id="standortbestimmung" className="scroll-mt-20 bg-[var(--color-stone)] py-12">
+          <div className="mx-auto w-full max-w-5xl px-4">
+            <CastingAssessment />
+          </div>
+        </section>
+      ) : null}
 
       <section className="bg-[var(--color-stone)] py-12">
         <div

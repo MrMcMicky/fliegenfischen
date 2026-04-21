@@ -238,11 +238,11 @@ export function Header({
     "bg-[var(--color-ember)] text-white hover:bg-[var(--color-ember)]/90";
   const headerInnerClass =
     isHome && !scrolled
-      ? "items-start py-1"
+      ? "items-center py-5"
       : "items-center py-3";
   const navClass =
     isHome && !scrolled
-      ? "items-center gap-3 pt-6 text-base"
+      ? "items-center gap-3 pt-0 text-base"
       : "items-center gap-4 pt-0 text-base";
 
   return (

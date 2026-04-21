@@ -114,7 +114,8 @@ export default async function RootLayout({
   const requestHeaders = await headers();
   const isAdmin = requestHeaders.get("x-admin-section") === "1";
   const host = requestHeaders.get("host")?.toLowerCase() ?? "";
-  const isPreviewHost = host === "test.fliegenfischer-schule.shop";
+  const isTestHost = host === "test.fliegenfischer-schule.shop";
+  const isClassicHost = !isTestHost;
 
   if (isAdmin) {
     return (
@@ -163,7 +164,7 @@ export default async function RootLayout({
     }),
   ];
 
-  const themeClass = isPreviewHost ? "theme-classic" : "";
+  const themeClass = isClassicHost ? "theme-classic" : "";
 
   return (
     <html lang="de">
@@ -174,8 +175,8 @@ export default async function RootLayout({
           <Header
             siteName={settings?.name || "Fliegenfischerschule"}
             navLinks={headerNavLinks}
-            previewMode={isPreviewHost}
-            classicLogo={isPreviewHost}
+            previewMode={isClassicHost}
+            classicLogo={isClassicHost}
           />
           <main className="flex-1 pt-20">{children}</main>
           <Footer

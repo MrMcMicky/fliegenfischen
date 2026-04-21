@@ -23,16 +23,6 @@ export default function TestHome({
   searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
 }) {
   return (
-    <HomeContent
-      searchParams={searchParams}
-      heroMedia="image"
-      heroImage="/videos/hero-urs.jpg"
-      hideSessionBadge
-      heroOverride={{
-        title: "Herzlich willkommen in der Fliegenfischerschule Urs Müller",
-        primaryCta: { label: "Kursangebot entdecken", href: "/#kurse" },
-        secondaryCta: { label: "Privatlektion anfragen", href: "/#privat" },
-      }}
-    />
+    <HomeContent searchParams={searchParams} />
   );
 }

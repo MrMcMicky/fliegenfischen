@@ -33,6 +33,12 @@ export const metadata: Metadata = buildPageMetadata({
 
 export const dynamic = "force-dynamic";
 
+const classicHomeHero = {
+  title: "Herzlich willkommen in der Fliegenfischerschule Urs Müller",
+  primaryCta: { label: "Kursangebot entdecken", href: "/#kurse" },
+  secondaryCta: { label: "Privatlektion anfragen", href: "/#privat" },
+};
+
 const extractFirstImage = (body: string) => {
   const match = body.match(/<img[^>]+src="([^"]+)"/i);
   return match?.[1] || null;
@@ -56,7 +62,15 @@ export default async function Home({
 }: {
   searchParams?: { w?: string } | URLSearchParams | Promise<unknown>;
 }) {
-  return <HomeContent searchParams={searchParams} />;
+  return (
+    <HomeContent
+      searchParams={searchParams}
+      heroMedia="image"
+      heroImage="/videos/hero-urs.jpg"
+      hideSessionBadge
+      heroOverride={classicHomeHero}
+    />
+  );
 }
 
 export async function HomeContent({

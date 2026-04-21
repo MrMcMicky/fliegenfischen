@@ -27,7 +27,7 @@ export function Header({
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const pathname = usePathname();
   const isPreviewRoute = pathname === "/test";
-  const isPreviewMode = previewMode || isPreviewRoute;
+  const isPreviewMode = previewMode;
   const isHome = pathname === "/" || isPreviewRoute;
   const showBreadcrumb = !isHome && !pathname.startsWith("/buchen");
   const manualActiveRef = useRef<{ hash: string; until: number } | null>(null);

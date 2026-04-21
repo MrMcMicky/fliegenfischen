@@ -202,14 +202,14 @@ export function Header({
     // Dark background states: hero overlay → neon dark logo
     // Light background states: scrolled/non-home → classic light logo
     logoSrc = showHeroLogo
-      ? "/branding/logo-classic-dark.png"
+      ? "/branding/logo-dunkel_mit_text-nav.png"
       : scrolled
         ? "/branding/logo-classic-mark.png"
         : "/branding/logo-classic.png";
-    logoWidth = showHeroLogo ? 680 : scrolled ? 300 : 400;
-    logoHeight = showHeroLogo ? 226 : scrolled ? 200 : 130;
+    logoWidth = showHeroLogo ? 1479 : scrolled ? 300 : 400;
+    logoHeight = showHeroLogo ? 275 : scrolled ? 200 : 130;
     logoClass = showHeroLogo
-      ? "-mt-8 h-40 w-auto drop-shadow-[0_4px_16px_rgba(0,0,0,0.78)] sm:-mt-10 sm:h-44"
+      ? "h-auto w-32 drop-shadow-[0_4px_16px_rgba(0,0,0,0.78)] sm:w-40 lg:w-44"
       : scrolled
         ? "h-16 w-auto"
         : "h-16 w-auto";
@@ -242,7 +242,7 @@ export function Header({
       : "items-center py-3";
   const navClass =
     isHome && !scrolled
-      ? "items-center gap-4 pt-6 text-base"
+      ? "items-center gap-3 pt-6 text-base"
       : "items-center gap-4 pt-0 text-base";
 
   return (
@@ -253,7 +253,7 @@ export function Header({
         <Link
           href={isPreviewRoute ? "/test" : "/"}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-3"
+          className="flex shrink-0 items-center gap-3"
         >
           <span className="sr-only">{siteName}</span>
           <div className={logoWrapClass}>

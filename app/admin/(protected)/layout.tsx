@@ -19,11 +19,12 @@ export default async function AdminLayout({
     "PAYMENT_PENDING",
     "INVOICE_REQUESTED",
   ];
-  const [openBookingCount, openContactCount] = await Promise.all([
+  const [openBookingCount, openContactCount, openCastingAssessmentCount] = await Promise.all([
     prisma.booking.count({
       where: { status: { in: openBookingStatuses } },
     }),
     prisma.contactRequest.count({ where: { status: "OPEN" } }),
+    prisma.castingAssessmentSubmission.count({ where: { status: "OPEN" } }),
   ]);
 
   return (
@@ -34,6 +35,7 @@ export default async function AdminLayout({
         badges={{
           "/admin/buchungen": openBookingCount,
           "/admin/anfragen": openContactCount,
+          "/admin/standortbestimmung": openCastingAssessmentCount,
         }}
       >
         {children}

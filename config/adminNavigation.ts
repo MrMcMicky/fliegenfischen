@@ -31,7 +31,10 @@ export const adminNavItems: AdminNavItem[] = [
   {
     label: "Anfragen",
     href: "/admin/anfragen",
-    children: [],
+    children: [
+      { label: "Kontaktanfragen", href: "/admin/anfragen" },
+      { label: "Standortbestimmung", href: "/admin/standortbestimmung" },
+    ],
   },
   {
     label: "Statistiken",

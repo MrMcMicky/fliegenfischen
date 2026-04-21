@@ -19,6 +19,7 @@ export default async function AdminDashboard() {
     vouchers,
     openBookingCount,
     openContactCount,
+    openCastingAssessmentCount,
     bookingStatusCounts,
   ] = await Promise.all([
     prisma.courseSession.findMany({
@@ -42,6 +43,7 @@ export default async function AdminDashboard() {
       },
     }),
     prisma.contactRequest.count({ where: { status: "OPEN" } }),
+    prisma.castingAssessmentSubmission.count({ where: { status: "OPEN" } }),
     prisma.booking.groupBy({
       by: ["status"],
       where: { status: { in: openBookingStatuses } },
@@ -58,7 +60,7 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-10">
-      <section className="grid gap-4 md:grid-cols-2">
+      <section className="grid gap-4 md:grid-cols-3">
         <Link
           href="/admin/buchungen"
           className={`rounded-2xl border px-6 py-5 text-sm transition hover:shadow ${
@@ -108,6 +110,26 @@ export default async function AdminDashboard() {
             </span>
             <span className="text-sm text-[var(--color-muted)]">
               {openContactCount === 1 ? "Anfrage offen" : "Anfragen offen"}
+            </span>
+          </div>
+        </Link>
+        <Link
+          href="/admin/standortbestimmung"
+          className={`rounded-2xl border px-6 py-5 text-sm transition hover:shadow ${
+            openCastingAssessmentCount
+              ? "border-[var(--color-ember)] bg-[var(--color-ember)]/10"
+              : "border-[var(--color-border)] bg-white"
+          }`}
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-forest)]/60">
+            Standortbestimmung
+          </p>
+          <div className="mt-3 flex items-baseline gap-3">
+            <span className="text-3xl font-semibold text-[var(--color-text)]">
+              {openCastingAssessmentCount}
+            </span>
+            <span className="text-sm text-[var(--color-muted)]">
+              {openCastingAssessmentCount === 1 ? "Ergebnis offen" : "Ergebnisse offen"}
             </span>
           </div>
         </Link>

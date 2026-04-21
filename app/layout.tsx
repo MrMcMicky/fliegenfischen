@@ -27,19 +27,27 @@ const headerVoucherLink: NavLink = {
   href: "/#gutscheine",
 };
 
+const selfAssessmentLink: NavLink = {
+  label: "Wurfstand",
+  href: "/#standortbestimmung",
+};
+
 const buildHeaderNavLinks = (links: NavLink[]) => {
   const filteredLinks = links.filter((item) => {
     const label = item.label.trim().toLowerCase();
     const href = item.href.trim().toLowerCase();
     return !(
       label === "gutschein" ||
+      label === "wurfstand" ||
       href === "/gutscheine" ||
       href === "/#gutscheine" ||
-      href === "#gutscheine"
+      href === "#gutscheine" ||
+      href === "/#standortbestimmung" ||
+      href === "#standortbestimmung"
     );
   });
 
-  return [headerVoucherLink, ...filteredLinks];
+  return [headerVoucherLink, selfAssessmentLink, ...filteredLinks];
 };
 
 const sourceSans = Source_Sans_3({

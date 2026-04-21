@@ -194,6 +194,26 @@ model ContactRequest {
   updatedAt DateTime             @updatedAt
 }
 
+model CastingAssessmentSubmission {
+  id             String               @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  score          Int
+  levelKey       String
+  levelTitle     String
+  recommendation String
+  goal           String?
+  answers        Json
+  status         ContactRequestStatus @default(OPEN)
+  adminNotes     String?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  @@index([createdAt])
+  @@index([status])
+}
+
 model AnalyticsVisitor {
   id         String             @id @default(cuid())
   visitorKey String             @unique

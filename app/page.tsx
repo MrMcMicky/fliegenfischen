@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/Button";
+import { CastingAssessment } from "@/components/CastingAssessment";
 import { ContactForm } from "@/components/ContactForm";
 import { CourseGrid } from "@/components/CourseGrid";
 import { HeroSection } from "@/components/HeroSection";
@@ -35,8 +36,8 @@ export const dynamic = "force-dynamic";
 
 const classicHomeHero = {
   title: "Herzlich willkommen in der Fliegenfischerschule Urs Müller",
-  primaryCta: { label: "Kursangebot entdecken", href: "/#kurse" },
-  secondaryCta: { label: "Privatlektion anfragen", href: "/#privat" },
+  primaryCta: { label: "Wurfstand testen", href: "/#standortbestimmung" },
+  secondaryCta: { label: "Standortbestimmung anfragen", href: "/#standortbestimmung" },
 };
 
 const extractFirstImage = (body: string) => {
@@ -374,6 +375,12 @@ export async function HomeContent({
               );
             })}
           </div>
+        </div>
+      </section>
+
+      <section id="standortbestimmung" className="scroll-mt-20 bg-[var(--color-stone)] py-12">
+        <div className="mx-auto w-full max-w-5xl px-4">
+          <CastingAssessment />
         </div>
       </section>
 

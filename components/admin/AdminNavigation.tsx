@@ -14,6 +14,7 @@ import {
   Newspaper,
   Settings,
   Tag,
+  Target,
   Users,
   BarChart3,
 } from "lucide-react";
@@ -46,6 +47,7 @@ const sideNavIcons: Record<string, LucideIcon> = {
   "/admin/berichte": Newspaper,
   "/admin/gutscheine": Gift,
   "/admin/anfragen": Mail,
+  "/admin/standortbestimmung": Target,
   "/admin/statistiken": BarChart3,
   "/admin/users": Users,
   "/admin/settings": Settings,
